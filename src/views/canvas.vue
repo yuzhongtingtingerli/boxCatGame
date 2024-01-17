@@ -41,7 +41,7 @@ const minHeight = 35; // 纵向网格个数
 const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
 // console.log(wSize, hSize);
 let scale = 1.5; // 缩放比例
-let minScale = 0.5; // 缩放比例
+let minScale = 1; // 缩放比例
 let maxScale = 2.5; // 缩放比例
 let offsetX = 0; // 水平偏移量
 let offsetY = 0; // 垂直偏移量
@@ -101,7 +101,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const imgw = dialogBoxImg.width / 2;
   const imgh = dialogBoxImg.height / 2;
   const imgX = x * w + offsetX - (imgw - w) / 2;
-  const imgY = y * h + offsetY - catH * 1.2;
+  const imgY = y * h + offsetY - 2.4 * h; // 2.4块砖的高度
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
   ctx.font = "20px Arial"; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
@@ -204,13 +204,13 @@ function handleWheel(fn) {
     scale = Math.min(scale, maxScale);
 
     // console.log(offsetX, offsetY);
-    console.log(
-      "===============================",
-      window.innerWidth,
-      window.innerWidth * scale,
-      window.innerWidth - window.innerWidth * scale,
-      offsetX + (window.innerWidth - window.innerWidth * scale) / 2
-    );
+    // console.log(
+    //   "===============================",
+    //   window.innerWidth,
+    //   window.innerWidth * scale,
+    //   window.innerWidth - window.innerWidth * scale,
+    //   offsetX + (window.innerWidth - window.innerWidth * scale) / 2
+    // );
     // offsetY = offsetY + window.innerHeight - (window.innerHeight / scale) / 2;
     fn();
     event.preventDefault(); // 阻止页面滚动
