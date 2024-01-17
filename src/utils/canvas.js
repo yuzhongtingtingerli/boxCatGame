@@ -171,7 +171,7 @@ function transitionLocation(groups, wSize, hSize) {
       if (max >= wSize - 5) {
         maxLimit = Math.max(maxLimit, max - (wSize - 5));
       }
-      console.log(x, y, minLimit, maxLimit);
+      // console.log(x, y, minLimit, maxLimit);
 
       item.location = { x, y };
     }

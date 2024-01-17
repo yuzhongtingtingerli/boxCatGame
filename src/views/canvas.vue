@@ -206,13 +206,28 @@ function handleWheel(fn) {
     // console.log(offsetX, offsetY);
     // console.log(
     //   "===============================",
+    //   scale,
+    //   offsetX,
     //   window.innerWidth,
     //   window.innerWidth * scale,
     //   window.innerWidth - window.innerWidth * scale,
     //   offsetX + (window.innerWidth - window.innerWidth * scale) / 2
     // );
-    // offsetY = offsetY + window.innerHeight - (window.innerHeight / scale) / 2;
+    // console.log(
+    //   "===============================",
+    //   scale,
+    //   offsetY,
+    //   window.innerHeight,
+    //   window.innerHeight * scale,
+    //   window.innerHeight - window.innerHeight * scale,
+    //   offsetY + (window.innerHeight * scale - window.innerHeight) / 2
+    // );
+    // console.log(lastMouseX, lastMouseY, 'lastMouseX, lastMouseY');
+    // offsetX = (window.innerWidth - window.innerWidth * scale) / 2;
+    // offsetY = (window.innerHeight - window.innerHeight * scale) / 2;
     fn();
+    ctx.setTransform(1, 0, 0, 1, offsetX / scale, offsetY / scale);
+
     event.preventDefault(); // 阻止页面滚动
   });
 }
