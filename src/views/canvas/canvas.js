@@ -181,3 +181,13 @@ function transitionLocation(groups, wSize, hSize) {
     hSize: hSize + Math.max(minLimit, maxLimit),
   };
 }
+export function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = function () {
+      resolve(image);
+    };
+    // 设置图片源
+    image.src = src;
+  });
+}

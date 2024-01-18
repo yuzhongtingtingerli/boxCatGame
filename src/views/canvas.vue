@@ -7,7 +7,7 @@ import cat from "../assets/cat.png";
 import catRed from "../assets/cat-red.png";
 import dialogBox from "../assets/dialog_box.png";
 import talkingCat from "../assets/walk_cat.gif";
-import { computeSize, getLocation } from "../utils/canvas";
+import { computeSize, getLocation } from "./canvas/canvas";
 // 创建 Canvas 元素
 // 获取浏览器窗口宽度
 var windowWidth =
@@ -30,8 +30,6 @@ canvas.width = windowWidth;
 canvas.height = windowHeight;
 const ctx = canvas.getContext("2d");
 
-// canvas添加黑色边框
-// canvas.style.border = '1px solid black';
 
 document.querySelector("#app").appendChild(canvas);
 const SizeW = 100; // 单个网格宽度
@@ -39,7 +37,7 @@ const SizeH = 60; // 单个网格高度
 const minWidth = 35; // 横向网格个数
 const minHeight = 35; // 纵向网格个数
 const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
-// console.log(wSize, hSize);
+console.log(wSize, hSize);
 let scale = 1.5; // 缩放比例
 let minScale = 1; // 缩放比例
 let maxScale = 2.5; // 缩放比例
@@ -55,11 +53,14 @@ function drawGrid() {
   const gridSizeW = SizeW * scale; // 单个网格宽度
   const gridSizeH = SizeH * scale; // 单个网格高度
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  console.log( canvas.width, canvas.height);
 
   for (let i = 0; i < wSize; i++) {
     for (let j = 0; j < hSize; j++) {
       const x = i * gridSizeW + offsetX; // 横向间隔为 gridSizeW
       const y = j * gridSizeH + offsetY; // 纵向间隔为 gridSizeH
+      console.log(bgImg, x, y, gridSizeW, gridSizeH);
+      return
       ctx.drawImage(bgImg, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(
         bgImg,

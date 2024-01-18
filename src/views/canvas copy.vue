@@ -8,7 +8,7 @@ import {
   computeSize,
   transitionLocation,
   getLocation,
-} from "../utils/canvas";
+} from "./canvas/canvas";
 // 创建 Canvas 元素
 const canvas = document.createElement("canvas");
 canvas.width = 1000;
