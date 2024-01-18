@@ -1,5 +1,4 @@
 <script setup>
-// import Three from './views/three.vue'
 import Canvas from './views/canvas.vue'
 </script>
 
