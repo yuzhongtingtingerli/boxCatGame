@@ -1,11 +1,11 @@
 <script setup>
 // import Three from './views/three.vue'
-import Canvas from './views/canvas.vue'
+// import Canvas from "./views/canvas.vue";
 </script>
 
 <template>
-  <Canvas></Canvas>
+  <router-view />
+  <!-- <Canvas /> -->
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

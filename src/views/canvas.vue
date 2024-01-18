@@ -29,7 +29,6 @@ const canvas = document.createElement("canvas");
 canvas.width = windowWidth;
 canvas.height = windowHeight;
 const ctx = canvas.getContext("2d");
-
 // canvas添加黑色边框
 // canvas.style.border = '1px solid black';
 
@@ -55,11 +54,62 @@ function drawGrid() {
   const gridSizeW = SizeW * scale; // 单个网格宽度
   const gridSizeH = SizeH * scale; // 单个网格高度
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // 绘制图片的上半部分到 Canvas（绘制区域大小为 100x100）
+  // ctx.drawImage(
+  //   bgImg,
+  //   0,
+  //   0,
+  //   bgImg.width,
+  //   bgImg.height / 2,
+  //   0,
+  //   0,
+  //   bgImg.width,
+  //   bgImg.height / 2
+  // );
 
+  // 绘制图片的下半部分到 Canvas（绘制区域大小为 100x100）
+  // ctx.drawImage(
+  //   bgImg, // 源图像（要绘制的图像，这里是bgImg）
+  //   0, // 源图像的 x 坐标（在源图像中要绘制的矩形区域的左上角 x 坐标）
+  //   bgImg.height / 2, // 源图像的 y 坐标（在源图像中要绘制的矩形区域的左上角 y 坐标，这里是图像下半部分）
+  //   bgImg.width, // 源图像的宽度
+  //   bgImg.height / 2, // 源图像的高度（这里是图像下半部分）
+  //   0, // 目标图像的 x 坐标（在 Canvas 中要绘制的矩形区域的左上角 x 坐标）
+  //   100, // 目标图像的 y 坐标（在 Canvas 中要绘制的矩形区域的左上角 y 坐标，这里是距离 Canvas 顶部的距离为100）
+  //   bgImg.width, // 目标图像的宽度
+  //   bgImg.height / 2 // 目标图像的高度（这里是绘制到 Canvas 的高度，即图像下半部分）
+  // );
+
+  // 绘制图片的左半部分到 Canvas（绘制区域大小为 100x100）
+  // ctx.drawImage(
+  //   bgImg,
+  //   0,
+  //   0,
+  //   bgImg.width / 2,
+  //   bgImg.height,
+  //   100,
+  //   0,
+  //   bgImg.width / 2,
+  //   bgImg.height
+  // );
+
+  // 绘制图片的右半部分到 Canvas（绘制区域大小为 100x100）
+  // ctx.drawImage(
+  //   bgImg,
+  //   bgImg.width / 2,
+  //   0,
+  //   bgImg.width / 2,
+  //   bgImg.height,
+  //   100,
+  //   100,
+  //   bgImg.width / 2,
+  //   bgImg.height
+  // );
   for (let i = 0; i < wSize; i++) {
     for (let j = 0; j < hSize; j++) {
       const x = i * gridSizeW + offsetX; // 横向间隔为 gridSizeW
       const y = j * gridSizeH + offsetY; // 纵向间隔为 gridSizeH
+
       ctx.drawImage(bgImg, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(
         bgImg,
