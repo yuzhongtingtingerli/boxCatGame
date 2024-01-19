@@ -207,7 +207,7 @@ defineExpose({
   }
 }
 .content {
-  margin: 20px;
+  margin: 20px 20px 0;
   .list {
     display: flex;
     justify-content: space-between;
