@@ -1,5 +1,43 @@
 <template>
-  <div class="hoursTVL"></div>
+  <div class="hoursTVL">
+    <div class="top">
+      <div class="title">24 hours TVL</div>
+      <div class="taps">
+        <div
+          :class="`group ${type === 'group' ? 'active' : ''}`"
+          @click="getTVL('group')"
+        >
+          group
+        </div>
+        <div
+          :class="`individual ${type === 'individual' ? 'active' : ''}`"
+          @click="getTVL('individual')"
+        >
+          individual
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="groupInfo" v-if="type === 'group'">
+        <div class="list" v-for="item in GroupInfo" :key="item.GroupName">
+          <div class="left">
+            <div class="img"></div>
+            <div class="name">{{ item.GroupName }} Group</div>
+          </div>
+          <div class="svl">+$ {{ getMoney(item.GroupTVL) }}</div>
+        </div>
+      </div>
+      <div class="ownersInfo" v-if="type === 'individual'">
+        <div class="list" v-for="item in OwnersInfo" :key="item.OwnersAddress">
+          <div class="left">
+            <div class="img"></div>
+            <div class="name">{{ getAddress(item.OwnersAddress) }}</div>
+          </div>
+          <div class="svl">+$ {{ getMoney(item.OwnersTVL) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -30,7 +68,56 @@ const router = useRouter();
 /**
  * 数据部分
  */
-const data = reactive({});
+let type = "individual";
+const getTVL = (t) => {
+  // 将t赋值给type，并实现响应式
+  type = t;
+};
+const getAddress = (add) => {
+  return add.slice(0, 4) + "......" + add.slice(-4);
+};
+const getMoney = (money) => {
+  // 每隔三位小数加一个,
+  return money.toString().replace(/\d+/, function (n) {
+    return n.replace(/(\d)(?=(\d{3})+$)/g, function ($1) {
+      return $1 + ",";
+    });
+  });
+};
+const GroupInfo = [
+  {
+    GroupName: "ordi",
+    GroupTVL: "300000.000",
+  },
+  {
+    GroupName: "rats",
+    GroupTVL: "200000.000",
+  },
+  {
+    GroupName: "sats",
+    GroupTVL: "100000.000",
+  },
+];
+const OwnersInfo = [
+  {
+    OwnersLogo: "https://127.0.0.1/images/ordi.png",
+    OwnersAddress:
+      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta",
+    OwnersTVL: "300000.000",
+  },
+  {
+    OwnersLogo: "https://127.0.0.1/images/rats.png",
+    OwnersAddress:
+      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta",
+    OwnersTVL: "200000.000",
+  },
+  {
+    OwnersLogo: "https://127.0.0.1/images/sats.png",
+    OwnersAddress:
+      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
+    OwnersTVL: "100000.000",
+  },
+];
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
@@ -40,8 +127,67 @@ onMounted(() => {
 watchEffect(() => {});
 // 使用toRefs解构
 // let { } = { ...toRefs(data) }
+const data = reactive({});
+
 defineExpose({
   ...toRefs(data),
 });
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="scss">
+.top {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-family: LilitaOne;
+  .title {
+    line-height: 40px;
+    font-size: 20px;
+  }
+  .taps {
+    width: 207px;
+    height: 40px;
+    display: flex;
+    //垂直居中对齐
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    div {
+      width: 100px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      color: #ccc;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .active {
+      background-color: #000;
+      color: #fff;
+    }
+  }
+}
+.content {
+  margin-top: 20px;
+  .list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+    margin-right: 36px;
+    font-family: LilitaOne;
+    line-height: 32px;
+    margin-bottom: 8px;
+    .left {
+      display: flex;
+      justify-self: start;
+      .img {
+        width: 32px;
+      }
+    }
+  }
+}
+</style>

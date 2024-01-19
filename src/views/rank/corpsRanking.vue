@@ -15,13 +15,26 @@
         class="list_item"
         v-for="item in corpsRankingData"
         :key="item.ranking"
-      ></div>
+      >
+        <div class="left">
+          <div class="ranking">{{ item.ranking }}</div>
+          <div class="groupName">
+            <UserOutlined style="color: rgba(0, 0, 0, 0.45)" />{{
+              item.groupName
+            }}
+          </div>
+          <div class="num">{{ item.num }}</div>
+        </div>
+        <div class="right">
+          <div class="svl">SVL：$ {{ item.svl }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { SearchOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 import {
   ref,
   reactive,
@@ -134,6 +147,36 @@ defineExpose({
     padding-bottom: 17px;
     font-weight: 400;
     font-size: 20px;
+  }
+  .list {
+    margin-top: 18px;
+    .list_item {
+      position: relative;
+      height: 48px;
+      background-color: #fff;
+      margin-bottom: 12px;
+      border-radius: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      // padding: 10px 0;
+      text-shadow: 2px 2px 2px #000;
+      font-weight: 900;
+      padding-right: 20px;
+      padding-left: 6px;
+      .ranking {
+        position: absolute;
+        top: 0;
+      }
+      .groupName {
+        margin-right: 10px;
+        margin-left: 12px;
+      }
+      .left {
+        display: flex;
+        justify-self: start;
+      }
+    }
   }
 }
 </style>
