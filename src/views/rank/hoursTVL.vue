@@ -52,6 +52,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { getMoney, getAddress } from "./../../utils/Tools.js";
 /**
  * 仓库
  */
@@ -68,21 +69,10 @@ const router = useRouter();
 /**
  * 数据部分
  */
-let type = "individual";
+const type = ref("group");
 const getTVL = (t) => {
   // 将t赋值给type，并实现响应式
-  type = t;
-};
-const getAddress = (add) => {
-  return add.slice(0, 4) + "......" + add.slice(-4);
-};
-const getMoney = (money) => {
-  // 每隔三位小数加一个,
-  return money.toString().replace(/\d+/, function (n) {
-    return n.replace(/(\d)(?=(\d{3})+$)/g, function ($1) {
-      return $1 + ",";
-    });
-  });
+  type.value = t;
 };
 const GroupInfo = [
   {

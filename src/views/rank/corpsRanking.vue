@@ -147,6 +147,7 @@ defineExpose({
     padding-bottom: 17px;
     font-weight: 400;
     font-size: 20px;
+    font-family: LilitaOne;
   }
   .list {
     margin-top: 18px;
