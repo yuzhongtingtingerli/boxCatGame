@@ -1,8 +1,8 @@
 // router/index.js
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/home.vue";
+import Home from "../views/home/index.vue";
 import Canvas from "../views/canvas/index.vue";
-import Rank from "../views/rank.vue";
+import Rank from "../views/rank/index.vue";
 
 const routes = [
   {
