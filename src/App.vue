@@ -1,10 +1,14 @@
 <script setup>
-// import Three from './views/three.vue'
+import Header from "./views/header.vue";
 // import Canvas from "./views/canvas.vue";
 </script>
 
 <template>
-  <router-view />
+  <Header />
+  <div class="content">
+    <router-view />
+  </div>
+
   <!-- <Canvas /> -->
 </template>
 
