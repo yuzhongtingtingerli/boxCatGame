@@ -1,6 +1,8 @@
-
 <template>
-  <canvas ref="canvasRef"></canvas>
+  <div class="canvas">
+    <canvas ref="canvasRef"></canvas>
+    <Sidebar />
+  </div>
 </template>
 
 <script setup>
@@ -14,6 +16,7 @@ import dialogBox from "../../assets/dialog_box.png";
 import talkingCat from "../../assets/walk_cat.gif";
 import { computeSize, getLocation, loadImage } from "./canvas";
 import { useMouse } from "./mouse";
+import Sidebar from "./sidebar/index.vue";
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } =
   useMouse(drawGrid);
 watch(scale, drawGrid);
@@ -129,6 +132,4 @@ onMounted(() => {
 });
 </script>
 
-
-<style scoped>
-</style>
+<style scoped></style>

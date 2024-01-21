@@ -161,10 +161,11 @@ defineExpose({
       justify-content: space-between;
       align-items: center;
       // padding: 10px 0;
-      text-shadow: 2px 2px 2px #000;
+      text-shadow: 1px 1px 0px #000;
       font-weight: 900;
       padding-right: 20px;
       padding-left: 6px;
+      font-family: Inter;
       .ranking {
         position: absolute;
         top: 0;
