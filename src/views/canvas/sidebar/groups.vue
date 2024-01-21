@@ -1,5 +1,38 @@
 <template>
-  <div class="group"></div>
+  <div class="group">
+    <div class="top">
+      <Title title="Groups" />
+      <div class="search">
+        <a-input v-model:value="userName" placeholder="Brc20" size="small">
+          <template #suffix>
+            <a-tooltip title="Extra information">
+              <SearchOutlined style="color: rgba(0, 0, 0, 0.45)" />
+            </a-tooltip>
+          </template>
+        </a-input>
+      </div>
+    </div>
+    <div class="list">
+      <div
+        class="list-item"
+        v-for="item in corpsRankingData"
+        :key="item.RankNumber"
+      >
+        <div class="RankNumber">{{ item.RankNumber }}</div>
+        <div class="bg"></div>
+        <div class="img">
+          <img src="@/assets/cat_ava.png" alt="" srcset="" />
+        </div>
+        <div class="name">{{ item.GroupName }}</div>
+        <div class="GroupTokenPerson">
+          <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
+            item.GroupTokenPerson
+          }}
+        </div>
+        <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -14,6 +47,9 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import Title from "@cps/title";
+import { getMoney } from "@/utils/Tools.js";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 /**
  * 仓库
  */
@@ -30,6 +66,68 @@ const router = useRouter();
 /**
  * 数据部分
  */
+let corpsRankingData = [
+  {
+    RankNumber: "1",
+    GroupName: "ordi",
+    GroupTokenPerson: "65.3K",
+    GroupSVL: "300000.000",
+  },
+  {
+    RankNumber: "2",
+    GroupName: "sats",
+    GroupTokenPerson: "653.3K",
+    GroupSVL: "200000.000",
+  },
+  {
+    RankNumber: "3",
+    GroupName: "ordi",
+    GroupTokenPerson: "65.3K",
+    GroupSVL: "300000.000",
+  },
+  {
+    RankNumber: "4",
+    GroupName: "sats",
+    GroupTokenPerson: "653.3K",
+    GroupSVL: "200000.000",
+  },
+  {
+    RankNumber: "5",
+    GroupName: "ordi",
+    GroupTokenPerson: "65.3K",
+    GroupSVL: "300000.000",
+  },
+  {
+    RankNumber: "6",
+    GroupName: "sats",
+    GroupTokenPerson: "653.3K",
+    GroupSVL: "200000.000",
+  },
+  {
+    RankNumber: "7",
+    GroupName: "ordi",
+    GroupTokenPerson: "65.3K",
+    GroupSVL: "300000.000",
+  },
+  {
+    RankNumber: "8",
+    GroupName: "sats",
+    GroupTokenPerson: "653.3K",
+    GroupSVL: "200000.000",
+  },
+  {
+    RankNumber: "9",
+    GroupName: "ordi",
+    GroupTokenPerson: "65.3K",
+    GroupSVL: "300000.000",
+  },
+  {
+    RankNumber: "10",
+    GroupName: "sats",
+    GroupTokenPerson: "653.3K",
+    GroupSVL: "200000.000",
+  },
+];
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
@@ -44,4 +142,104 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="scss">
+.top {
+  display: flex;
+  justify-content: space-between;
+  .search {
+    width: 100px;
+    height: 24px;
+    border-radius: 2px;
+    font-family: LilitaOne;
+  }
+}
+.list {
+  padding-top: 13px;
+  height: 240px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 220px;
+  box-sizing: border-box;
+  .list-item {
+    position: relative;
+    width: 220px;
+    height: 48px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: Inter;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 12px;
+    letter-spacing: 0em;
+    overflow: hidden;
+    .RankNumber {
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      font-family: LilitaOne;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #fff;
+      text-shadow: 2px 2px 0px #000;
+      z-index: 999;
+    }
+    .bg {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #000;
+      position: absolute;
+      top: -48px;
+      left: -48px;
+      z-index: -1;
+    }
+    .img {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      img {
+        width: 25px;
+      }
+    }
+    .name {
+      position: absolute;
+      top: 28px;
+      left: 12px;
+      color: #fff;
+      text-shadow: 2px 2px 0px #000;
+      font-family: LilitaOne;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0em;
+    }
+    .GroupTokenPerson {
+      margin-left: 40px;
+      font-family: Inter;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #fff;
+      text-shadow: 1px 1px 0px #000;
+    }
+    .svl {
+      font-family: Inter;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #fff;
+      text-shadow: 1px 1px 0px #000;
+      margin-right: 6px;
+    }
+  }
+}
+</style>

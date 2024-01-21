@@ -4,6 +4,7 @@
     <YourScore />
     <Joined />
     <Groups />
+    <div class="JoinGroup">Join Group</div>
   </div>
 </template>
 
@@ -65,5 +66,24 @@ defineExpose({
   box-shadow: 4px 4px 0px 0px #000000;
   border: 3px solid #000;
   padding: 16px 20px;
+  .JoinGroup {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 48px;
+    width: 180px;
+    color: #000;
+    background-color: #f6cb37;
+    box-shadow: 4px 4px 0px #000;
+    border-radius: 4px;
+    font-family: LilitaOne;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0em;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+  }
 }
 </style>

@@ -4,7 +4,9 @@
     <div class="list">
       <div class="list-item" v-for="item in YourBrc" :key="item.name">
         <div class="left">
-          <div class="img"></div>
+          <div class="img">
+            <img width="20px" src="@/assets/money_logo.png" alt="" srcset="" />
+          </div>
           <div class="name">{{ item.name }}</div>
         </div>
         <div class="score">{{ getMoney(item.score) }}</div>
@@ -104,7 +106,8 @@ defineExpose({
       font-family: LilitaOne;
       font-weight: 400;
       .img {
-        width: 20px;
+        // width: 20px;
+        margin-right: 6px;
       }
     }
     .score {
