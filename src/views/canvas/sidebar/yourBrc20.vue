@@ -108,7 +108,9 @@ defineExpose({
       }
     }
     .score {
+      font-family: Inter;
       font-size: 10px;
+      font-weight: 700;
     }
   }
 }

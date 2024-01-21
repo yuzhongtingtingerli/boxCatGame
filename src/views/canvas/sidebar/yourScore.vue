@@ -66,7 +66,7 @@ defineExpose({
     letter-spacing: 0em;
     color: #ffc500;
     text-shadow: 2px 2px 0px #000;
-    margin-top: 16px;
+    margin-top: 10px;
   }
   .PersonalTotalTVL {
     font-family: Inter;
@@ -76,7 +76,6 @@ defineExpose({
     letter-spacing: 0em;
     text-align: center;
     margin-top: 6px;
-    margin-bottom: 20px;
   }
 }
 </style>
