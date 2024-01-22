@@ -16,11 +16,13 @@
         v-for="item in corpsRankingData"
         :key="item.ranking"
       >
+        <div class="RankNumber">{{ item.ranking }}</div>
+        <div class="bg"></div>
+        <div class="img">
+          <img src="@/assets/cat_ava.png" alt="" srcset="" />
+        </div>
+        <div class="name">{{ item.groupName }}</div>
         <div class="left">
-          <div class="ranking">{{ item.ranking }}</div>
-          <div class="groupName">
-            {{ item.groupName }}
-          </div>
           <div class="num">
             <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
               item.num
@@ -140,6 +142,11 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
+<style>
+.ant-input.ant-input-sm.css-dev-only-do-not-override-19yxfbp {
+  font-family: LilitaOne !important;
+}
+</style>
 <style scoped lang="scss">
 .corpsRanking {
   width: 280px !important;
@@ -149,6 +156,11 @@ defineExpose({
     padding-bottom: 17px;
     font-weight: 400;
     font-size: 20px;
+    font-family: LilitaOne;
+  }
+  .search {
+    height: 24px;
+    border-radius: 2px;
     font-family: LilitaOne;
   }
   .list {
@@ -170,13 +182,38 @@ defineExpose({
       padding-right: 20px;
       padding-left: 6px;
       font-family: Inter;
-      .ranking {
+      .RankNumber {
         position: absolute;
-        top: 0;
+        top: 2px;
+        left: 6px;
+        font-family: LilitaOne;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #fff;
+        text-shadow: 2px 2px 0px #000;
+        z-index: 999;
       }
-      .groupName {
-        margin-right: 10px;
-        margin-left: 12px;
+      .img {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        img {
+          width: 25px;
+        }
+      }
+      .name {
+        position: absolute;
+        top: 28px;
+        left: 20px;
+        color: #fff;
+        text-shadow: 2px 2px 0px #000;
+        font-family: LilitaOne;
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 0em;
       }
       .left {
         display: flex;

@@ -142,6 +142,12 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
+<style>
+.group
+  .ant-input-affix-wrapper.ant-input-affix-wrapper-sm.css-dev-only-do-not-override-19yxfbp {
+  border: 2px solid #d9d9d9;
+}
+</style>
 <style scoped lang="scss">
 .top {
   display: flex;

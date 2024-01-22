@@ -7,7 +7,7 @@
           :class="`group ${type === 'group' ? 'active' : ''}`"
           @click="getTVL('group')"
         >
-          group
+          Group
         </div>
         <div
           :class="`individual ${type === 'individual' ? 'active' : ''}`"
@@ -21,7 +21,9 @@
       <div class="groupInfo" v-if="type === 'group'">
         <div class="list" v-for="item in GroupInfo" :key="item.GroupName">
           <div class="left">
-            <div class="img"></div>
+            <div class="img">
+              <img width="22px" src="@/assets/cat_ava.png" alt="" srcset="" />
+            </div>
             <div class="name">{{ item.GroupName }} Group</div>
           </div>
           <div class="svl">+$ {{ getMoney(item.GroupTVL) }}</div>
@@ -30,8 +32,17 @@
       <div class="ownersInfo" v-if="type === 'individual'">
         <div class="list" v-for="item in OwnersInfo" :key="item.OwnersAddress">
           <div class="left">
-            <div class="img"></div>
-            <div class="name">{{ getAddress(item.OwnersAddress) }}</div>
+            <div class="img">
+              <img
+                width="20px"
+                src="@/assets/money_logo.png"
+                alt=""
+                srcset=""
+              />
+            </div>
+            <div class="name">
+              {{ getAddress(item.OwnersAddress) }}
+            </div>
           </div>
           <div class="svl">+$ {{ getMoney(item.OwnersTVL) }}</div>
         </div>
@@ -175,7 +186,9 @@ defineExpose({
       display: flex;
       justify-self: start;
       .img {
-        width: 32px;
+        width: 20px;
+        margin-left: 20px;
+        margin-right: 2px;
       }
     }
   }

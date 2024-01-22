@@ -9,7 +9,17 @@
       </div>
       <div class="lists">
         <div class="list" v-for="(item, index) in OwnersScore" :key="index">
-          <div class="Address">{{ getAddress(item.OwnersAddress) }}</div>
+          <div class="Address">
+            <div class="img">
+              <img
+                width="20px"
+                src="@/assets/money_logo.png"
+                alt=""
+                srcset=""
+              />
+            </div>
+            <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
+          </div>
           <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
           <div class="Time">{{ getMoney(item.OwnersTime) }}</div>
         </div>
@@ -204,6 +214,11 @@ defineExpose({
     height: 20px;
     .Address {
       width: 125px;
+      display: flex;
+      justify-self: start;
+      .img {
+        margin-right: 2px;
+      }
     }
     .TVL {
       width: 120px;
