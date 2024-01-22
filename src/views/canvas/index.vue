@@ -1,5 +1,7 @@
 <template>
   <div class="canvas">
+    <!-- {{ offsetX }} -->
+    <!-- {{ offsetY }} -->
     <canvas ref="canvasRef"></canvas>
     <Sidebar />
   </div>
@@ -14,14 +16,14 @@ import cat from "../../assets/cat.png";
 import catRed from "../../assets/cat-red.png";
 import dialogBox from "../../assets/dialog_box.png";
 import talkingCat from "../../assets/walk_cat.gif";
-import { computeSize, getLocation, loadImage } from "./canvas";
-import { useMouse } from "./mouse";
+import { computeSize, getLocation, loadImage,drawRect } from "./canvas";
+import { useMouse,  } from "./mouse";
 import Sidebar from "./sidebar/index.vue";
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } =
-  useMouse(drawGrid);
-watch(scale, drawGrid);
-watch(offsetX, drawGrid);
-watch(offsetY, drawGrid);
+    useMouse(drawGrid);
+    watch(scale, drawGrid);
+    watch(offsetX, drawGrid);
+    watch(offsetY, drawGrid);
 let ctx;
 const SizeW = 100; // 单个网格宽度
 const SizeH = 60; // 单个网格高度
@@ -54,9 +56,57 @@ function drawGrid() {
         gridSizeW,
         gridSizeH
       );
+      drawBoundary(j,hSize,i,wSize, x, y, gridSizeW, gridSizeH)
     }
   }
   drawGroup(groups, gridSizeW, gridSizeH);
+}
+function drawBoundary(j,hSize,i,wSize, x, y, gridSizeW, gridSizeH) {
+
+    if (j === 0 ) {
+        // 绘制三角形
+        ctx.beginPath();
+        ctx.moveTo(x + gridSizeW/2, y); // 左顶点
+        ctx.lineTo(x + gridSizeW+ gridSizeW/2, y); // 右顶点
+        ctx.lineTo(x + gridSizeW , y + gridSizeH/2); // 下顶点
+        ctx.closePath();
+        // 填充颜色
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      }
+      if (j >= hSize-0.5 ) {
+        // 绘制三角形
+        ctx.beginPath();
+        ctx.moveTo(x + gridSizeW/2, y + gridSizeH); // 左顶点
+        ctx.lineTo(x + gridSizeW, y + gridSizeH+gridSizeH/2); // 右顶点
+        ctx.lineTo(x  , y + gridSizeH+gridSizeH/2); // 下顶点
+        ctx.closePath();
+        // 填充颜色
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      }
+      if (i === 0 ) {
+        // 绘制三角形
+        ctx.beginPath();
+        ctx.moveTo(x, y+ gridSizeH/2); // 左顶点
+        ctx.lineTo(x+ gridSizeW/2, y+ gridSizeH); // 右顶点
+        ctx.lineTo(x , y + gridSizeH+ gridSizeH/2); // 下顶点
+        ctx.closePath();
+        // 填充颜色
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      }
+      if (i >= wSize-0.5 ) {
+        // 绘制三角形
+        ctx.beginPath();
+        ctx.moveTo(x+ gridSizeW, y+ gridSizeH/2); // 左顶点
+        ctx.lineTo(x+ gridSizeW + gridSizeW/2, y); // 右顶点
+        ctx.lineTo(x+ gridSizeW + gridSizeW/2 , y + gridSizeH); // 下顶点
+        ctx.closePath();
+        // 填充颜色
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      }
 }
 // 我再这里已经获取到每一个大兵团的中心位置了，默认第一个，用红色标记
 function drawGroup(groups, w, h) {
@@ -127,9 +177,12 @@ onMounted(() => {
     catRedImg = catRed;
     dialogBoxImg = dialogBox;
     talkingCatImg = talkingCat;
-    drawGrid();
+    // drawGrid();
+    offsetX.value = -Math.floor( wSize/3)*SizeW
+    offsetY.value = -Math.floor( hSize/3)*SizeH
   });
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
