@@ -1,21 +1,25 @@
 <template>
-  <div class="header">
-    <div class="left">
-      <div class="title">BIT PARTY</div>
-      <div class="menu">
-        <router-link :class="getCurrentRoute('/map')" to="/map"
-          >Map</router-link
-        >
-        <router-link :class="getCurrentRoute('/rank')" to="/rank"
-          >Rank</router-link
-        >
-        <router-link to="/">Bridge</router-link>
-        <router-link to="/">Stake</router-link>
-        <router-link to="/">Whitepaper</router-link>
-        <router-link to="/">Safe And Privacy</router-link>
+  <div :class="`bjs ${currentRoute === '/rank' ? 'yellow' : 'black'}`">
+    <div class="header">
+      <div class="left">
+        <div class="title">
+          <router-link to="/">BIT PARTY</router-link>
+        </div>
+        <div class="menu">
+          <router-link :class="getCurrentRoute('/map')" to="/map"
+            >Map</router-link
+          >
+          <router-link :class="getCurrentRoute('/rank')" to="/rank"
+            >Rank</router-link
+          >
+          <router-link to="/">Bridge</router-link>
+          <router-link to="/">Stake</router-link>
+          <router-link to="/">Whitepaper</router-link>
+          <router-link to="/">Safe And Privacy</router-link>
+        </div>
       </div>
+      <div class="Wallet">Connect Wallet</div>
     </div>
-    <div class="Wallet">Connect Wallet</div>
   </div>
 </template>
 
@@ -47,11 +51,6 @@ const router = useRouter();
 /**
  * 数据部分
  */
-//  computed: {
-//     currentPath() {
-//       return this.$router.currentRoute.value.path;
-//     }
-//   }
 let currentRoute = computed(() => router.currentRoute.value.path);
 const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
@@ -72,8 +71,50 @@ defineExpose({
 });
 </script>
 <style scoped lang="scss">
-.header {
+.yellow {
+  background-color: #fccd37;
+  color: #000;
+  .menu {
+    a {
+      font-family: LilitaOne;
+      font-size: 16px;
+      margin-right: 38.6px;
+      color: #000;
+    }
+    .active {
+      color: #fff;
+    }
+  }
+  .title {
+    a {
+      color: #000;
+    }
+  }
+}
+.black {
+  background: #000;
+  color: #fff;
+  .menu {
+    a {
+      font-family: LilitaOne;
+      font-size: 16px;
+      margin-right: 38.6px;
+      color: #fff;
+    }
+    .active {
+      color: #fccd37;
+    }
+  }
+  .title {
+    a {
+      color: #fff;
+    }
+  }
+}
+.bjs {
   height: 60px;
+}
+.header {
   line-height: 60px;
   display: flex;
   justify-content: space-between;
@@ -88,17 +129,7 @@ defineExpose({
       width: 210px;
       text-align: center;
       margin-right: 80px;
-    }
-    .menu {
-      a {
-        font-family: LilitaOne;
-        font-size: 16px;
-        color: #000;
-        margin-right: 38.6px;
-      }
-      .active {
-        color: #fff;
-      }
+      color: #000;
     }
   }
   .Wallet {
