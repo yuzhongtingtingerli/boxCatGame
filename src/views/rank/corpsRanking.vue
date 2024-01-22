@@ -19,11 +19,13 @@
         <div class="left">
           <div class="ranking">{{ item.ranking }}</div>
           <div class="groupName">
-            <UserOutlined style="color: rgba(0, 0, 0, 0.45)" />{{
-              item.groupName
+            {{ item.groupName }}
+          </div>
+          <div class="num">
+            <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
+              item.num
             }}
           </div>
-          <div class="num">{{ item.num }}</div>
         </div>
         <div class="right">
           <div class="svl">SVL：$ {{ item.svl }}</div>
@@ -151,6 +153,8 @@ defineExpose({
   }
   .list {
     margin-top: 18px;
+    height: 588px;
+    overflow-y: scroll;
     .list_item {
       position: relative;
       height: 48px;
@@ -161,7 +165,7 @@ defineExpose({
       justify-content: space-between;
       align-items: center;
       // padding: 10px 0;
-      text-shadow: 1px 1px 0px #000;
+      text-shadow: 2px 2px 0px #000;
       font-weight: 900;
       padding-right: 20px;
       padding-left: 6px;

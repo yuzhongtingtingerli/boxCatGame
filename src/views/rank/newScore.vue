@@ -7,10 +7,12 @@
         <div class="TVL">TVL</div>
         <div class="Time">Time</div>
       </div>
-      <div class="list" v-for="(item, index) in OwnersScore" :key="index">
-        <div class="Address">{{ getAddress(item.OwnersAddress) }}</div>
-        <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-        <div class="Time">{{ getMoney(item.OwnersTime) }}</div>
+      <div class="lists">
+        <div class="list" v-for="(item, index) in OwnersScore" :key="index">
+          <div class="Address">{{ getAddress(item.OwnersAddress) }}</div>
+          <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
+          <div class="Time">{{ getMoney(item.OwnersTime) }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -188,6 +190,10 @@ defineExpose({
 }
 .content {
   margin: 0 10px;
+  .lists {
+    height: 596px;
+    overflow-y: scroll;
+  }
   .list {
     display: flex;
     justify-content: space-between;
