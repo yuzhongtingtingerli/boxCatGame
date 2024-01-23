@@ -2,25 +2,28 @@
   <div class="canvas">
     <!-- {{ offsetX }} -->
     <!-- {{ offsetY }} -->
+    <video muted autoplay controls ref="videoRef" :src="cut1920"></video>
     <canvas ref="canvasRef"></canvas>
-    <Sidebar />
+
+    <!-- <Sidebar /> -->
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { arr } from "../../utils/data";
+import cut1920 from "../../assets/cut/1920.mp4";
 import blackfloor from "../../assets/blackfloor.png";
 import floor from "../../assets/new_floor.png";
 import cat from "../../assets/cat.png";
 import catRed from "../../assets/cat-red.png";
 import dialogBox from "../../assets/dialog_box.png";
-import talkingCat from "../../assets/walk_cat.gif";
-import { computeSize, getLocation, loadImage,drawRect } from "./canvas";
-import { useMouse,  } from "./mouse";
+import { computeSize, getLocation, loadImage, drawRect } from "./canvas";
+import { useMouse } from "./mouse";
+import { useCut } from "./cut";
 import Sidebar from "./sidebar/index.vue";
-const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } =
-    useMouse();
+const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
+const { drawCut, videoRef } = useCut();
 let ctx;
 const SizeW = 250; // 单个网格宽度
 const SizeH = 150; // 单个网格高度
@@ -33,7 +36,6 @@ let catImg = null;
 let catRedImg = null;
 let floorImg = null;
 let dialogBoxImg = null;
-let talkingCatImg = null;
 function drawGrid() {
   const gridSizeW = SizeW * scale.value; // 单个网格宽度
   const gridSizeH = SizeH * scale.value; // 单个网格高度
@@ -53,58 +55,57 @@ function drawGrid() {
         gridSizeW,
         gridSizeH
       );
-      drawBoundary(j,hSize,i,wSize, x, y, gridSizeW, gridSizeH)
+      drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH);
     }
   }
   drawGroup(groups, gridSizeW, gridSizeH);
-  requestAnimationFrame(drawGrid)
+  requestAnimationFrame(drawGrid);
 }
-function drawBoundary(j,hSize,i,wSize, x, y, gridSizeW, gridSizeH) {
-
-    if (j === 0 ) {
-        // 绘制三角形
-        ctx.beginPath();
-        ctx.moveTo(x + gridSizeW/2, y); // 左顶点
-        ctx.lineTo(x + gridSizeW+ gridSizeW/2, y); // 右顶点
-        ctx.lineTo(x + gridSizeW , y + gridSizeH/2); // 下顶点
-        ctx.closePath();
-        // 填充颜色
-        ctx.fillStyle = '#000';
-        ctx.fill();
-      }
-      if (j >= hSize-0.5 ) {
-        // 绘制三角形
-        ctx.beginPath();
-        ctx.moveTo(x + gridSizeW/2, y + gridSizeH); // 左顶点
-        ctx.lineTo(x + gridSizeW, y + gridSizeH+gridSizeH/2); // 右顶点
-        ctx.lineTo(x  , y + gridSizeH+gridSizeH/2); // 下顶点
-        ctx.closePath();
-        // 填充颜色
-        ctx.fillStyle = '#000';
-        ctx.fill();
-      }
-      if (i === 0 ) {
-        // 绘制三角形
-        ctx.beginPath();
-        ctx.moveTo(x, y+ gridSizeH/2); // 左顶点
-        ctx.lineTo(x+ gridSizeW/2, y+ gridSizeH); // 右顶点
-        ctx.lineTo(x , y + gridSizeH+ gridSizeH/2); // 下顶点
-        ctx.closePath();
-        // 填充颜色
-        ctx.fillStyle = '#000';
-        ctx.fill();
-      }
-      if (i >= wSize-0.5 ) {
-        // 绘制三角形
-        ctx.beginPath();
-        ctx.moveTo(x+ gridSizeW, y+ gridSizeH/2); // 左顶点
-        ctx.lineTo(x+ gridSizeW + gridSizeW/2, y); // 右顶点
-        ctx.lineTo(x+ gridSizeW + gridSizeW/2 , y + gridSizeH); // 下顶点
-        ctx.closePath();
-        // 填充颜色
-        ctx.fillStyle = '#000';
-        ctx.fill();
-      }
+function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
+  if (j === 0) {
+    // 绘制三角形
+    ctx.beginPath();
+    ctx.moveTo(x + gridSizeW / 2, y); // 左顶点
+    ctx.lineTo(x + gridSizeW + gridSizeW / 2, y); // 右顶点
+    ctx.lineTo(x + gridSizeW, y + gridSizeH / 2); // 下顶点
+    ctx.closePath();
+    // 填充颜色
+    ctx.fillStyle = "#000";
+    ctx.fill();
+  }
+  if (j >= hSize - 0.5) {
+    // 绘制三角形
+    ctx.beginPath();
+    ctx.moveTo(x + gridSizeW / 2, y + gridSizeH); // 左顶点
+    ctx.lineTo(x + gridSizeW, y + gridSizeH + gridSizeH / 2); // 右顶点
+    ctx.lineTo(x, y + gridSizeH + gridSizeH / 2); // 下顶点
+    ctx.closePath();
+    // 填充颜色
+    ctx.fillStyle = "#000";
+    ctx.fill();
+  }
+  if (i === 0) {
+    // 绘制三角形
+    ctx.beginPath();
+    ctx.moveTo(x, y + gridSizeH / 2); // 左顶点
+    ctx.lineTo(x + gridSizeW / 2, y + gridSizeH); // 右顶点
+    ctx.lineTo(x, y + gridSizeH + gridSizeH / 2); // 下顶点
+    ctx.closePath();
+    // 填充颜色
+    ctx.fillStyle = "#000";
+    ctx.fill();
+  }
+  if (i >= wSize - 0.5) {
+    // 绘制三角形
+    ctx.beginPath();
+    ctx.moveTo(x + gridSizeW, y + gridSizeH / 2); // 左顶点
+    ctx.lineTo(x + gridSizeW + gridSizeW / 2, y); // 右顶点
+    ctx.lineTo(x + gridSizeW + gridSizeW / 2, y + gridSizeH); // 下顶点
+    ctx.closePath();
+    // 填充颜色
+    ctx.fillStyle = "#000";
+    ctx.fill();
+  }
 }
 // 我再这里已经获取到每一个大兵团的中心位置了，默认第一个，用红色标记
 function drawGroup(groups, w, h) {
@@ -117,12 +118,12 @@ function drawGroup(groups, w, h) {
       const ox = offsetX.value * scale.value + offsetW.value;
       const oy = offsetY.value * scale.value + offsetH.value;
       getLocation(x, y, el.PersonNumber).forEach(({ x, y }, i) => {
-        ctx.drawImage(floorImg, (x) * w + ox, (y-0.1) * h + oy, w, h * 1.1);
+        ctx.drawImage(floorImg, x * w + ox, (y - 0.1) * h + oy, w, h * 1.1);
         const img = Number(group.UserLocation) === i + 1 ? catRedImg : catImg;
         ctx.drawImage(
           img,
-          (x+0.2) * w + ox,
-          (y+0.2) * h + oy - (catH - h) ,
+          (x + 0.2) * w + ox,
+          (y + 0.2) * h + oy - (catH - h),
           w * 0.68,
           catH * 0.68
         );
@@ -148,48 +149,52 @@ function drawGroup(groups, w, h) {
 function drawGroupInfo(x, y, w, h, group, catH) {
   const ox = offsetX.value * scale.value + offsetW.value;
   const oy = offsetY.value * scale.value + offsetH.value;
-  const imgw = dialogBoxImg.width  * Math.min(scale.value, 1);
+  const imgw = dialogBoxImg.width * Math.min(scale.value, 1);
   const imgh = dialogBoxImg.height * Math.min(scale.value, 1);
   const imgX = x * w + ox - (imgw - w) / 2;
   const imgY = y * h + oy - 2.4 * h; // 2.4块砖的高度
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
-  ctx.font = `${40* Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
+  ctx.font = `${40 * Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
-  const t1 = `${group.GroupName} Group`
+  const t1 = `${group.GroupName} Group`;
   const text1Width = ctx.measureText(t1).width;
   const text1X = imgX + (imgw - text1Width) / 2;
   const text1Y = imgY + imgh / 3;
   ctx.fillText(t1, text1X, text1Y); // 在指定位置绘制文字
 
-  ctx.font = `${28* Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
-  const t2 = `${group.GroupName} Group`
+  ctx.font = `${28 * Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
+  const t2 = `${group.GroupName} Group`;
   const text2Width = ctx.measureText(t2).width;
   const text2X = imgX + (imgw - text2Width) / 2;
   const text2Y = imgY + imgh / 1.4;
   ctx.fillText(t2, text2X, text2Y);
 }
-onMounted(() => {
+onMounted(async () => {
+  ctx = canvasRef.value.getContext("2d");
+  await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   Promise.all([
     loadImage(blackfloor),
     loadImage(floor),
     loadImage(cat),
     loadImage(catRed),
     loadImage(dialogBox),
-    loadImage(talkingCat),
-  ]).then(([blackfloor, floor, cat, catRed, dialogBox, talkingCat]) => {
-    ctx = canvasRef.value.getContext("2d");
+  ]).then(([blackfloor, floor, cat, catRed, dialogBox]) => {
     bgImg = blackfloor;
     floorImg = floor;
     catImg = cat;
     catRedImg = catRed;
     dialogBoxImg = dialogBox;
-    talkingCatImg = talkingCat;
-    offsetX.value = -Math.floor( wSize/3)*SizeW
-    offsetY.value = -Math.floor( hSize/3)*SizeH
+    offsetX.value = -Math.floor(wSize / 3) * SizeW;
+    offsetY.value = -Math.floor(hSize / 3) * SizeH;
     drawGrid()
   });
 });
 </script>
 
 <style scoped>
+video {
+    width: 0px;
+    opacity: 0;
+    height: 0px;
+}
 </style>
