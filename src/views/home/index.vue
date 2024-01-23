@@ -10,25 +10,61 @@
         <div class="description">The First Brc20 Stake To Earn Game</div>
         <div class="list">
           <div class="list-item">
-            <div class="text">Powered by brc20 brc30</div>
-            <div class="right">></div>
-          </div>
-          <div class="list-item">
-            <div class="text">Stake pool by okx</div>
-            <div class="right">></div>
-          </div>
-          <div class="list-item">
-            <div class="top"></div>
-            <div class="text">Security by slowmist</div>
-            <div class="right">></div>
-            <!-- <div class="content">
+            <div class="top" @click="unfolding(1)">
+              <div :class="`text ${active === 1 ? 'active' : ''}`">
+                Powered by brc20 brc30
+              </div>
+              <div class="right" v-if="active === 1">
+                <img src="@/assets/Vector.png" alt="" srcset="" />
+              </div>
+              <div class="right" v-else>></div>
+            </div>
+            <div class="content" v-if="active === 1">
               Dive into "The Managers," an innovative NFT collection harnessing
               the power of ERC6551 or TokenBound Account (TBA) technology. Your
               NFT isn't just an art piece - it's your wallet. For the first
               time, manage assets directly with your NFT. Curious? Learn more in
               our comprehensive guide on TBAs Start exploring the future of NFTs
               today.（展开的样式占位 具体内容根据安全审计反馈而定）
-            </div> -->
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="top" @click="unfolding(2)">
+              <div :class="`text ${active === 2 ? 'active' : ''}`">
+                Stake pool by okx
+              </div>
+              <div class="right" v-if="active === 2">
+                <img src="@/assets/Vector.png" alt="" srcset="" />
+              </div>
+              <div class="right" v-else>></div>
+            </div>
+            <div class="content" v-if="active === 2">
+              Dive into "The Managers," an innovative NFT collection harnessing
+              the power of ERC6551 or TokenBound Account (TBA) technology. Your
+              NFT isn't just an art piece - it's your wallet. For the first
+              time, manage assets directly with your NFT. Curious? Learn more in
+              our comprehensive guide on TBAs Start exploring the future of NFTs
+              today.（展开的样式占位 具体内容根据安全审计反馈而定）
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="top" @click="unfolding(3)">
+              <div :class="`text ${active === 3 ? 'active' : ''}`">
+                Security by slowmist
+              </div>
+              <div class="right" v-if="active === 3">
+                <img src="@/assets/Vector.png" alt="" srcset="" />
+              </div>
+              <div class="right" v-else>></div>
+            </div>
+            <div class="content" v-if="active === 3">
+              Dive into "The Managers," an innovative NFT collection harnessing
+              the power of ERC6551 or TokenBound Account (TBA) technology. Your
+              NFT isn't just an art piece - it's your wallet. For the first
+              time, manage assets directly with your NFT. Curious? Learn more in
+              our comprehensive guide on TBAs Start exploring the future of NFTs
+              today.（展开的样式占位 具体内容根据安全审计反馈而定）
+            </div>
           </div>
         </div>
       </div>
@@ -59,6 +95,14 @@ const router = useRouter();
 /**
  * 数据部分
  */
+const active = ref(0);
+const unfolding = (index) => {
+  if (active.value === index) {
+    active.value = 0;
+  } else {
+    active.value = index;
+  }
+};
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
@@ -141,25 +185,40 @@ defineExpose({
     .list {
       margin-top: 60px;
       .list-item {
-        display: flex;
-        justify-content: space-between;
         padding-left: 20px;
         padding-right: 40px;
         width: 500px;
-        height: 60px;
-        line-height: 60px;
+
         margin-bottom: 16px;
         font-family: LilitaOne;
         font-size: 14px;
         font-weight: 400;
         letter-spacing: 0em;
         text-align: left;
-        cursor: pointer;
         background: linear-gradient(
           135deg,
           rgba(131, 196, 255, 0.2) 0%,
           rgba(255, 255, 255, 0.2) 100%
         );
+        .top {
+          display: flex;
+          justify-content: space-between;
+          height: 60px;
+          line-height: 60px;
+          cursor: pointer;
+        }
+        .top.active {
+          color: #feac14;
+        }
+        .content {
+          font-family: LilitaOne;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+          letter-spacing: 0em;
+          text-align: left;
+          padding-bottom: 30px;
+        }
       }
     }
   }
