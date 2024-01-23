@@ -148,13 +148,12 @@ function drawGroup(groups, w, h) {
 function drawGroupInfo(x, y, w, h, group, catH) {
   const ox = offsetX.value * scale.value + offsetW.value;
   const oy = offsetY.value * scale.value + offsetH.value;
-  const imgw = dialogBoxImg.width / 2;
-  const imgh = dialogBoxImg.height / 2;
+  const imgw = dialogBoxImg.width  * Math.min(scale.value, 1);
+  const imgh = dialogBoxImg.height * Math.min(scale.value, 1);
   const imgX = x * w + ox - (imgw - w) / 2;
-//   const distance = Math.min(2, 2.4 * scale.value)
-  const imgY = y * h + oy - 2.5 * h; // 2.4块砖的高度
+  const imgY = y * h + oy - 2.4 * h; // 2.4块砖的高度
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
-  ctx.font = "20px Arial"; // 设置字体大小和类型
+  ctx.font = `${40* Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
   const t1 = `${group.GroupName} Group`
   const text1Width = ctx.measureText(t1).width;
@@ -162,7 +161,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const text1Y = imgY + imgh / 3;
   ctx.fillText(t1, text1X, text1Y); // 在指定位置绘制文字
 
-  ctx.font = "14px Arial"; // 设置字体大小和类型
+  ctx.font = `${28* Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
   const t2 = `${group.GroupName} Group`
   const text2Width = ctx.measureText(t2).width;
   const text2X = imgX + (imgw - text2Width) / 2;
