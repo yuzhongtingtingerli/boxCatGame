@@ -20,13 +20,10 @@ import { computeSize, getLocation, loadImage,drawRect } from "./canvas";
 import { useMouse,  } from "./mouse";
 import Sidebar from "./sidebar/index.vue";
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } =
-    useMouse(drawGrid);
-    watch(scale, drawGrid);
-    watch(offsetX, drawGrid);
-    watch(offsetY, drawGrid);
+    useMouse();
 let ctx;
-const SizeW = 100; // 单个网格宽度
-const SizeH = 60; // 单个网格高度
+const SizeW = 250; // 单个网格宽度
+const SizeH = 150; // 单个网格高度
 const minWidth = 35; // 横向网格个数
 const minHeight = 35; // 纵向网格个数
 const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
@@ -60,6 +57,7 @@ function drawGrid() {
     }
   }
   drawGroup(groups, gridSizeW, gridSizeH);
+  requestAnimationFrame(drawGrid)
 }
 function drawBoundary(j,hSize,i,wSize, x, y, gridSizeW, gridSizeH) {
 
@@ -119,15 +117,16 @@ function drawGroup(groups, w, h) {
       const ox = offsetX.value * scale.value + offsetW.value;
       const oy = offsetY.value * scale.value + offsetH.value;
       getLocation(x, y, el.PersonNumber).forEach(({ x, y }, i) => {
-        ctx.drawImage(floorImg, x * w + ox, y * h + oy, w, h * 1.1);
+        ctx.drawImage(floorImg, (x) * w + ox, (y-0.1) * h + oy, w, h * 1.1);
         const img = Number(group.UserLocation) === i + 1 ? catRedImg : catImg;
         ctx.drawImage(
           img,
-          (x + 0.2) * w + ox,
-          (y + 0.8) * h + oy - (catH - h) - h / 2,
+          (x+0.2) * w + ox,
+          (y+0.2) * h + oy - (catH - h) ,
           w * 0.68,
           catH * 0.68
         );
+        // 绘制点
       });
       infoList.push({ x, y, w, h, group });
       // 在指定位置绘制文字
@@ -152,14 +151,23 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const imgw = dialogBoxImg.width / 2;
   const imgh = dialogBoxImg.height / 2;
   const imgX = x * w + ox - (imgw - w) / 2;
-  const imgY = y * h + oy - 2.4 * h; // 2.4块砖的高度
+//   const distance = Math.min(2, 2.4 * scale.value)
+  const imgY = y * h + oy - 2.5 * h; // 2.4块砖的高度
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
   ctx.font = "20px Arial"; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
-  ctx.fillText(`${group.GroupName} Group`, imgX + 28, imgY + 30); // 在指定位置绘制文字
+  const t1 = `${group.GroupName} Group`
+  const text1Width = ctx.measureText(t1).width;
+  const text1X = imgX + (imgw - text1Width) / 2;
+  const text1Y = imgY + imgh / 3;
+  ctx.fillText(t1, text1X, text1Y); // 在指定位置绘制文字
 
   ctx.font = "14px Arial"; // 设置字体大小和类型
-  ctx.fillText(`SVL: ${group.GroupSVL}`, imgX + 36, imgY + 56);
+  const t2 = `${group.GroupName} Group`
+  const text2Width = ctx.measureText(t2).width;
+  const text2X = imgX + (imgw - text2Width) / 2;
+  const text2Y = imgY + imgh / 1.4;
+  ctx.fillText(t2, text2X, text2Y);
 }
 onMounted(() => {
   Promise.all([
@@ -177,9 +185,9 @@ onMounted(() => {
     catRedImg = catRed;
     dialogBoxImg = dialogBox;
     talkingCatImg = talkingCat;
-    // drawGrid();
     offsetX.value = -Math.floor( wSize/3)*SizeW
     offsetY.value = -Math.floor( hSize/3)*SizeH
+    drawGrid()
   });
 });
 </script>

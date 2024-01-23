@@ -6,11 +6,11 @@ export function useMouse() {
 
 
     const canvasRef = ref(null);
-    const scale = ref(2.5); // 缩放比例
+    const scale = ref(1.0); // 缩放比例
     const offsetX = ref(0); // 水平偏移量
     const offsetY = ref(0); // 垂直偏移量
-    const minScale = 1.0; // 最小缩放比例
-    const maxScale = 10; // 最大缩放比例
+    const minScale = 0.5; // 最小缩放比例
+    const maxScale = 50; // 最大缩放比例
     let isDragging = false; // 是否正在拖拽
     let lastMouseX = 0; // 上次鼠标的X坐标
     let lastMouseY = 0; // 上次鼠标的Y坐标
@@ -71,11 +71,7 @@ export function useMouse() {
             document.body.clientHeight;
 
         canvas.width = windowWidth;
-        canvas.height = windowHeight;
-        console.log('windowWidth',windowWidth);
-        console.log('windowWidth',windowWidth/3*100);
-        console.log('windowHeight',windowHeight);
-        console.log('windowHeight',windowHeight/3*60);
+        canvas.height = windowHeight - 60;
         
         canvas.addEventListener('mousedown', mousedown)
         canvas.addEventListener('mousemove', mousemove)
