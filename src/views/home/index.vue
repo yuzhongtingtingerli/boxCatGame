@@ -149,7 +149,8 @@ defineExpose({
     top: 153px;
     right: 53px;
     position: absolute;
-    background-image: url("@/assets/right1.png");
+    background-image: url("@/assets/blackCatScene.gif");
+    background-size: 640px 478px;
     animation: updown 4s ease infinite;
   }
   .right2 {
