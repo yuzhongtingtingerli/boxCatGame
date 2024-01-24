@@ -31,4 +31,19 @@ export default defineConfig({
     // import时省略后缀
     extensions: [".js", ".ts", ".jsx", ".tsx", ".json", ".vue", ".mjs"],
   },
+  server: {
+    port: 3100,
+    // 是否自动在浏览器打开
+    open: false,
+    // 是否开启 https
+    https: false,
+    host: "0.0.0.0",
+    proxy: {
+      "/api": {
+        target: "http://68.178.206.124:8834",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "/"),
+      },
+    },
+  },
 });

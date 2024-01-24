@@ -35,6 +35,7 @@ import CorpsRanking from "./corpsRanking.vue";
 import GroupTVLRank from "./groupTVLRank.vue";
 import HoursTVL from "./hoursTVL.vue";
 import NewScore from "./newScore.vue";
+import { request } from "@/services/request.js";
 
 /**
  * 路由对象
@@ -48,6 +49,26 @@ const router = useRouter();
 /**
  * 数据部分
  */
+const loading = ref(false);
+const error = ref(null);
+const groupListData = ref(null);
+const getGroupList = async () => {
+  loading.value = true;
+
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getGroupList?offset=${2}&limit=${10}`,
+      "get"
+    );
+    console.log(data, "data");
+    groupListData.value = data;
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    loading.value = false;
+  }
+};
 const data = reactive({});
 // 获取浏览器窗口高度
 
@@ -64,6 +85,7 @@ onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
+  getGroupList();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
   window.fullHeight = document.documentElement.clientHeight;
   // 获取bg模块并设置高度
