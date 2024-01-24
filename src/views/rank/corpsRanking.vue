@@ -12,10 +12,10 @@
     </div>
     <div class="list">
       <div
-        class="list_item"
         v-for="item in groupListData"
         :key="item.GroupRankNumber"
         @click="getGroupName(item.GroupName)"
+        :class="`list_item ${GroupName === item.GroupName ? 'active' : ''}`"
       >
         <div class="RankNumber">{{ item.GroupRankNumber }}</div>
         <div class="bg"></div>
@@ -71,9 +71,9 @@ const router = useRouter();
  */
 const porps = defineProps({
   groupListData: Array,
+  GroupName: String,
 });
 const emit = defineEmits(["group-search"]);
-const GroupName = ref("");
 const getGroupName = (GroupName) => {
   emit("group-search", GroupName);
 };
@@ -115,6 +115,10 @@ defineExpose({
     margin-top: 18px;
     height: 588px;
     overflow-y: scroll;
+    .list_item.active {
+      border: 2px solid #fccd37;
+      border-radius: 4px;
+    }
     .list_item {
       position: relative;
       height: 48px;

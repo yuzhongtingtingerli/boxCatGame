@@ -8,15 +8,10 @@
         <div class="Time">Time</div>
       </div>
       <div class="lists">
-        <div class="list" v-for="(item, index) in OwnersScore" :key="index">
+        <div class="list" v-for="(item, index) in LastScoreRank" :key="index">
           <div class="Address">
             <div class="img">
-              <img
-                width="20px"
-                src="@/assets/money_logo.png"
-                alt=""
-                srcset=""
-              />
+              <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
             </div>
             <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
           </div>
@@ -67,127 +62,9 @@ onMounted(() => {
 watchEffect(() => {});
 // 使用toRefs解构
 // let { } = { ...toRefs(data) }
-const OwnersScore = [
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-  {
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersTime: "5min ago",
-  },
-];
+const props = defineProps({
+  LastScoreRank: Array,
+});
 defineExpose({
   ...toRefs(data),
 });

@@ -4,19 +4,27 @@
       <div class="corpsRanking">
         <CorpsRanking
           :groupListData="groupListData"
-          @group-search="getGroupSearch"
+          @group-search="getScoreRankGroup"
+          :GroupName="GroupName"
         />
       </div>
       <div class="middle">
         <div class="hoursTVL">
-          <HoursTVL />
+          <HoursTVL
+            :GroupTVLRankData="GroupTVLRankData"
+            :PersonalTVLRank="PersonalTVLRank"
+          />
         </div>
         <div class="groupTVLRank">
-          <GroupTVLRank />
+          <GroupTVLRank
+            :ScoreRankGroup="ScoreRankGroup"
+            :ScoreRank="ScoreRank"
+            :GroupName="GroupName"
+          />
         </div>
       </div>
       <div class="newScore">
-        <NewScore />
+        <NewScore :LastScoreRank="LastScoreRank" />
       </div>
     </div>
   </div>
@@ -52,11 +60,13 @@ const router = useRouter();
 /**
  * 数据部分
  */
-const loading = ref(false);
+// const loading = ref(false);
 const error = ref(null);
+// 获取军团列表
 const groupListData = ref(null);
+const GroupName = ref("");
 const getGroupList = async () => {
-  loading.value = true;
+  // loading.value = true;
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
@@ -64,15 +74,92 @@ const getGroupList = async () => {
       "get"
     );
     groupListData.value = data.result.GroupInfo;
+    getScoreRankGroup(data.result.GroupInfo[0].GroupName);
   } catch (err) {
     error.value = "请求失败";
   } finally {
-    loading.value = false;
+    // loading.value = false;
   }
 };
-
-const getGroupSearch = (GroupName) => {
-  console.log(GroupName, "GroupName");
+// 获取某个军团的积分排名
+const ScoreRankGroup = ref(null);
+const getScoreRankGroup = async (groupName) => {
+  if (GroupName.value === groupName || groupName === "") return;
+  GroupName.value = groupName;
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getScoreRank?Offset=${1}&Limit=${10}&group=${groupName}`,
+      "get"
+    );
+    ScoreRankGroup.value = data.result.OwnersInfo;
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
+// 获取积分排名
+const ScoreRank = ref(null);
+const getScoreRank = async () => {
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getScoreRank?Offset=${1}&Limit=${10}`,
+      "get"
+    );
+    ScoreRank.value = data.result.OwnersInfo;
+    console.log(data.result.OwnersInfo, "ScoreRank");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
+// 获取军团TVL排名信息
+const GroupTVLRankData = ref(null);
+const getGroupTVLRank = async () => {
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(`/api/blockchain/getGroupTVLRank`, "get");
+    GroupTVLRankData.value = data.result.GroupInfo;
+    console.log(data.result, "GroupTVLRankData");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
+// 获取个人TVL排名信息
+const PersonalTVLRank = ref(null);
+const getPersonalTVLRank = async () => {
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(`/api/blockchain/getPersonalTVLRank`, "get");
+    PersonalTVLRank.value = data.result.OwnersInfo;
+    console.log(data.result, "PersonalTVLRank");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
+// 获取最新积分信息
+const LastScoreRank = ref(null);
+const getLastScoreRank = async () => {
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getLastScoreRank?Offset=${1}&Limit=${30}`,
+      "get"
+    );
+    LastScoreRank.value = data.result.OwnersInfo;
+    console.log(data.result, "LastScoreRank");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
 };
 const data = reactive({});
 // 获取浏览器窗口高度
@@ -91,6 +178,10 @@ onBeforeMount(() => {
 });
 onMounted(() => {
   getGroupList();
+  getScoreRank();
+  getGroupTVLRank();
+  getPersonalTVLRank();
+  getLastScoreRank();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
   window.fullHeight = document.documentElement.clientHeight;
   // 获取bg模块并设置高度

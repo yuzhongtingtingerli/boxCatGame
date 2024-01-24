@@ -19,7 +19,11 @@
     </div>
     <div class="content">
       <div class="groupInfo" v-if="type === 'group'">
-        <div class="list" v-for="item in GroupInfo" :key="item.GroupName">
+        <div
+          class="list"
+          v-for="item in GroupTVLRankData"
+          :key="item.GroupName"
+        >
           <div class="left">
             <div class="img">
               <img width="22px" src="@/assets/cat_ava.png" alt="" srcset="" />
@@ -30,15 +34,14 @@
         </div>
       </div>
       <div class="ownersInfo" v-if="type === 'individual'">
-        <div class="list" v-for="item in OwnersInfo" :key="item.OwnersAddress">
+        <div
+          class="list"
+          v-for="item in PersonalTVLRank"
+          :key="item.OwnersAddress"
+        >
           <div class="left">
             <div class="img">
-              <img
-                width="20px"
-                src="@/assets/money_logo.png"
-                alt=""
-                srcset=""
-              />
+              <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
             </div>
             <div class="name">
               {{ getAddress(item.OwnersAddress) }}
@@ -119,6 +122,10 @@ const OwnersInfo = [
     OwnersTVL: "100000.000",
   },
 ];
+const porps = defineProps({
+  GroupTVLRankData: Array,
+  PersonalTVLRank: Array,
+});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });

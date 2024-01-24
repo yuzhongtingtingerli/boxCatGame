@@ -15,29 +15,61 @@
           :class="`ordi ${type === 'ordi' ? 'active' : ''}`"
           @click="getTVL('ordi')"
         >
-          ordi
+          {{ GroupName }}
         </div>
       </div>
     </div>
     <div class="content">
-      <div class="list header">
+      <div class="header">
         <div class="Ranking">Ranking</div>
         <div class="Address">Address</div>
         <div class="TVL">TVL</div>
         <div class="Score">Score</div>
       </div>
-      <div class="list" v-for="item in OwnersInfo" :key="item.RankNumber">
-        <div class="Ranking">{{ item.RankNumber }}</div>
-        <div class="Address">
-          <div class="img">
-            <img width="20px" src="@/assets/money_logo.png" alt="" srcset="" />
+      <template v-if="type === 'total'">
+        <div class="list">
+          <div
+            class="list-item"
+            v-for="(item, index) in ScoreRank"
+            :key="item.RankNumber"
+          >
+            <div class="Ranking">
+              {{ item.RankNumber ? item.RankNumber : index + 1 }}
+            </div>
+            <div class="Address">
+              <div class="img">
+                <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
+              </div>
+              <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
+            </div>
+            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
           </div>
-          <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
         </div>
-        <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-        <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
-      </div>
-      <a-pagination :total="50" size="small" />
+        <a-pagination :total="50" size="small" />
+      </template>
+      <template v-else>
+        <div class="list">
+          <div
+            class="list-item"
+            v-for="(item, index) in ScoreRankGroup"
+            :key="item.RankNumber"
+          >
+            <div class="Ranking">
+              {{ item.RankNumber ? item.RankNumber : index + 1 }}
+            </div>
+            <div class="Address">
+              <div class="img">
+                <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
+              </div>
+              <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
+            </div>
+            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
+          </div>
+        </div>
+        <a-pagination :total="50" size="small" />
+      </template>
     </div>
   </div>
 </template>
@@ -71,100 +103,25 @@ const router = useRouter();
 /**
  * 数据部分
  */
-
-const type = ref("total");
+const props = defineProps({
+  ScoreRankGroup: Array,
+  ScoreRank: Array,
+  GroupName: String,
+});
+const type = ref("");
+const ScoreRankData = ref(null);
 const getTVL = (t) => {
   // 将t赋值给type，并实现响应式
   type.value = t;
 };
 const TotalListNumber = ref(10);
-const OwnersInfo = [
-  {
-    RankNumber: "1",
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "2",
-    OwnersLogo: "https://127.0.0.1/images/rats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "200000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "3",
-    OwnersLogo: "https://127.0.0.1/images/sats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "100000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "4",
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "5",
-    OwnersLogo: "https://127.0.0.1/images/rats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "200000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "6",
-    OwnersLogo: "https://127.0.0.1/images/sats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "100000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "7",
-    OwnersLogo: "https://127.0.0.1/images/ordi.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "300000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "8",
-    OwnersLogo: "https://127.0.0.1/images/rats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "200000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "9",
-    OwnersLogo: "https://127.0.0.1/images/sats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "100000.000",
-    OwnersScore: "300000.000",
-  },
-  {
-    RankNumber: "10",
-    OwnersLogo: "https://127.0.0.1/images/sats.png",
-    OwnersAddress:
-      "bc1ph904vma5ma6decqu60d5ff47hqr6eud2erldlhllv0xnqp46hmpqznrdta", //（前四字符+六个省略符号+后四字符）
-    OwnersTVL: "100000.000",
-    OwnersScore: "300000.000",
-  },
-];
+
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
+  getTVL("total");
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
 watchEffect(() => {});
@@ -174,6 +131,28 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
+<style>
+.groupTVLRank .ant-pagination-item {
+  width: 30px;
+}
+.groupTVLRank .ant-pagination-item a {
+  color: #fff;
+}
+.groupTVLRank .ant-pagination-item.ant-pagination-item-active a {
+  color: #ffc500;
+}
+.groupTVLRank .ant-pagination-item.ant-pagination-item-active {
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.groupTVLRank .anticon {
+  color: #fff;
+}
+.groupTVLRank
+  .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
+  text-align: center;
+}
+</style>
 <style scoped lang="scss">
 .top {
   height: 40px;
@@ -214,6 +193,10 @@ defineExpose({
 .content {
   margin: 20px 20px 0;
   .list {
+    height: 380px;
+  }
+  .list-item,
+  .header {
     display: flex;
     justify-content: space-between;
     font-family: LilitaOne;
@@ -240,6 +223,7 @@ defineExpose({
     }
   }
   .header {
+    height: 20px;
     color: #ffaa08;
   }
 }
