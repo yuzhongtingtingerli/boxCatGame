@@ -13,24 +13,26 @@
     <div class="list">
       <div
         class="list_item"
-        v-for="item in corpsRankingData"
-        :key="item.ranking"
+        v-for="item in groupListData"
+        :key="item.GroupRankNumber"
+        @click="getGroupName(item.GroupName)"
       >
-        <div class="RankNumber">{{ item.ranking }}</div>
+        <div class="RankNumber">{{ item.GroupRankNumber }}</div>
         <div class="bg"></div>
         <div class="img">
           <img src="@/assets/cat_ava.png" alt="" srcset="" />
         </div>
-        <div class="name">{{ item.groupName }}</div>
+        <div class="name">{{ item.GroupName }}</div>
         <div class="left">
-          <div class="num">
-            <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
-              item.num
-            }}
+          <div class="left_img">
+            <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />
+          </div>
+          <div class="content">
+            {{ item.GroupTokenPerson }}
           </div>
         </div>
         <div class="right">
-          <div class="svl">SVL：$ {{ item.svl }}</div>
+          <div class="svl">SVL：$ {{ item.GroupSVL }}</div>
         </div>
       </div>
     </div>
@@ -38,7 +40,7 @@
 </template>
 
 <script setup>
-import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
 import {
   ref,
   reactive,
@@ -47,71 +49,10 @@ import {
   onMounted,
   watchEffect,
   computed,
+  defineProps,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-let corpsRankingData = [
-  {
-    ranking: 1,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 2,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 3,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 4,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 5,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 10,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 20,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 30,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 40,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-  {
-    ranking: 50,
-    groupName: "123",
-    num: "20k",
-    svl: 200000,
-  },
-];
 /**
  * 仓库
  */
@@ -128,6 +69,14 @@ const router = useRouter();
 /**
  * 数据部分
  */
+const porps = defineProps({
+  groupListData: Array,
+});
+const emit = defineEmits(["group-search"]);
+const GroupName = ref("");
+const getGroupName = (GroupName) => {
+  emit("group-search", GroupName);
+};
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
@@ -135,7 +84,6 @@ onBeforeMount(() => {
 onMounted(() => {
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
-watchEffect(() => {});
 // 使用toRefs解构
 // let { } = { ...toRefs(data) }
 defineExpose({
@@ -184,6 +132,7 @@ defineExpose({
       padding-right: 20px;
       padding-left: 6px;
       font-family: Inter;
+      cursor: pointer;
       .RankNumber {
         position: absolute;
         top: 2px;
@@ -220,6 +169,7 @@ defineExpose({
       .left {
         display: flex;
         justify-self: start;
+        align-items: center;
       }
     }
   }

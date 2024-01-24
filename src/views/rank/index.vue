@@ -2,7 +2,10 @@
   <div class="bg" id="rankBg">
     <div class="rank">
       <div class="corpsRanking">
-        <CorpsRanking />
+        <CorpsRanking
+          :groupListData="groupListData"
+          @group-search="getGroupSearch"
+        />
       </div>
       <div class="middle">
         <div class="hoursTVL">
@@ -54,20 +57,22 @@ const error = ref(null);
 const groupListData = ref(null);
 const getGroupList = async () => {
   loading.value = true;
-
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getGroupList?offset=${2}&limit=${10}`,
+      `/api/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
       "get"
     );
-    console.log(data, "data");
-    groupListData.value = data;
+    groupListData.value = data.result.GroupInfo;
   } catch (err) {
     error.value = "请求失败";
   } finally {
     loading.value = false;
   }
+};
+
+const getGroupSearch = (GroupName) => {
+  console.log(GroupName, "GroupName");
 };
 const data = reactive({});
 // 获取浏览器窗口高度
