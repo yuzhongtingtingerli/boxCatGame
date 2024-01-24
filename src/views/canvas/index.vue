@@ -10,20 +10,20 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, watch } from "vue";
 import { arr } from "../../utils/data";
 import cut1920 from "../../assets/cut/1920.mp4";
 import blackfloor from "../../assets/blackfloor.png";
 import floor from "../../assets/new_floor.png";
-import cat from "../../assets/cat.png";
-import catRed from "../../assets/cat-red.png";
 import dialogBox from "../../assets/dialog_box.png";
 import { computeSize, getLocation, loadImage, drawRect } from "./canvas";
 import { useMouse } from "./mouse";
 import { useCut } from "./cut";
+import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();
+const { getCat } = useCat();
 let ctx;
 const SizeW = 250; // 单个网格宽度
 const SizeH = 150; // 单个网格高度
@@ -32,8 +32,6 @@ const minHeight = 35; // 纵向网格个数
 const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
 
 let bgImg = null;
-let catImg = null;
-let catRedImg = null;
 let floorImg = null;
 let dialogBoxImg = null;
 function drawGrid() {
@@ -107,26 +105,32 @@ function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
     ctx.fill();
   }
 }
-// 我再这里已经获取到每一个大兵团的中心位置了，默认第一个，用红色标记
+// 我再这里已经获取到每一个大兵团的中心位置了，红色标记
 function drawGroup(groups, w, h) {
   groups.forEach((el) => {
-    const catH = (catImg.height / (catImg.width / SizeW)) * scale.value;
+    const catH = (640 / (480 / SizeW)) * scale.value;
     const infoList = [];
     el.CurrentGroupInfo.forEach((group) => {
       const x = group.location.x;
       const y = group.location.y;
       const ox = offsetX.value * scale.value + offsetW.value;
       const oy = offsetY.value * scale.value + offsetH.value;
-      getLocation(x, y, el.PersonNumber).forEach(({ x, y }, i) => {
-        ctx.drawImage(floorImg, x * w + ox, (y - 0.1) * h + oy, w, h * 1.1);
-        const img = Number(group.UserLocation) === i + 1 ? catRedImg : catImg;
+      getLocation(x, y, el.PersonNumber).forEach((item, i) => {
+        // { x, y }
         ctx.drawImage(
-          img,
-          (x + 0.2) * w + ox,
-          (y + 0.2) * h + oy - (catH - h),
-          w * 0.68,
-          catH * 0.68
+          floorImg,
+          item.x * w + ox,
+          (item.y - 0.1) * h + oy,
+          w,
+          h * 1.1
         );
+        const x = (item.x + 0.1) * w + ox;
+        const y = (item.y + 0.1) * h + oy - (catH - h);
+        const isRedCat = Number(group.UserLocation) === i + 1
+        const img = getCat(isRedCat)
+        img && ctx.drawImage(img, x, y, w * 0.88, catH * 0.88)
+
+
         // 绘制点
       });
       infoList.push({ x, y, w, h, group });
@@ -143,7 +147,6 @@ function drawGroup(groups, w, h) {
       .forEach(({ x, y, w, h, group }) =>
         Promise.resolve().then(() => drawGroupInfo(x, y, w, h, group, catH))
       );
-    // ;
   });
 }
 function drawGroupInfo(x, y, w, h, group, catH) {
@@ -171,30 +174,26 @@ function drawGroupInfo(x, y, w, h, group, catH) {
 }
 onMounted(async () => {
   ctx = canvasRef.value.getContext("2d");
-  await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
+  //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   Promise.all([
     loadImage(blackfloor),
     loadImage(floor),
-    loadImage(cat),
-    loadImage(catRed),
     loadImage(dialogBox),
-  ]).then(([blackfloor, floor, cat, catRed, dialogBox]) => {
+  ]).then(([blackfloor, floor,  dialogBox]) => {
     bgImg = blackfloor;
     floorImg = floor;
-    catImg = cat;
-    catRedImg = catRed;
     dialogBoxImg = dialogBox;
     offsetX.value = -Math.floor(wSize / 3) * SizeW;
     offsetY.value = -Math.floor(hSize / 3) * SizeH;
-    drawGrid()
+    drawGrid();
   });
 });
 </script>
 
 <style scoped>
 video {
-    width: 0px;
-    opacity: 0;
-    height: 0px;
+  width: 0px;
+  opacity: 0;
+  height: 0px;
 }
 </style>
