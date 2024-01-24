@@ -65,7 +65,7 @@ defineExpose({
     line-height: 36px;
     letter-spacing: 0em;
     color: #ffc500;
-    text-shadow: 2px 2px 0px #000;
+    text-shadow: 0 3px #000, 3px 0 #000, -1px 0 #000, 0 -1px #000;
     margin-top: 10px;
   }
   .PersonalTotalTVL {

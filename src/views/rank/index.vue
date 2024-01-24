@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="bg" id="rankBg">
     <div class="rank">
       <div class="corpsRanking">
         <CorpsRanking />
@@ -49,11 +49,26 @@ const router = useRouter();
  * 数据部分
  */
 const data = reactive({});
+// 获取浏览器窗口高度
+
+// 当窗口变化时，获取浏览器窗口宽高
+window.onresize = () => {
+  return (() => {
+    window.fullHeight = document.documentElement.clientHeight;
+    // 获取bg模块并设置高度
+    document.getElementById("rankBg")[0].style.height =
+      window.fullHeight - 60 + "px";
+  })();
+};
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
+  window.fullHeight = document.documentElement.clientHeight;
+  // 获取bg模块并设置高度
+  document.getElementById("rankBg").style.height =
+    window.fullHeight - 60 + "px";
 });
 watchEffect(() => {});
 // 使用toRefs解构

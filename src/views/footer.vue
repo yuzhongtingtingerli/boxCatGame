@@ -44,4 +44,8 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="scss">
+.footer {
+  height: 328px;
+}
+</style>

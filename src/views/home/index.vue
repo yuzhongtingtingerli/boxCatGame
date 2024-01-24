@@ -69,6 +69,7 @@
         </div>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -83,6 +84,7 @@ import {
   computed,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Footer from "@/views/footer.vue";
 /**
  * 路由对象
  */
@@ -125,8 +127,9 @@ defineExpose({
   position: relative;
   width: 1440px;
   margin: 0 auto;
-  height: 823px;
+  height: 812px;
   overflow: hidden;
+  border-bottom: 1px solid #333;
   .left1 {
     height: 114px;
     width: 119px;

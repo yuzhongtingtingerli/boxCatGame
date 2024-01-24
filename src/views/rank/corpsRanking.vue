@@ -177,7 +177,9 @@ defineExpose({
       justify-content: space-between;
       align-items: center;
       // padding: 10px 0;
-      text-shadow: 2px 2px 0px #000;
+      // text-shadow: 2px 2px 0px #000;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+      // -webkit-text-stroke: 1px #000;
       font-weight: 900;
       padding-right: 20px;
       padding-left: 6px;
@@ -193,7 +195,7 @@ defineExpose({
         letter-spacing: 0em;
         text-align: left;
         color: #fff;
-        text-shadow: 2px 2px 0px #000;
+        text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
         z-index: 999;
       }
       .img {
@@ -209,7 +211,7 @@ defineExpose({
         top: 28px;
         left: 20px;
         color: #fff;
-        text-shadow: 2px 2px 0px #000;
+        text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
         font-family: LilitaOne;
         font-size: 13px;
         font-weight: 400;

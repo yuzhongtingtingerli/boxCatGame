@@ -194,7 +194,7 @@ defineExpose({
       letter-spacing: 0em;
       text-align: left;
       color: #fff;
-      text-shadow: 2px 2px 0px #000;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
       z-index: 999;
     }
     .bg {
@@ -220,7 +220,7 @@ defineExpose({
       top: 28px;
       left: 12px;
       color: #fff;
-      text-shadow: 2px 2px 0px #000;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
       font-family: LilitaOne;
       font-size: 13px;
       font-weight: 400;
@@ -234,7 +234,7 @@ defineExpose({
       letter-spacing: 0em;
       text-align: left;
       color: #fff;
-      text-shadow: 1px 1px 0px #000;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
     }
     .svl {
       font-family: Inter;
@@ -243,7 +243,7 @@ defineExpose({
       letter-spacing: 0em;
       text-align: left;
       color: #fff;
-      text-shadow: 1px 1px 0px #000;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
       margin-right: 6px;
     }
   }
