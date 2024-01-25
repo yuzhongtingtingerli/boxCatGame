@@ -85,6 +85,8 @@ const connectWallet = async () => {
     let unisat = window.unisat;
     const accounts = await unisat?.requestAccounts();
     console.log("connect success", accounts);
+    let res = await unisat?.getInscriptions(0, 10);
+    console.log(res, "rrr");
     // this.setAccount(accounts[0]);
     // this.subscribeProvider();
   } catch (error) {

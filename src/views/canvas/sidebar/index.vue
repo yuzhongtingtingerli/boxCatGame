@@ -52,7 +52,7 @@ const getScore = async () => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getScore?UserAddress=${Address.value}`,
+      `/blockchain/getScore?UserAddress=${Address.value}`,
       "get"
     );
     ScoreData.value = data.result;
@@ -69,7 +69,7 @@ const getJoinGroup = async () => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getJoinGroup?UserAddress=${Address.value}`,
+      `/blockchain/getJoinGroup?UserAddress=${Address.value}`,
       "get"
     );
     JoinGroupData.value = data.result.GroupInfo;
@@ -89,7 +89,7 @@ const getGroupList = async () => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
+      `/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
       "get"
     );
     groupListData.value = data.result.GroupInfo;

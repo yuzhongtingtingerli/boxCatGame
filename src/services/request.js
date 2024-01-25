@@ -1,7 +1,19 @@
 // api.js
 
 import axios from "axios";
-
+function getBaseUrl() {
+  try {
+    let protocol = window.location.protocol;
+    let host = window.location.host;
+    return `${protocol}//${host}/api`;
+  } catch (e) {
+    return "";
+  }
+}
+const BASEURL =
+  process.env.NODE_ENV === "development"
+    ? getBaseUrl()
+    : "http://68.178.206.124:8834";
 // 创建一个 axios 实例
 const apiInstance = axios.create({});
 
@@ -35,7 +47,7 @@ apiInstance.interceptors.response.use(
 export const request = async (url, method = "get", data = null) => {
   try {
     const response = await apiInstance.request({
-      url,
+      url: BASEURL + url,
       method,
       data,
     });

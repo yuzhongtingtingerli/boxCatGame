@@ -4,6 +4,7 @@
       <div class="corpsRanking">
         <CorpsRanking
           :groupListData="groupListData"
+          :groupListTotal="groupListTotal"
           @group-search="getScoreRankGroup"
           :GroupName="GroupName"
         />
@@ -12,7 +13,9 @@
         <div class="hoursTVL">
           <HoursTVL
             :GroupTVLRankData="GroupTVLRankData"
+            :GroupTVLRankTotal="GroupTVLRankTotal"
             :PersonalTVLRank="PersonalTVLRank"
+            :PersonalTVLRankTotal="PersonalTVLRankTotal"
           />
         </div>
         <div class="groupTVLRank">
@@ -64,16 +67,18 @@ const router = useRouter();
 const error = ref(null);
 // 获取军团列表
 const groupListData = ref(null);
+const groupListTotal = ref(0);
 const GroupName = ref("");
 const getGroupList = async () => {
   // loading.value = true;
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
+      `/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
       "get"
     );
     groupListData.value = data.result.GroupInfo;
+    groupListTotal.value = data.result.TotalListNumber;
     getScoreRankGroup(data.result.GroupInfo[0].GroupName);
   } catch (err) {
     error.value = "请求失败";
@@ -89,7 +94,7 @@ const getScoreRankGroup = async (groupName) => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getScoreRank?Offset=${1}&Limit=${10}&group=${groupName}`,
+      `/blockchain/getGroupScoreRank?Offset=${1}&Limit=${10}&GroupName=${groupName}`,
       "get"
     );
     ScoreRankGroup.value = data.result.OwnersInfo;
@@ -105,7 +110,7 @@ const getScoreRank = async () => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getScoreRank?Offset=${1}&Limit=${10}`,
+      `/blockchain/getScoreRank?Offset=${1}&Limit=${10}`,
       "get"
     );
     ScoreRank.value = data.result.OwnersInfo;
@@ -118,12 +123,13 @@ const getScoreRank = async () => {
 };
 // 获取军团TVL排名信息
 const GroupTVLRankData = ref(null);
+const GroupTVLRankTotal = ref(0);
 const getGroupTVLRank = async () => {
   try {
     // 使用封装的 request 方法发起请求
-    const data = await request(`/api/blockchain/getGroupTVLRank`, "get");
+    const data = await request(`/blockchain/getGroupTVLRank`, "get");
     GroupTVLRankData.value = data.result.GroupInfo;
-    console.log(data.result, "GroupTVLRankData");
+    GroupTVLRankTotal = data.result.TotalListNumber;
   } catch (err) {
     error.value = "请求失败";
   } finally {
@@ -132,11 +138,13 @@ const getGroupTVLRank = async () => {
 };
 // 获取个人TVL排名信息
 const PersonalTVLRank = ref(null);
+const PersonalTVLRankTotal = ref(0);
 const getPersonalTVLRank = async () => {
   try {
     // 使用封装的 request 方法发起请求
-    const data = await request(`/api/blockchain/getPersonalTVLRank`, "get");
+    const data = await request(`/blockchain/getPersonalTVLRank`, "get");
     PersonalTVLRank.value = data.result.OwnersInfo;
+    PersonalTVLRankTotal.value = data.result.TotalListNumber;
     console.log(data.result, "PersonalTVLRank");
   } catch (err) {
     error.value = "请求失败";
@@ -150,7 +158,7 @@ const getLastScoreRank = async () => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getLastScoreRank?Offset=${1}&Limit=${30}`,
+      `/blockchain/getLastScoreRank?Offset=${1}&Limit=${30}`,
       "get"
     );
     LastScoreRank.value = data.result.OwnersInfo;

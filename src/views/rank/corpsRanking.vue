@@ -109,7 +109,7 @@ const getGroupSearch = async (groupName) => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
+      `/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
       "get"
     );
     groupList.value = data.result;
@@ -123,6 +123,7 @@ const getGroupSearch = async (groupName) => {
 const porps = defineProps({
   groupListData: Array,
   GroupName: String,
+  groupListTotal: Number,
 });
 const emit = defineEmits(["group-search"]);
 const getGroupName = (GroupName) => {

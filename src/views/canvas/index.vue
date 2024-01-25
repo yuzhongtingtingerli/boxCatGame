@@ -34,7 +34,9 @@ const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
 let bgImg = null;
 let floorImg = null;
 let dialogBoxImg = null;
+let count = 0;
 function drawGrid() {
+  count++;
   const gridSizeW = SizeW * scale.value; // 单个网格宽度
   const gridSizeH = SizeH * scale.value; // 单个网格高度
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
@@ -58,6 +60,7 @@ function drawGrid() {
   }
   drawGroup(groups, gridSizeW, gridSizeH);
   requestAnimationFrame(drawGrid);
+  // setInterval(drawGrid, 2000);
 }
 function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
   if (j === 0) {
@@ -127,7 +130,7 @@ function drawGroup(groups, w, h) {
         const x = (item.x + 0.1) * w + ox;
         const y = (item.y + 0.1) * h + oy - (catH - h);
         const isRedCat = Number(group.UserLocation) === i + 1;
-        const img = getCat(isRedCat);
+        const img = getCat(isRedCat, count);
         img && ctx.drawImage(img, x, y, w * 0.88, catH * 0.88);
 
         // 绘制点

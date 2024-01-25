@@ -104,7 +104,7 @@ const getGroupSearch = async (groupName) => {
   try {
     // 使用封装的 request 方法发起请求
     const data = await request(
-      `/api/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
+      `/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
       "get"
     );
     groupList.value = data.result;
