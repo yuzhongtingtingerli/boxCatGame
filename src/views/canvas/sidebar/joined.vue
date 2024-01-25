@@ -2,14 +2,18 @@
   <div class="joined">
     <Title title="Joined" />
     <div class="list">
-      <div class="list-item" v-for="item in YourBrc" :key="item.name">
+      <div
+        class="list-item"
+        v-for="item in JoinGroupData"
+        :key="item.TokenSymbol"
+      >
         <div class="left">
           <div class="img">
-            <img width="20px" src="@/assets/money_logo.png" alt="" srcset="" />
+            <img width="20px" :src="item.TokenPicture" alt="" srcset="" />
           </div>
-          <div class="name">{{ item.name }}</div>
+          <div class="name">{{ item.TokenSymbol }}</div>
         </div>
-        <div class="score">{{ getMoney(item.score) }}</div>
+        <div class="score">{{ getMoney(item.TokenBalance) }}</div>
       </div>
     </div>
   </div>
@@ -45,6 +49,9 @@ const router = useRouter();
 /**
  * 数据部分
  */
+const props = defineProps({
+  JoinGroupData: Array,
+});
 const YourBrc = [
   {
     img: "",

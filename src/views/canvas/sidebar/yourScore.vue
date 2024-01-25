@@ -1,8 +1,8 @@
 <template>
   <div class="YourScore">
     <Title title="Your Score" />
-    <div class="PersonalTotalScore">{{ YourScore.PersonalTotalScore }}</div>
-    <div class="PersonalTotalTVL">TVL: ${{ YourScore.PersonalTotalTVL }}</div>
+    <div class="PersonalTotalScore">{{ ScoreData?.PersonalTotalScore }}</div>
+    <div class="PersonalTotalTVL">TVL: ${{ ScoreData?.PersonalTotalTVL }}</div>
   </div>
 </template>
 
@@ -36,10 +36,9 @@ const router = useRouter();
 /**
  * 数据部分
  */
-const YourScore = {
-  PersonalTotalScore: "65478998",
-  PersonalTotalTVL: "3000.000",
-};
+const props = defineProps({
+  ScoreData: Object,
+});
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')

@@ -5,7 +5,7 @@
     <video muted autoplay controls ref="videoRef" :src="cut1920"></video>
     <canvas ref="canvasRef"></canvas>
 
-    <!-- <Sidebar /> -->
+    <Sidebar />
   </div>
 </template>
 
@@ -126,10 +126,9 @@ function drawGroup(groups, w, h) {
         );
         const x = (item.x + 0.1) * w + ox;
         const y = (item.y + 0.1) * h + oy - (catH - h);
-        const isRedCat = Number(group.UserLocation) === i + 1
-        const img = getCat(isRedCat)
-        img && ctx.drawImage(img, x, y, w * 0.88, catH * 0.88)
-
+        const isRedCat = Number(group.UserLocation) === i + 1;
+        const img = getCat(isRedCat);
+        img && ctx.drawImage(img, x, y, w * 0.88, catH * 0.88);
 
         // 绘制点
       });
@@ -179,7 +178,7 @@ onMounted(async () => {
     loadImage(blackfloor),
     loadImage(floor),
     loadImage(dialogBox),
-  ]).then(([blackfloor, floor,  dialogBox]) => {
+  ]).then(([blackfloor, floor, dialogBox]) => {
     bgImg = blackfloor;
     floorImg = floor;
     dialogBoxImg = dialogBox;

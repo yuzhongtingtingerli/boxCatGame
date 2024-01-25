@@ -3,10 +3,13 @@
     <div class="top">
       <Title title="Groups" />
       <div class="search">
-        <a-input v-model:value="userName" placeholder="Brc20" size="small">
+        <a-input v-model:value="GroupName" placeholder="Brc20" size="small">
           <template #suffix>
             <a-tooltip title="Extra information">
-              <SearchOutlined style="color: rgba(0, 0, 0, 0.45)" />
+              <SearchOutlined
+                style="color: rgba(0, 0, 0, 0.45)"
+                @click="getGroupName"
+              />
             </a-tooltip>
           </template>
         </a-input>
@@ -15,10 +18,10 @@
     <div class="list">
       <div
         class="list-item"
-        v-for="item in corpsRankingData"
-        :key="item.RankNumber"
+        v-for="item in groupListData"
+        :key="item.GroupRankNumber"
       >
-        <div class="RankNumber">{{ item.RankNumber }}</div>
+        <div class="RankNumber">{{ item.GroupRankNumber }}</div>
         <div class="bg"></div>
         <div class="img">
           <img src="@/assets/cat_ava.png" alt="" srcset="" />
@@ -49,7 +52,8 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
+import { request } from "@/services/request.js";
 /**
  * 仓库
  */
@@ -66,68 +70,33 @@ const router = useRouter();
 /**
  * 数据部分
  */
-let corpsRankingData = [
-  {
-    RankNumber: "1",
-    GroupName: "ordi",
-    GroupTokenPerson: "65.3K",
-    GroupSVL: "300000.000",
-  },
-  {
-    RankNumber: "2",
-    GroupName: "sats",
-    GroupTokenPerson: "653.3K",
-    GroupSVL: "200000.000",
-  },
-  {
-    RankNumber: "3",
-    GroupName: "ordi",
-    GroupTokenPerson: "65.3K",
-    GroupSVL: "300000.000",
-  },
-  {
-    RankNumber: "4",
-    GroupName: "sats",
-    GroupTokenPerson: "653.3K",
-    GroupSVL: "200000.000",
-  },
-  {
-    RankNumber: "5",
-    GroupName: "ordi",
-    GroupTokenPerson: "65.3K",
-    GroupSVL: "300000.000",
-  },
-  {
-    RankNumber: "6",
-    GroupName: "sats",
-    GroupTokenPerson: "653.3K",
-    GroupSVL: "200000.000",
-  },
-  {
-    RankNumber: "7",
-    GroupName: "ordi",
-    GroupTokenPerson: "65.3K",
-    GroupSVL: "300000.000",
-  },
-  {
-    RankNumber: "8",
-    GroupName: "sats",
-    GroupTokenPerson: "653.3K",
-    GroupSVL: "200000.000",
-  },
-  {
-    RankNumber: "9",
-    GroupName: "ordi",
-    GroupTokenPerson: "65.3K",
-    GroupSVL: "300000.000",
-  },
-  {
-    RankNumber: "10",
-    GroupName: "sats",
-    GroupTokenPerson: "653.3K",
-    GroupSVL: "200000.000",
-  },
-];
+const props = defineProps({
+  groupListData: Array,
+});
+const GroupName = ref("");
+const getGroupName = () => {
+  console.log(GroupName.value);
+  const groupName = GroupName.value;
+  getGroupSearch(groupName);
+};
+const error = ref(null);
+const groupList = ref({});
+const getGroupSearch = async (groupName) => {
+  // loading.value = true;
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getGroupSearch?GroupName=${groupName}`,
+      "get"
+    );
+    groupList.value = data.result;
+    console.log(data.result, "getGroupSearch");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
