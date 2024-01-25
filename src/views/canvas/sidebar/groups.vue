@@ -15,22 +15,22 @@
         </a-input>
       </div>
     </div>
-    <div class="list">
-      <div class="list-item" v-if="groupList">
-        <div class="RankNumber">{{ groupList.GroupRank }}</div>
-        <div class="bg"></div>
-        <div class="img">
-          <img src="@/assets/cat_ava.png" alt="" srcset="" />
-        </div>
-        <div class="name">{{ groupList.GroupName }}</div>
-        <div class="GroupTokenPerson">
-          <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
-            groupList.GroupOwners
-          }}
-        </div>
-        <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+    <div class="list-item" v-if="groupList">
+      <div class="RankNumber">{{ groupList.GroupRank }}</div>
+      <div class="bg"></div>
+      <div class="img">
+        <img src="@/assets/cat_ava.png" alt="" srcset="" />
       </div>
-      <div class="search-group" v-if="groupList"></div>
+      <div class="name">{{ groupList.GroupName }}</div>
+      <div class="GroupTokenPerson">
+        <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
+          groupList.GroupOwners
+        }}
+      </div>
+      <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+    </div>
+    <div class="search-group" v-if="groupList"></div>
+    <div class="list">
       <div
         class="list-item"
         v-for="item in groupListData"
@@ -144,100 +144,100 @@ defineExpose({
     height: 24px;
     border-radius: 2px;
     font-family: LilitaOne;
+    margin-bottom: 13px;
   }
 }
 .list {
-  padding-top: 13px;
   height: 240px;
   overflow-y: scroll;
   overflow-x: hidden;
   width: 220px;
   box-sizing: border-box;
-  .search-group {
-    height: 1px;
-    border: 1px dashed #d9d9d9;
-    margin-bottom: 10px;
+}
+.search-group {
+  height: 1px;
+  border: 1px dashed #d9d9d9;
+  margin-bottom: 10px;
+}
+.list-item {
+  position: relative;
+  width: 220px;
+  height: 48px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 2px solid #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: Inter;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 12px;
+  letter-spacing: 0em;
+  overflow: hidden;
+  .RankNumber {
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    font-family: LilitaOne;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #fff;
+    text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+    z-index: 999;
   }
-  .list-item {
-    position: relative;
-    width: 220px;
-    height: 48px;
-    box-sizing: border-box;
-    border-radius: 2px;
-    border: 2px solid #000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  .bg {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #000;
+    position: absolute;
+    top: -48px;
+    left: -48px;
+    z-index: -1;
+  }
+  .img {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    img {
+      width: 25px;
+    }
+  }
+  .name {
+    position: absolute;
+    top: 28px;
+    left: 12px;
+    color: #fff;
+    text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+    font-family: LilitaOne;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0em;
+  }
+  .GroupTokenPerson {
+    margin-left: 40px;
     font-family: Inter;
     font-size: 10px;
     font-weight: 900;
-    line-height: 12px;
     letter-spacing: 0em;
-    overflow: hidden;
-    .RankNumber {
-      position: absolute;
-      top: 2px;
-      left: 6px;
-      font-family: LilitaOne;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 22px;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #fff;
-      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
-      z-index: 999;
-    }
-    .bg {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #000;
-      position: absolute;
-      top: -48px;
-      left: -48px;
-      z-index: -1;
-    }
-    .img {
-      position: absolute;
-      top: 10px;
-      left: 12px;
-      img {
-        width: 25px;
-      }
-    }
-    .name {
-      position: absolute;
-      top: 28px;
-      left: 12px;
-      color: #fff;
-      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
-      font-family: LilitaOne;
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0em;
-    }
-    .GroupTokenPerson {
-      margin-left: 40px;
-      font-family: Inter;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #fff;
-      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
-    }
-    .svl {
-      font-family: Inter;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #fff;
-      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
-      margin-right: 6px;
-    }
+    text-align: left;
+    color: #fff;
+    text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+  }
+  .svl {
+    font-family: Inter;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #fff;
+    text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+    margin-right: 6px;
   }
 }
 </style>

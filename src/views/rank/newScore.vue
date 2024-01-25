@@ -16,7 +16,7 @@
             <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
           </div>
           <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-          <div class="Time">{{ getMoney(item.OwnersTime) }}</div>
+          <div class="Time">{{ item.OwnersTime }}</div>
         </div>
       </div>
     </div>

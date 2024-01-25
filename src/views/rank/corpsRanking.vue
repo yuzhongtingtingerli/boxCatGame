@@ -2,15 +2,38 @@
   <div class="corpsRanking">
     <div class="title">Brc20 corps Ranking</div>
     <div class="search">
-      <a-input v-model:value="userName" placeholder="Brc20" size="small">
+      <a-input v-model:value="groupName" placeholder="Brc20" size="small">
         <template #suffix>
           <a-tooltip title="Extra information">
-            <SearchOutlined style="color: rgba(0, 0, 0, 0.45)" />
+            <SearchOutlined
+              style="color: rgba(0, 0, 0, 0.45)"
+              @click="getName"
+            />
           </a-tooltip>
         </template>
       </a-input>
     </div>
     <div class="list">
+      <div class="list_item" v-if="groupList">
+        <div class="RankNumber">{{ groupList.GroupRank }}</div>
+        <div class="bg"></div>
+        <div class="img">
+          <img src="@/assets/cat_ava.png" alt="" srcset="" />
+        </div>
+        <div class="name">{{ groupList.GroupName }}</div>
+        <div class="left">
+          <div class="left_img">
+            <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />
+          </div>
+          <div class="content">
+            {{ groupList.GroupOwners }}
+          </div>
+        </div>
+        <div class="right">
+          <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+        </div>
+      </div>
+      <div class="search-group" v-if="groupList"></div>
       <div
         v-for="item in groupListData"
         :key="item.GroupRankNumber"
@@ -32,7 +55,7 @@
           </div>
         </div>
         <div class="right">
-          <div class="svl">SVL：$ {{ item.GroupSVL }}</div>
+          <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
         </div>
       </div>
     </div>
@@ -53,6 +76,8 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { request } from "@/services/request.js";
+import { getMoney } from "@/utils/Tools.js";
 /**
  * 仓库
  */
@@ -69,6 +94,32 @@ const router = useRouter();
 /**
  * 数据部分
  */
+const groupName = ref("");
+const getName = () => {
+  if (groupName.value === "") {
+    groupList.value = null;
+  } else {
+    const name = groupName.value;
+    getGroupSearch(name);
+  }
+};
+const groupList = ref(null);
+const getGroupSearch = async (groupName) => {
+  // loading.value = true;
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(
+      `/api/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
+      "get"
+    );
+    groupList.value = data.result;
+    console.log(data.result, "getGroupSearch");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
 const porps = defineProps({
   groupListData: Array,
   GroupName: String,
@@ -118,6 +169,11 @@ defineExpose({
     .list_item.active {
       border: 2px solid #fccd37;
       border-radius: 4px;
+    }
+    .search-group {
+      height: 1px;
+      border: 1px dashed #d9d9d9;
+      margin-bottom: 10px;
     }
     .list_item {
       position: relative;

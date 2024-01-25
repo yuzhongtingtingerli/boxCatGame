@@ -46,3 +46,26 @@ export const request = async (url, method = "get", data = null) => {
     throw error;
   }
 };
+
+const apikey = import.meta.env.VITE_OPEN_API;
+console.log(apikey, "apikey");
+
+export const requestWallet = async (url, method = "get", data = null) => {
+  try {
+    const response = await apiInstance.request({
+      url,
+      method,
+      data,
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apikey}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    // 处理请求错误
+    throw error;
+  }
+};
