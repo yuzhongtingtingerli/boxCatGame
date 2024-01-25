@@ -118,7 +118,6 @@ const getScoreRank = async () => {
   } catch (err) {
     error.value = "请求失败";
   } finally {
-    // loading.value = false;
   }
 };
 // 获取军团TVL排名信息
