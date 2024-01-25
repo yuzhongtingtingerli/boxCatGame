@@ -18,7 +18,7 @@
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>
-      <div class="Wallet">Connect Wallet</div>
+      <div class="Wallet" @click="connectWallet">Connect Wallet</div>
     </div>
   </div>
 </template>
@@ -55,6 +55,27 @@ let currentRoute = computed(() => router.currentRoute.value.path);
 const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
   return "";
+};
+const connectWallet = async () => {
+  // 没有钱包就跳转
+  if (!window.unisat) {
+    console.log("UniSat Wallet is installed!");
+    window.open("https://unisat.io/");
+    return;
+  }
+  // 链接钱包
+  try {
+    let unisat = window.unisat;
+    const accounts = await unisat?.requestAccounts();
+    console.log("connect success", accounts);
+    // this.setAccount(accounts[0]);
+    // this.subscribeProvider();
+  } catch (error) {
+    // ElMessage({
+    //   message: $t('base.11'),
+    //   type: 'error'
+    // });
+  }
 };
 const data = reactive({});
 onBeforeMount(() => {

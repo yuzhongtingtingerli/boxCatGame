@@ -16,6 +16,21 @@
       </div>
     </div>
     <div class="list">
+      <div class="list-item" v-if="groupList">
+        <div class="RankNumber">{{ groupList.GroupRank }}</div>
+        <div class="bg"></div>
+        <div class="img">
+          <img src="@/assets/cat_ava.png" alt="" srcset="" />
+        </div>
+        <div class="name">{{ groupList.GroupName }}</div>
+        <div class="GroupTokenPerson">
+          <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
+            groupList.GroupOwners
+          }}
+        </div>
+        <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+      </div>
+      <div class="search-group" v-if="groupList"></div>
       <div
         class="list-item"
         v-for="item in groupListData"
@@ -75,12 +90,15 @@ const props = defineProps({
 });
 const GroupName = ref("");
 const getGroupName = () => {
-  console.log(GroupName.value);
-  const groupName = GroupName.value;
-  getGroupSearch(groupName);
+  if (GroupName.value === "") {
+    groupList.value = null;
+  } else {
+    const groupName = GroupName.value;
+    getGroupSearch(groupName);
+  }
 };
 const error = ref(null);
-const groupList = ref({});
+const groupList = ref(null);
 const getGroupSearch = async (groupName) => {
   // loading.value = true;
   try {
@@ -135,6 +153,11 @@ defineExpose({
   overflow-x: hidden;
   width: 220px;
   box-sizing: border-box;
+  .search-group {
+    height: 1px;
+    border: 1px dashed #d9d9d9;
+    margin-bottom: 10px;
+  }
   .list-item {
     position: relative;
     width: 220px;
