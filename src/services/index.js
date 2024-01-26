@@ -1,4 +1,4 @@
-import { getScore, getJoinGroup, getGroupList } from "./api";
+import { getScore, getJoinGroup, getGroupList, getTokenLogo } from "./api";
 
 export const getScoreData = async (params) => {
   try {
@@ -31,6 +31,20 @@ export const getJoinGroupData = async (params) => {
 export const getGroupListData = async (params) => {
   try {
     const { code, result, status } = await getGroupList(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getTokenLogoData = async (params) => {
+  try {
+    const { code, result, status } = await getTokenLogo(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

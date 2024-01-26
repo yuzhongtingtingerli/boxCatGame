@@ -24,7 +24,6 @@ import YourBrc20 from "./yourBrc20.vue";
 import YourScore from "./yourScore.vue";
 import Joined from "./joined.vue";
 import Groups from "./groups.vue";
-import { request } from "@/services/request.js";
 import {
   getScoreData,
   getJoinGroupData,

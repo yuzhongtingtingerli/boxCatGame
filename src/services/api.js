@@ -11,3 +11,6 @@ export const getGroupList = ({ Offset, Limit }) => {
     "get"
   );
 };
+export const getTokenLogo = () => {
+  return request(`/blockchain/getTokenLogo`, "get");
+};
