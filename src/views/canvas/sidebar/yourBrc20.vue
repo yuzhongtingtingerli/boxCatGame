@@ -2,14 +2,14 @@
   <div class="YourBrc20">
     <Title title="Your Brc20" />
     <div class="list">
-      <div class="list-item" v-for="item in YourBrc" :key="item.name">
+      <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
         <div class="left">
           <div class="img">
             <img width="20px" src="@/assets/money_logo.png" alt="" srcset="" />
           </div>
-          <div class="name">{{ item.name }}</div>
+          <div class="name">{{ item.ticker }}</div>
         </div>
-        <div class="score">{{ getMoney(item.score) }}</div>
+        <div class="score">{{ getMoney(item.availableBalance) }}</div>
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
+import { requestWallet, request } from "@/services/request.js";
 /**
  * 仓库
  */
@@ -45,38 +46,50 @@ const router = useRouter();
 /**
  * 数据部分
  */
-const YourBrc = [
-  {
-    img: "",
-    name: "sats",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats2",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats3",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats4",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats5",
-    score: "4000.000",
-  },
-];
+const YourBrc = ref(null);
+const address = ref(
+  "bc1pegf237syuuqkwfcgn3fkd76c9w5et5lwtdeqma043l2cwn269xtsce750u"
+);
+const error = ref(null);
+const getBrcSummary = async () => {
+  // loading.value = true;
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await requestWallet(
+      `https://open-api.unisat.io/v1/indexer/address/${address.value}/brc20/summary`,
+      "get"
+    );
+    YourBrc.value = data.data.detail;
+    console.log(YourBrc.value, "YourBrc.value");
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+    // loading.value = false;
+  }
+};
+const obj = {
+  ordi: "https://static.oklink.com/cdn/web3/currency/token/btc-ordi-b61b0172d95e266c18aea0c624db987e971a5d6d4ebc2aaed85da4642d635735i0.png/type=png_350_0?x-oss-process=image/format,webp/resize,w_240,h_240,type_6/ignore-error,1",
+  sats: "https://static.oklink.com/cdn/web3/currency/token/btc-sats-9b664bdd6f5ed80d8d88957b63364c41f3ad4efb8eee11366aa16435974d9333i0.png/type=png_350_0?x-oss-process=image/format,webp/resize,w_240,h_240,type_6/ignore-error",
+};
+const TokenLogo = ref(null);
+const getTokenLogo = async () => {
+  try {
+    // 使用封装的 request 方法发起请求
+    const data = await request(`/blockchain/getTokenLogo`, "get");
+    console.log(data, "TokenLogo");
+    TokenLogo.value = JSON.parse(data);
+  } catch (err) {
+    error.value = "请求失败";
+  } finally {
+  }
+};
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
+  getTokenLogo();
+  getBrcSummary();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
 watchEffect(() => {});

@@ -25,6 +25,11 @@ import YourScore from "./yourScore.vue";
 import Joined from "./joined.vue";
 import Groups from "./groups.vue";
 import { request } from "@/services/request.js";
+import {
+  getScoreData,
+  getJoinGroupData,
+  getGroupListData,
+} from "@/services/index";
 /**
  * 仓库
  */
@@ -41,63 +46,25 @@ const router = useRouter();
 /**
  * 数据部分
  */
-// const loading = ref(false);
 const error = ref(null);
 // 获取军团列表
-// 0x1BaF1035d5b6B3DaBc1AB89a34ca1343da1F296e
 const Address = ref("0x1BaF1035d5b6B3DaBc1AB89a34ca1343da1F296e");
 const ScoreData = ref(null);
 const getScore = async () => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getScore?UserAddress=${Address.value}`,
-      "get"
-    );
-    ScoreData.value = data.result;
-    console.log(data.result, "ScoreData");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getScoreData(Address.value);
+  ScoreData.value = data.result;
 };
+// 加入军团列表
 const JoinGroupData = ref(null);
 const getJoinGroup = async () => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getJoinGroup?UserAddress=${Address.value}`,
-      "get"
-    );
-    JoinGroupData.value = data.result.GroupInfo;
-    console.log(data.result, "JoinGroupData");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getJoinGroupData(Address.value);
+  JoinGroupData.value = data.result.GroupInfo;
 };
-// const loading = ref(false);
 // 获取军团列表
 const groupListData = ref(null);
-const GroupName = ref("");
 const getGroupList = async () => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
-      "get"
-    );
-    groupListData.value = data.result.GroupInfo;
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getGroupListData({ Offset: 1, Limit: 10 });
+  groupListData.value = data.result.GroupInfo;
 };
 const data = reactive({});
 onBeforeMount(() => {

@@ -53,6 +53,7 @@ const router = useRouter();
  * 数据部分
  */
 //  https://open-api.unisat.io/v1/indexer/brc20/list
+
 const getBrc20List = async () => {
   // loading.value = true;
   try {
@@ -68,6 +69,26 @@ const getBrc20List = async () => {
     // loading.value = false;
   }
 };
+// const address = ref(
+//   "bc1pegf237syuuqkwfcgn3fkd76c9w5et5lwtdeqma043l2cwn269xtsce750u"
+// );
+// const getBrcSummary = async () => {
+//   // loading.value = true;
+//   try {
+//     // 使用封装的 request 方法发起请求
+//     const data = await requestWallet(
+//       `https://open-api.unisat.io/v1/indexer/address/${address.value}/brc20/summary`,
+//       "get"
+//     );
+//     console.log(data, "getBrcSummary");
+//   } catch (err) {
+//     error.value = "请求失败";
+//   } finally {
+//     // loading.value = false;
+//   }
+// };
+// https://open-api.unisat.io/v1/indexer/address/{address}/brc20/{ticker}/info
+//
 let currentRoute = computed(() => router.currentRoute.value.path);
 const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
@@ -101,7 +122,8 @@ onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
-  getBrc20List();
+  // getBrc20List();
+  // getBrcSummary();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
 watchEffect(() => {});
