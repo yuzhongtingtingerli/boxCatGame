@@ -49,8 +49,14 @@ import CorpsRanking from "./corpsRanking.vue";
 import GroupTVLRank from "./groupTVLRank.vue";
 import HoursTVL from "./hoursTVL.vue";
 import NewScore from "./newScore.vue";
-import { request } from "@/services/request.js";
-
+import {
+  getGroupListData,
+  getGroupScoreRankData,
+  getScoreRankData,
+  getGroupTVLRankData,
+  getPersonalTVLRankData,
+  getLastScoreRankData,
+} from "@/services/index";
 /**
  * 路由对象
  */
@@ -70,103 +76,46 @@ const groupListData = ref(null);
 const groupListTotal = ref(0);
 const GroupName = ref("");
 const getGroupList = async () => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getGroupList?Offset=${1}&Limit=${10}`,
-      "get"
-    );
-    groupListData.value = data.result.GroupInfo;
-    groupListTotal.value = data.result.TotalListNumber;
-    getScoreRankGroup(data.result.GroupInfo[0].GroupName);
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getGroupListData({ Offset: 1, Limit: 10 });
+  groupListData.value = data.result.GroupInfo;
+  groupListTotal.value = data.result.TotalListNumber;
+  getScoreRankGroup(data.result.GroupInfo[0].GroupName);
 };
 // 获取某个军团的积分排名
 const ScoreRankGroup = ref(null);
 const getScoreRankGroup = async (groupName) => {
   if (GroupName.value === groupName || groupName === "") return;
   GroupName.value = groupName;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getGroupScoreRank?Offset=${1}&Limit=${10}&GroupName=${groupName}`,
-      "get"
-    );
-    ScoreRankGroup.value = data.result.OwnersInfo;
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getGroupScoreRankData({ Offset: 1, Limit: 10, groupName });
+  ScoreRankGroup.value = data.result.OwnersInfo;
 };
 // 获取积分排名
 const ScoreRank = ref(null);
 const getScoreRank = async () => {
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getScoreRank?Offset=${1}&Limit=${10}`,
-      "get"
-    );
-    ScoreRank.value = data.result.OwnersInfo;
-    console.log(data.result.OwnersInfo, "ScoreRank");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-  }
+  const data = await getScoreRankData({ Offset: 1, Limit: 10 });
+  ScoreRank.value = data.result.OwnersInfo;
 };
 // 获取军团TVL排名信息
 const GroupTVLRankData = ref(null);
 const GroupTVLRankTotal = ref(0);
 const getGroupTVLRank = async () => {
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(`/blockchain/getGroupTVLRank`, "get");
-    GroupTVLRankData.value = data.result.GroupInfo;
-    GroupTVLRankTotal = data.result.TotalListNumber;
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getGroupTVLRankData();
+  GroupTVLRankData.value = data.result.GroupInfo;
+  GroupTVLRankTotal = data.result.TotalListNumber;
 };
 // 获取个人TVL排名信息
 const PersonalTVLRank = ref(null);
 const PersonalTVLRankTotal = ref(0);
 const getPersonalTVLRank = async () => {
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(`/blockchain/getPersonalTVLRank`, "get");
-    PersonalTVLRank.value = data.result.OwnersInfo;
-    PersonalTVLRankTotal.value = data.result.TotalListNumber;
-    console.log(data.result, "PersonalTVLRank");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getPersonalTVLRankData();
+  PersonalTVLRank.value = data.result.OwnersInfo;
+  PersonalTVLRankTotal.value = data.result.TotalListNumber;
 };
 // 获取最新积分信息
 const LastScoreRank = ref(null);
 const getLastScoreRank = async () => {
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getLastScoreRank?Offset=${1}&Limit=${30}`,
-      "get"
-    );
-    LastScoreRank.value = data.result.OwnersInfo;
-    console.log(data.result, "LastScoreRank");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = await getLastScoreRankData({ Offset: 1, Limit: 30 });
+  LastScoreRank.value = data.result.OwnersInfo;
 };
 const data = reactive({});
 // 获取浏览器窗口高度

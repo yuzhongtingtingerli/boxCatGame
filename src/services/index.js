@@ -1,4 +1,15 @@
-import { getScore, getJoinGroup, getGroupList, getTokenLogo } from "./api";
+import {
+  getScore,
+  getJoinGroup,
+  getGroupList,
+  getTokenLogo,
+  getGroupScoreRank,
+  getScoreRank,
+  getGroupTVLRank,
+  getPersonalTVLRank,
+  getLastScoreRank,
+  getGroupSearch,
+} from "./api";
 
 export const getScoreData = async (params) => {
   try {
@@ -45,6 +56,90 @@ export const getGroupListData = async (params) => {
 export const getTokenLogoData = async (params) => {
   try {
     const { code, result, status } = await getTokenLogo(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getGroupScoreRankData = async (params) => {
+  try {
+    const { code, result, status } = await getGroupScoreRank(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getScoreRankData = async (params) => {
+  try {
+    const { code, result, status } = await getScoreRank(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getGroupTVLRankData = async (params) => {
+  try {
+    const { code, result, status } = await getGroupTVLRank(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getPersonalTVLRankData = async (params) => {
+  try {
+    const { code, result, status } = await getPersonalTVLRank(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getLastScoreRankData = async (params) => {
+  try {
+    const { code, result, status } = await getLastScoreRank(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getGroupSearchData = async (params) => {
+  try {
+    const { code, result, status } = await getGroupSearch(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

@@ -210,7 +210,7 @@ defineExpose({
     .Address {
       width: 125px;
       display: flex;
-      justify-self: start;
+      justify-content: center;
       .img {
         margin-right: 2px;
       }

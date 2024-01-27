@@ -76,7 +76,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { request } from "@/services/request.js";
+import { getGroupSearchData } from "@/services/index.js";
 import { getMoney } from "@/utils/Tools.js";
 /**
  * 仓库
@@ -105,20 +105,8 @@ const getName = () => {
 };
 const groupList = ref(null);
 const getGroupSearch = async (groupName) => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await request(
-      `/blockchain/getGroupSearch?TokenSymbol=${groupName}`,
-      "get"
-    );
-    groupList.value = data.result;
-    console.log(data.result, "getGroupSearch");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
+  const data = getGroupSearchData(groupName);
+  groupList.value = data.result;
 };
 const porps = defineProps({
   groupListData: Array,
