@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/home/index.vue";
 import Canvas from "../views/canvas/index.vue";
 import Rank from "../views/rank/index.vue";
+import Bridge from "../views/bridge/index.vue";
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: "/rank",
     name: "Rank",
     component: Rank,
+  },
+  {
+    path: "/bridge",
+    name: "Bridge",
+    component: Bridge,
   },
 ];
 

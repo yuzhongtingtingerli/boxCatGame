@@ -1,5 +1,13 @@
 <template>
-  <div class="bridge"></div>
+  <div class="bridge">
+    <div class="w">
+      <Guidelines />
+      <div class="w1140">
+        <Network />
+        <MyRecord />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -14,6 +22,10 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+
+import Guidelines from "./guidelines.vue";
+import Network from "./network.vue";
+import MyRecord from "./myRecord.vue";
 /**
  * 仓库
  */
@@ -44,4 +56,14 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="scss">
+.bridge {
+  background-color: #000;
+  height: 1340px;
+  color: #fff;
+  .w1140 {
+    width: 1140px;
+    margin: 0 auto;
+  }
+}
+</style>

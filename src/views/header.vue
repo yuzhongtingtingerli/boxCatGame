@@ -3,6 +3,7 @@
     <div class="header">
       <div class="left">
         <div class="title">
+          <img src="@/assets/Union.png" style="margin-right: 12px" alt="" />
           <router-link to="/">BIT PARTY</router-link>
         </div>
         <div class="menu">
@@ -12,7 +13,9 @@
           <router-link :class="getCurrentRoute('/rank')" to="/rank"
             >Rank</router-link
           >
-          <router-link to="/">Bridge</router-link>
+          <router-link :class="getCurrentRoute('/bridge')" to="/bridge"
+            >Bridge</router-link
+          >
           <router-link to="/">Stake</router-link>
           <router-link to="/">Whitepaper</router-link>
           <router-link to="/">Safe And Privacy</router-link>
@@ -105,9 +108,11 @@ const connectWallet = async () => {
   try {
     let unisat = window.unisat;
     const accounts = await unisat?.requestAccounts();
-    console.log("connect success", accounts);
-    let res = await unisat?.getInscriptions(0, 10);
-    console.log(res, "rrr");
+    if (accounts && accounts.length > 0)
+      localStorage.setItem("address", accounts[0]);
+    // console.log("connect success", accounts);
+    // let res = await unisat?.getInscriptions(0, 10);
+    // console.log(res, "rrr");
     // this.setAccount(accounts[0]);
     // this.subscribeProvider();
   } catch (error) {

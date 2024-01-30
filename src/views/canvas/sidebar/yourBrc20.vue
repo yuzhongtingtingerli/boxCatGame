@@ -16,7 +16,7 @@
           </div>
           <div class="name">{{ item.ticker }}</div>
         </div>
-        <div class="score">{{ getMoney(item.availableBalance) }}</div>
+        <div class="score">{{ getMoney(item.overallBalance) }}</div>
       </div>
     </div>
   </div>
@@ -56,12 +56,13 @@ const router = useRouter();
  * 数据部分
  */
 const YourBrc = ref(null);
-const address = ref(
-  "bc1pegf237syuuqkwfcgn3fkd76c9w5et5lwtdeqma043l2cwn269xtsce750u"
-);
+// const address = localStorage.getItem("address");
+const address =
+  "bc1pzsm9vs0tgntmjk9nzx0099ve8842n8prhyz8jh0wtts4sm64e7esxl0apk";
 // const error = ref(null);
 const getBrcSummary = async () => {
-  const data = await getBrc20SummaryData(address.value);
+  if (!address) return;
+  const data = await getBrc20SummaryData(address);
   YourBrc.value = data.data.detail;
 };
 

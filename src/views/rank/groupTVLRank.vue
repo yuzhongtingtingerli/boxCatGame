@@ -131,28 +131,6 @@ defineExpose({
   ...toRefs(data),
 });
 </script>
-<style>
-.groupTVLRank .ant-pagination-item {
-  width: 30px;
-}
-.groupTVLRank .ant-pagination-item a {
-  color: #fff;
-}
-.groupTVLRank .ant-pagination-item.ant-pagination-item-active a {
-  color: #ffc500;
-}
-.groupTVLRank .ant-pagination-item.ant-pagination-item-active {
-  border: none;
-  background-color: rgba(0, 0, 0, 0);
-}
-.groupTVLRank .anticon {
-  color: #fff;
-}
-.groupTVLRank
-  .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
-  text-align: center;
-}
-</style>
 <style scoped lang="scss">
 .top {
   height: 40px;

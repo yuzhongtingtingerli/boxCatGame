@@ -12,3 +12,27 @@ body {
   /* height: 100%; */
   /* background-color: rgba(0, 0, 0, 0.8); */
 }
+.w {
+  width: 1440px;
+  margin: 0 auto;
+}
+
+.ant-pagination-item {
+  width: 30px;
+}
+.ant-pagination-item a {
+  color: #fff !important;
+}
+.ant-pagination-item.ant-pagination-item-active a {
+  color: #ffc500 !important;
+}
+.ant-pagination-item.ant-pagination-item-active {
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.anticon {
+  color: #fff;
+}
+.ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
+  text-align: center;
+}

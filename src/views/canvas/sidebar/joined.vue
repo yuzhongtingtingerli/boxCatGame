@@ -52,33 +52,6 @@ const router = useRouter();
 const props = defineProps({
   JoinGroupData: Array,
 });
-const YourBrc = [
-  {
-    img: "",
-    name: "sats",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats2",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats3",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats4",
-    score: "4000.000",
-  },
-  {
-    img: "",
-    name: "sats5",
-    score: "4000.000",
-  },
-];
 const data = reactive({});
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
