@@ -16,7 +16,9 @@
           <router-link :class="getCurrentRoute('/bridge')" to="/bridge"
             >Bridge</router-link
           >
-          <router-link to="/">Stake</router-link>
+          <router-link :class="getCurrentRoute('/stake')" to="/stake"
+            >Stake</router-link
+          >
           <router-link to="/">Whitepaper</router-link>
           <router-link to="/">Safe And Privacy</router-link>
         </div>
