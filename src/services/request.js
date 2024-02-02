@@ -81,3 +81,18 @@ export const requestWallet = async (url, method = "get", data = null) => {
     throw error;
   }
 };
+
+export const requestM = async (url, method = "get", data = null) => {
+  try {
+    const response = await apiInstance.request({
+      url: url,
+      method,
+      data,
+    });
+
+    return response.data;
+  } catch (error) {
+    // 处理请求错误
+    throw error;
+  }
+};

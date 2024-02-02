@@ -84,7 +84,9 @@
       ></div> -->
     </div>
     <div class="ETHWallet">
-      <div class="btn" @click="connectETHWallet">Connect ETH Wallet</div>
+      <div class="btn" @click="connectETHWallet">
+        {{ ETHAddress === "" ? "Connect ETH Wallet" : getAddress(ETHAddress) }}
+      </div>
       <div class="title">ERC20 NETWORK</div>
       <!-- <div class="tips">
         You Should Do Something First<InfoCircleOutlined
@@ -99,8 +101,10 @@
             {{ ticker }}
           </div>
         </div>
-        <div class="amount change"></div>
-        <!-- <div class="totalFee change"></div> -->
+        <div class="amount change">
+          <div class="left">Amount</div>
+          <div class="right">{{ amount }}</div>
+        </div>
         <div class="address">
           Ordi eth contract address: 0x98......9876
           <img src="@/assets/Magnifying.png" alt="" />
@@ -157,39 +161,69 @@
         </div>
       </div>
     </a-modal>
+
+    <a-modal
+      v-model:open="openTransfer"
+      title=""
+      :footer="null"
+      :maskClosable="false"
+      @ok="handleTransferOk"
+      :closable="false"
+      width="480px"
+    >
+      <div class="transfer_style">
+        <div class="top">
+          <div class="title">It Will Cost 30 Mins</div>
+          <div class="close" @click="handleTransferOk">
+            <img src="@/assets/close.png" alt="" srcset="" />
+          </div>
+        </div>
+        <div class="list">
+          <div class="left">From:</div>
+          <div class="right">
+            <span>{{ getAddress(BTCAddress) }}</span>
+            <img src="@/assets/copy.png" alt="" srcset="" />
+          </div>
+        </div>
+        <div class="list">
+          <div class="left">To BITPARTY Safe Address:</div>
+          <div class="right">
+            <span>{{ getAddress(ETHAddress) }}</span>
+            <img src="@/assets/copy.png" alt="" srcset="" />
+          </div>
+        </div>
+        <div class="list">
+          <div class="left">Service Fee:</div>
+          <div class="right">{{}} BTC</div>
+        </div>
+        <div class="list tran">
+          <div class="fee">Transaction Fee</div>
+          <div class="Normal">
+            <div>Normal</div>
+            <div>{{ recommendedData?.economyFee }} sats/vb</div>
+          </div>
+          <div class="Normal">
+            <div>Fast</div>
+            <div>{{ recommendedData?.fastestFee }} sats/vb</div>
+          </div>
+          <div class="Normal">
+            <div>Custom</div>
+            <div>{{ recommendedData?.halfHourFee }} sats/vb</div>
+          </div>
+        </div>
+        <div class="btn">Confirm</div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
 import Web3 from "web3";
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref, reactive, onBeforeMount, onMounted } from "vue";
 import { InfoCircleOutlined, SearchOutlined } from "@ant-design/icons-vue";
 import { getAddress, getUniSatAddress } from "@/utils/Tools";
-import { requestWallet } from "@/services/request.js";
-import { getTokenLogoData } from "@/services/index.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
+import { getBrc20SummaryData, getRecommendedData } from "@/services/wallet.js";
+import { getTokenLogoData, getTVLStatusData } from "@/services/index.js";
 /**
  * 数据部分
  */
@@ -214,6 +248,7 @@ const handleOk = (e) => {
   console.log(e);
   open.value = false;
 };
+
 const handover = ref("BTC");
 const changeWallet = (val) => {
   handover.value = val;
@@ -229,11 +264,41 @@ const getTicker = (item) => {
 };
 const amount = ref(null);
 const getMax = async () => {
+  if (!transferData.value) return;
   const data = await transferData.value;
   amount.value = Number(data.transferableBalance);
 };
+
+const openTransfer = ref(false);
+const showTransferModal = () => {
+  openTransfer.value = true;
+};
+const handleTransferOk = (e) => {
+  console.log(e);
+  openTransfer.value = false;
+};
+
+const getTVLStatus = async ({ StakeTokenSymbol, StakeTokenBalance }) => {
+  const res = await getTVLStatusData({ StakeTokenSymbol, StakeTokenBalance });
+  return res.result.TVLStatus;
+};
+
 const getTransfer = async () => {
+  if (!transferData.value) return;
   const data = await transferData.value;
+  const TVLStatus = await getTVLStatus({
+    StakeTokenSymbol: data.ticker,
+    StakeTokenBalance: amount.value,
+  });
+  if (TVLStatus == 0) return;
+  showTransferModal();
+  getRecommended();
+};
+
+const recommendedData = ref(null);
+const getRecommended = async () => {
+  const res = await getRecommendedData();
+  recommendedData.value = res;
 };
 const BTCAddress = ref("");
 const connectBTCWallet = async () => {
@@ -247,16 +312,7 @@ const connectBTCWallet = async () => {
   // 链接钱包
   try {
     getUniSatAddressData();
-    // let res = await unisat?.getInscriptions(0, 10);
-    // console.log(res, "rrr");
-    // this.setAccount(accounts[0]);
-    // this.subscribeProvider();
-  } catch (error) {
-    // ElMessage({
-    //   message: $t('base.11'),
-    //   type: 'error'
-    // });
-  }
+  } catch (error) {}
 };
 const summaryData = ref(null);
 const getUniSatAddressData = async () => {
@@ -270,12 +326,8 @@ const getBrcSummary = async (address) => {
   // loading.value = true;
   try {
     // 使用封装的 request 方法发起请求
-    const res = await requestWallet(
-      `https://open-api.unisat.io/v1/indexer/address/${address}/brc20/summary`,
-      "get"
-    );
+    const res = await getBrc20SummaryData(address);
     summaryData.value = res.data.detail;
-    console.log(res, "getBrcSummary");
   } catch (err) {
     // error.value = "请求失败";
     console.log(err);
@@ -283,37 +335,37 @@ const getBrcSummary = async (address) => {
     // loading.value = false;
   }
 };
+const ETHAddress = ref("");
+const getETHWallet = async () => {
+  if (!window.ethereum) return;
+  const web3 = new Web3(window.ethereum);
+  const res = await web3.eth.getAccounts();
+  if (res.length > 0) {
+    window.ETHAddress = res[0];
+    ETHAddress.value = res[0];
+  }
+};
 const connectETHWallet = async () => {
-  // this.error = undefined
+  if (window.ETHAddress) return;
   if (typeof window.ethereum !== "undefined") {
     const ethereum = await window.ethereum.enable();
-    console.log(ethereum, "ethereum");
     const web3 = new Web3(window.ethereum);
     const res = await web3.eth.getAccounts();
-    console.log("userAdderss", res);
     if (res.length > 0) {
-      // this.checkNetId(web3)
-    } else {
+      window.ETHAddress = res[0];
+      ETHAddress.value = res[0];
     }
-  } else {
-    // this.error = "MetaMask not found. Please install MetaMask extension.";
-    // console.error("MetaMask not found. Please install MetaMask extension.");
   }
 };
 const data = reactive({});
 onBeforeMount(() => {
+  getETHWallet();
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
   getUniSatAddressData();
   getTokenLogo();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
 });
 </script>
 <style>
@@ -389,6 +441,64 @@ defineExpose({
     .list-item:hover {
       background-color: rgba(242, 151, 0, 0.1);
     }
+  }
+}
+.transfer_style {
+  height: 400px;
+  .top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
+  .title {
+    font-family: LilitaOne;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .list {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    line-height: 40px;
+    background-color: #ededed;
+    margin-bottom: 16px;
+    font-family: LilitaOne;
+    font-size: 15px;
+    font-weight: 400;
+    padding-left: 23px;
+    padding-right: 18px;
+    border-radius: 4px;
+  }
+  .tran {
+    height: 60px;
+    .fee {
+      line-height: 60px;
+      width: 131px;
+    }
+    .Normal {
+      line-height: 22px;
+      padding-top: 9px;
+      text-align: center;
+      width: 100px;
+      cursor: pointer;
+    }
+    .Normal:hover {
+      background-color: rgba(242, 151, 0, 0.2);
+    }
+  }
+  .btn {
+    width: 180px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    margin: 0 auto;
+    background: linear-gradient(0deg, #000000, #000000),
+      linear-gradient(0deg, #f6cb37, #f6cb37);
+    border: 2px solid rgba(0, 0, 0, 1);
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+    font-family: LilitaOne;
+    font-size: 20px;
+    font-weight: 400;
   }
 }
 .network {
@@ -520,6 +630,7 @@ defineExpose({
       rgba(131, 196, 255, 0.1) 0%,
       rgba(255, 255, 255, 0.1) 100%
     );
+    border: 1px solid #777e90;
     .btn {
       background-color: #f6cb37;
     }

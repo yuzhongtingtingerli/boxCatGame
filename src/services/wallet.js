@@ -1,4 +1,4 @@
-import { getBrc20Summary } from "./walletApi";
+import { getBrc20Summary, getRecommended } from "./walletApi";
 
 export const getBrc20SummaryData = async (params) => {
   try {
@@ -9,6 +9,15 @@ export const getBrc20SummaryData = async (params) => {
     } else {
       return { msg };
     }
+  } catch (error) {
+    return { msg: error };
+  }
+};
+
+export const getRecommendedData = async () => {
+  try {
+    const data = await getRecommended();
+    return data;
   } catch (error) {
     return { msg: error };
   }

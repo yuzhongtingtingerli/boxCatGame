@@ -2,9 +2,9 @@
   <div class="myRecord">
     <div class="title">
       <span class="left">My Record</span>
-      <span class="right">0x98......9876</span>
+      <span class="right" v-if="BTCAddress">{{ getAddress(BTCAddress) }}</span>
     </div>
-    <div v-if="myRecord.length > 0" class="information">
+    <div v-if="myRecord?.length > 0" class="information">
       <div
         class="list-item"
         v-for="item in myRecord"
@@ -31,70 +31,26 @@
       </div>
     </div>
     <div v-else class="information noInformation">No Information</div>
-    <a-pagination v-if="myRecord.length > 0" :total="50" size="small" />
+    <a-pagination v-if="myRecord?.length > 0" :total="50" size="small" />
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import { getMoney } from "@/utils/Tools.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const data = reactive({});
-const myRecord = [
-  {
-    BridgeTokenSymbol: "ordi",
-    BridgeTokenBalance: "1000",
-    BridgeWorkFlow: "2",
-    BridgeTokenStatus: "pending",
-    BridgeTomeTime: "2024-01-28 16:01:02",
-  },
-  {
-    BridgeTokenSymbol: "sats",
-    BridgeTokenBalance: "100000",
-    BridgeWorkFlow: "3",
-    BridgeTokenStatus: "Failed",
-    BridgeTomeTime: "2024-01-28 16:01:03",
-  },
-  {
-    BridgeTokenSymbol: "rats",
-    BridgeTokenBalance: "100000",
-    BridgeWorkFlow: "3",
-    BridgeTokenStatus: "Go Stake",
-    BridgeTomeTime: "2024-01-28 16:01:02",
-  },
-  {
-    BridgeTokenSymbol: "abc",
-    BridgeTokenBalance: "100000",
-    BridgeWorkFlow: "1",
-    BridgeTokenStatus: "pending",
-    BridgeTomeTime: "2024-01-28 16:01:02",
-  },
-];
+import { ref, onMounted, onBeforeMount } from "vue";
+import { getMoney, getAddress } from "@/utils/Tools.js";
+import { getBridgeListData } from "@/services/index";
+const BTCAddress = ref("");
+const myRecord = ref(null);
+const getBridgeList = async () => {
+  const res = await getBridgeListData({
+    BridgeType: 1,
+    UserAddress: window.address,
+    Offset: 1,
+    Limit: 4,
+  });
+  myRecord.value = res.result.BridgeInfo;
+};
+
 const getStatusColor = (status) => {
   let color = "white";
   switch (status) {
@@ -115,16 +71,10 @@ const getStatusColor = (status) => {
   return color;
 };
 onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
+  BTCAddress.value = window.address;
 });
 onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
+  getBridgeList();
 });
 </script>
 
