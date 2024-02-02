@@ -9,6 +9,14 @@ import {
   getPersonalTVLRank,
   getLastScoreRank,
   getGroupSearch,
+  getBridgeList,
+  doBridge,
+  getTotalStakeInfo,
+  getWalletStakeInfo,
+  getSakeList,
+  getTreasure,
+  doStake,
+  getTVLStatus,
 } from "./api";
 
 export const getScoreData = async (params) => {
@@ -140,6 +148,118 @@ export const getLastScoreRankData = async (params) => {
 export const getGroupSearchData = async (params) => {
   try {
     const { code, result, status } = await getGroupSearch(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getBridgeListData = async (params) => {
+  try {
+    const { code, result, status } = await getBridgeList(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const doBridgeData = async (params) => {
+  try {
+    const { code, result, status } = await doBridge(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getTotalStakeInfoData = async (params) => {
+  try {
+    const { code, result, status } = await getTotalStakeInfo(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getWalletStakeInfoData = async (params) => {
+  try {
+    const { code, result, status } = await getWalletStakeInfo(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getSakeListData = async (params) => {
+  try {
+    const { code, result, status } = await getSakeList(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getTreasureData = async (params) => {
+  try {
+    const { code, result, status } = await getTreasure(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const doStakeData = async (params) => {
+  try {
+    const { code, result, status } = await doStake(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getTVLStatusData = async (params) => {
+  try {
+    const { code, result, status } = await getTVLStatus(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

@@ -51,3 +51,62 @@ export const getLastScoreRank = ({ Offset, Limit }) => {
 export const getGroupSearch = ({ groupName }) => {
   return request(`/blockchain/getGroupSearch?TokenSymbol=${groupName}`, "get");
 };
+
+// 获取桥的记录列表
+export const getBridgeList = ({ BridgeType, UserAddress, Offset, Limit }) => {
+  return request(
+    `/stake/getBridgeList?BridgeType=${BridgeType}&UserAddress=${UserAddress}&Offset=${Offset}&Limit=${Limit}`,
+    "get"
+  );
+};
+
+export const doBridge = ({
+  BridgeFromAddress,
+  BridgeType,
+  BridgeTokenSymbol,
+  BridgeTokenBalance,
+  BridgeTxHash,
+}) => {
+  return request(
+    `/stake/doBridge?BridgeFromAddress=${BridgeFromAddress}&BridgeType=${BridgeType}&BridgeTokenSymbol=${BridgeTokenSymbol}&BridgeTokenBalance=${BridgeTokenBalance}&BridgeTxHash=${BridgeTxHash}&BridgeToAddress=bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k`,
+    "get"
+  );
+};
+
+export const getTotalStakeInfo = () => {
+  return request(`/stake/getTotalStakeInfo`, "get");
+};
+
+export const getWalletStakeInfo = ({ UserAddress, Offset, Limit }) => {
+  return request(
+    `/stake/getWalletStakeInfo?UserAddress=${UserAddress}&Offset=${Offset}&Limit=${Limit}`,
+    "get"
+  );
+};
+
+export const getSakeList = ({ UserAddress }) => {
+  return request(`/stake/getSakeList?UserAddress=${UserAddress}`, "get");
+};
+
+export const getTreasure = ({ UserAddress }) => {
+  return request(`/stake/getTreasure?UserAddress=${UserAddress}`, "get");
+};
+
+export const doStake = ({
+  UserAddress,
+  StakeTokenSymbol,
+  StakeTokenBalance,
+  StakeTxHash,
+}) => {
+  return request(
+    `/stake/doStake?UserAddress=${UserAddress}&StakeTokenSymbol=${StakeTokenSymbol}&StakeTokenBalance=${StakeTokenBalance}&StakeTxHash=${StakeTxHash}`,
+    "get"
+  );
+};
+
+export const getTVLStatus = ({ StakeTokenSymbol, StakeTokenBalance }) => {
+  return request(
+    `/stake/getTVLStatus?StakeTokenSymbol=${StakeTokenSymbol}&StakeTokenBalance=${StakeTokenBalance}`,
+    "get"
+  );
+};
