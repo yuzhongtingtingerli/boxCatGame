@@ -77,11 +77,8 @@ export const getTotalStakeInfo = () => {
   return request(`/stake/getTotalStakeInfo`, "get");
 };
 
-export const getWalletStakeInfo = ({ UserAddress, Offset, Limit }) => {
-  return request(
-    `/stake/getWalletStakeInfo?UserAddress=${UserAddress}&Offset=${Offset}&Limit=${Limit}`,
-    "get"
-  );
+export const getWalletStakeInfo = ({ UserAddress }) => {
+  return request(`/stake/getWalletStakeInfo?UserAddress=${UserAddress}`, "get");
 };
 
 export const getSakeList = ({ UserAddress }) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="season">
+  <div class="season" v-if="seasonData">
     <div class="title">
       <div class="title-item">Season 1</div>
       <div class="title-item">Season 2</div>
@@ -8,18 +8,19 @@
       <div
         class="currentStake"
         :style="`width: ${getWidth(
-          seasonData.TotalStakeTime,
-          seasonData.CurrentStakeTime
+          seasonData.TotalBlockNumber,
+          seasonData.CurrentBlockNumber
         )}px`"
       ></div>
       <div
         class="box"
         :style="`left: ${
-          getWidth(seasonData.TotalStakeTime, seasonData.CurrentStakeTime) - 30
+          getWidth(seasonData.TotalBlockNumber, seasonData.CurrentBlockNumber) -
+          30
         }px`"
       ></div>
       <div class="currentStakeTime">
-        {{ seasonData.CurrentStakeTime }} days Left
+        <!-- {{ seasonData.CurrentStakeTime }} days Left -->
       </div>
     </div>
     <div class="info">
@@ -58,6 +59,7 @@ import {
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getMoney } from "@/utils/Tools.js";
+import { getTotalStakeInfoData } from "@/services/index";
 /**
  * 仓库
  */
@@ -75,17 +77,17 @@ const router = useRouter();
  * 数据部分
  */
 const data = reactive({});
-const seasonData = {
-  TotalStakeTime: "30",
-  CurrentStakeTime: "15",
-  WillRelease: "888888888.000",
-  TotalStakeToken: "65478",
-  Staker: "512989",
+// 获取season数据
+const seasonData = ref(null);
+const getTotalStakeInfo = async () => {
+  const res = await getTotalStakeInfoData();
+  seasonData.value = res.result;
 };
 const getWidth = (total, current) => {
   return (Number(current) / Number(total)) * 1200;
 };
 onBeforeMount(() => {
+  getTotalStakeInfo();
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {

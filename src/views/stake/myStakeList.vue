@@ -1,5 +1,5 @@
 <template>
-  <div class="myStakeList">
+  <div class="myStakeList" v-if="SakeList">
     <div class="top">
       <div class="myScore">
         <div class="mean">My Total Score</div>
@@ -20,7 +20,7 @@
         <div class="text">Score Treasure</div>
       </div>
     </div>
-    <div class="nomain" v-if="SakeList?.BridgeInfo.length === 0">Empty</div>
+    <div class="nomain" v-if="StakeInfo?.length === 0">Empty</div>
     <div class="main" v-else>
       <div class="title">My Stake List</div>
       <div class="content">
@@ -31,11 +31,7 @@
           <div class="availableStatus">Day Score</div>
         </div>
         <div class="lists">
-          <div
-            class="list"
-            v-for="(item, index) in SakeList?.BridgeInfo"
-            :key="index"
-          >
+          <div class="list" v-for="(item, index) in StakeInfo" :key="index">
             <div class="token">
               {{ item.TokenSymbol }}
             </div>
@@ -66,6 +62,7 @@ import {
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getMoney } from "@/utils/Tools.js";
+import { getSakeListData, getTreasureData } from "@/services/index";
 /**
  * 仓库
  */
@@ -83,33 +80,31 @@ const router = useRouter();
  * 数据部分
  */
 const data = reactive({});
-const SakeList = {
-  TotalScore: "888888888",
-  TotalTVL: "8.000000",
-  TotalListNumber: "10",
-  BridgeInfo: [
-    {
-      TokenSymbol: "sats",
-      TokenAmount: "888888888",
-      TotalScore: "888888888",
-      DailyScore: "8888888",
-    },
-    {
-      TokenSymbol: "ordi",
-      TokenAmount: "888888888",
-      TotalScore: "888888888",
-      DailyScore: "8888888",
-    },
-  ],
+const props = defineProps({
+  address: String,
+});
+const SakeList = ref(null);
+const StakeInfo = ref(null);
+const getSakeList = async () => {
+  const res = await getSakeListData({ UserAddress: props.address });
+  SakeList.value = res.result;
+  StakeInfo.value = res.result.StakeInfo;
 };
-const treasureData = {
-  TimeTreasure: "1",
-  ScoreTreasure: "1",
+const treasureData = ref(null);
+const getTreasure = async () => {
+  const res = await getTreasureData({ UserAddress: props.address });
+  treasureData.value = res.result;
 };
+// const treasureData = {
+//   TimeTreasure: "1",
+//   ScoreTreasure: "1",
+// };
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
+  getSakeList();
+  getTreasure();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
 watchEffect(() => {});

@@ -1,13 +1,15 @@
 <template>
   <div class="myTokenList">
     <div class="title">My Token List</div>
-    <div class="content">
+    <div class="noContent" v-if="walletStakeInfo?.length === 0">Empty</div>
+    <div class="content" v-else>
       <div class="list header">
         <div class="token">Token</div>
         <div class="amount">Amount</div>
         <div class="stakeBalance">Stake Balance</div>
         <div class="availableStatus">Available Status</div>
       </div>
+
       <div class="lists">
         <div class="list" v-for="(item, index) in walletStakeInfo" :key="index">
           <div class="token">
@@ -37,6 +39,7 @@ import {
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { getMoney } from "@/utils/Tools.js";
+import { getWalletStakeInfoData } from "@/services/index";
 /**
  * 仓库
  */
@@ -54,29 +57,29 @@ const router = useRouter();
  * 数据部分
  */
 const data = reactive({});
-const walletStakeInfo = [
-  {
-    TokenSymbol: "sats",
-    TokenAmount: "888888888.000",
-    TokenStakeBalance: "88888888.000",
-    TokenStakeStatus: "1",
-  },
-  {
-    TokenSymbol: "rats",
-    TokenAmount: "888888888.000",
-    TokenStakeBalance: "0.000000",
-    TokenStakeStatus: "0",
-  },
-];
+const props = defineProps({
+  address: String,
+});
+const walletStakeInfo = ref(null);
+const getWalletStakeInfo = async () => {
+  const res = await getWalletStakeInfoData({ UserAddress: props.address });
+  walletStakeInfo.value = res.result.WalletInfo;
+};
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {
+  getWalletStakeInfo();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
 });
-watchEffect(() => {});
+watchEffect((address) => {
+  // address(() => {
+  //   console.log(porps.address);
+  // });
+});
 // 使用toRefs解构
 // let { } = { ...toRefs(data) }
+
 defineExpose({
   ...toRefs(data),
 });
@@ -100,12 +103,21 @@ defineExpose({
     margin-left: 20px;
     margin-top: -9px;
   }
+  .noContent {
+    height: 339px;
+    line-height: 339px;
+    font-family: LilitaOne;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: center;
+  }
   .content {
     padding-top: 38px;
     .lists {
       height: 234px;
       overflow-y: scroll;
     }
+
     .list {
       display: flex;
       justify-content: space-between;

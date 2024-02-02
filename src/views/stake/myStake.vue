@@ -2,19 +2,22 @@
   <div class="myStake">
     <div class="top">
       <div class="title">MY STAKE</div>
-      <div class="wallet">Connect Wallet</div>
+      <div class="wallet" @click="connectETHWallet">
+        {{ address ? getAddress(address) : "Connect Wallet" }}
+      </div>
     </div>
-    <div class="nocontent" v-if="walletStakeInfo.length === 0 && !SakeList">
+    <div class="nocontent" v-if="address === ''">
       Please connect your wallet, check the white paper know the rules
     </div>
     <div class="content" v-else>
-      <MyTokenList />
-      <MyStakeList />
+      <MyTokenList :address="address" />
+      <MyStakeList :address="address" />
     </div>
   </div>
 </template>
 
 <script setup>
+import Web3 from "web3";
 import {
   ref,
   reactive,
@@ -28,6 +31,7 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import MyTokenList from "./myTokenList.vue";
 import MyStakeList from "./myStakeList.vue";
+import { getAddress } from "@/utils/Tools";
 /**
  * 仓库
  */
@@ -45,42 +49,25 @@ const router = useRouter();
  * 数据部分
  */
 const data = reactive({});
-const walletStakeInfo = [
-  {
-    TokenSymbol: "sats",
-    TokenAmount: "888888888.000",
-    TokenStakeBalance: "88888888.000",
-    TokenStakeStatus: "1",
-  },
-  {
-    TokenSymbol: "rats",
-    TokenAmount: "888888888.000",
-    TokenStakeBalance: "0.000000",
-    TokenStakeStatus: "0",
-  },
-];
-const SakeList = {
-  TotalScore: "888888888",
-  TotalTVL: "8.000000",
-  TotalListNumber: "10",
-  BridgeInfo: [
-    {
-      TokenSymbol: "sats",
-      TokenAmount: "888888888",
-      TotalScore: "888888888",
-      DailyScore: "8888888",
-    },
-    {
-      TokenSymbol: "ordi",
-      TokenAmount: "888888888",
-      TotalScore: "888888888",
-      DailyScore: "8888888",
-    },
-  ],
-};
-const treasureData = {
-  TimeTreasure: "1",
-  ScoreTreasure: "1",
+const address = ref("");
+const connectETHWallet = async () => {
+  if (window.ethAddress) return;
+  // this.error = undefined
+  if (typeof window.ethereum !== "undefined") {
+    const ethereum = await window.ethereum.enable();
+    console.log(ethereum, "ethereum");
+    const web3 = new Web3(window.ethereum);
+    const res = await web3.eth.getAccounts();
+    console.log("userAdderss", res);
+    if (res.length > 0) {
+      window.ethAddress = res[0];
+      address.value = res[0];
+    } else {
+    }
+  } else {
+    // this.error = "MetaMask not found. Please install MetaMask extension.";
+    // console.error("MetaMask not found. Please install MetaMask extension.");
+  }
 };
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
