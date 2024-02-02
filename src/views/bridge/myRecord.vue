@@ -2,7 +2,9 @@
   <div class="myRecord">
     <div class="title">
       <span class="left">My Record</span>
-      <span class="right" v-if="BTCAddress">{{ getAddress(BTCAddress) }}</span>
+      <span class="right" v-if="Address.getBTCaddress">{{
+        getAddress(Address.getBTCaddress)
+      }}</span>
     </div>
     <div v-if="myRecord?.length > 0" class="information">
       <div
@@ -25,32 +27,59 @@
             Tokens
           </div>
         </div>
-        <div :class="`status ${getStatusColor(item.BridgeTokenStatus)}`">
+        <div
+          :class="`status ${getStatusColor(item.BridgeTokenStatus)}`"
+          @click="handleStatus(item)"
+        >
           {{ item.BridgeTokenStatus }}
         </div>
       </div>
     </div>
     <div v-else class="information noInformation">No Information</div>
-    <a-pagination v-if="myRecord?.length > 0" :total="50" size="small" />
+    <a-pagination
+      v-if="myRecord?.length > 0"
+      v-model:current="current"
+      :pageSize="4"
+      :total="total"
+      size="small"
+      @change="handleChange"
+    />
   </div>
+  <bitpartyAddress ref="bitpartyAddressRef" />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, watch } from "vue";
 import { getMoney, getAddress } from "@/utils/Tools.js";
 import { getBridgeListData } from "@/services/index";
-const BTCAddress = ref("");
+
+import { useAddressStore } from "@/store/address";
+import bitpartyAddress from "./bitpartyAddress.vue";
+const Address = useAddressStore();
+const current = ref(1);
+const total = ref(0);
 const myRecord = ref(null);
+const handleChange = (page, pageSize) => {
+  current.value = page;
+  getBridgeList();
+};
 const getBridgeList = async () => {
   const res = await getBridgeListData({
     BridgeType: 1,
-    UserAddress: window.address,
-    Offset: 1,
+    UserAddress: Address.getBTCaddress,
+    Offset: current.value,
     Limit: 4,
   });
   myRecord.value = res.result.BridgeInfo;
+  total.value = res.result.TotalListNumber;
 };
 
+const bitpartyAddressRef = ref(null);
+const handleStatus = (item) => {
+  if (item.BridgeTokenStatus === "Go Stake") {
+    bitpartyAddressRef.value.open();
+  }
+};
 const getStatusColor = (status) => {
   let color = "white";
   switch (status) {
@@ -63,19 +92,19 @@ const getStatusColor = (status) => {
     case "Go Stake":
       color = "green";
       break;
-
     default:
       color = "white";
       break;
   }
   return color;
 };
-onBeforeMount(() => {
-  BTCAddress.value = window.address;
-});
-onMounted(() => {
-  getBridgeList();
-});
+watch(
+  Address.getBTCaddress,
+  (newVal, oldVal) => {
+    getBridgeList();
+  },
+  { immediate: true }
+);
 </script>
 
 <style>

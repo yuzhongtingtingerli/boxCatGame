@@ -3,7 +3,18 @@
     <div class="header">
       <div class="left">
         <div class="title">
-          <img src="@/assets/Union.png" style="margin-right: 12px" alt="" />
+          <img
+            v-if="currentRoute === '/rank'"
+            src="@/assets/Union1.png"
+            style="margin-right: 12px"
+            width="42"
+          />
+          <img
+            v-else
+            src="@/assets/Union.png"
+            style="margin-right: 12px"
+            width="42"
+          />
           <router-link to="/">BIT PARTY</router-link>
         </div>
         <div class="menu">
@@ -23,80 +34,25 @@
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>
-      <div class="Wallet" @click="connectWallet" v-if="address">
-        {{ address === "" ? "Connect Wallet" : getAddress(address) }}
+      <div class="Wallet" @click="connectWallet">
+        {{
+          Address.getBTCaddress === ""
+            ? "Connect Wallet"
+            : getAddress(Address.getBTCaddress)
+        }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import { requestWallet } from "@/services/request.js";
-import { getAddress, getUniSatAddress } from "@/utils/Tools";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
+import { ref, computed } from "vue";
+import { useAddressStore } from "@/store/address";
+import { useRouter } from "vue-router";
+import { getAddress } from "@/utils/Tools";
 const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-//  https://open-api.unisat.io/v1/indexer/brc20/list
-const address = ref("");
-const getBrc20List = async () => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const data = await requestWallet(
-      `https://open-api.unisat.io/v1/indexer/brc20/list`,
-      "get"
-    );
-    console.log(data, "getBrc20List");
-  } catch (err) {
-    error.value = "请求失败";
-  } finally {
-    // loading.value = false;
-  }
-};
-// const address = ref(
-//   "bc1pegf237syuuqkwfcgn3fkd76c9w5et5lwtdeqma043l2cwn269xtsce750u"
-// );
-// const getBrcSummary = async () => {
-//   // loading.value = true;
-//   try {
-//     // 使用封装的 request 方法发起请求
-//     const data = await requestWallet(
-//       `https://open-api.unisat.io/v1/indexer/address/${address.value}/brc20/summary`,
-//       "get"
-//     );
-//     console.log(data, "getBrcSummary");
-//   } catch (err) {
-//     error.value = "请求失败";
-//   } finally {
-//     // loading.value = false;
-//   }
-// };
-// https://open-api.unisat.io/v1/indexer/address/{address}/brc20/{ticker}/info
-//
+const Address = useAddressStore();
+
 let currentRoute = computed(() => router.currentRoute.value.path);
 const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
@@ -104,47 +60,8 @@ const getCurrentRoute = (path) => {
 };
 const connectWallet = async () => {
   // 没有钱包就跳转
-  if (!window.unisat) {
-    console.log("UniSat Wallet is installed!");
-    window.open("https://unisat.io/");
-    return;
-  }
-  if (window.address) return;
-  // 链接钱包
-  try {
-    getUniSatAddressData();
-    // let res = await unisat?.getInscriptions(0, 10);
-    // console.log(res, "rrr");
-    // this.setAccount(accounts[0]);
-    // this.subscribeProvider();
-  } catch (error) {
-    // ElMessage({
-    //   message: $t('base.11'),
-    //   type: 'error'
-    // });
-  }
+  Address.linkWallet();
 };
-const getUniSatAddressData = async () => {
-  const addr = await getUniSatAddress();
-  address.value = addr;
-  window.address = addr;
-};
-const data = reactive({});
-onBeforeMount(() => {
-  getUniSatAddressData();
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
-onMounted(() => {
-  // getBrc20List();
-  // getBrcSummary();
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
-});
 </script>
 <style scoped lang="scss">
 .yellow {
@@ -194,6 +111,8 @@ defineExpose({
   line-height: 60px;
   display: flex;
   justify-content: space-between;
+  width: 1440px;
+  margin: 0 auto;
   .left {
     display: flex;
     justify-self: start;

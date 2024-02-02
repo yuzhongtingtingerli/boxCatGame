@@ -46,8 +46,13 @@
             <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
           </div>
         </div>
-        <a-pagination v-model:current="current" :total="total" size="small"  @change="handleChange"/>
-
+        <a-pagination
+          v-model:current="current"
+          :pageSize="10"
+          :total="total"
+          size="small"
+          @change="handleChange"
+        />
       </template>
       <template v-else>
         <div class="list">
@@ -69,56 +74,62 @@
             <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
           </div>
         </div>
-        <a-pagination v-model:current="current" :total="total" size="small"  @change="handleChange"/>
+        <a-pagination
+          v-model:current="current"
+          :pageSize="10"
+          :total="total"
+          size="small"
+          @change="handleChange"
+        />
       </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  watch
-} from "vue";
-import {
-  getGroupScoreRankData,
-  getScoreRankData
-} from "@/services/index";
+import { ref, onMounted, watch } from "vue";
+import { getGroupScoreRankData, getScoreRankData } from "@/services/index";
 import { getMoney, getAddress } from "./../../utils/Tools.js";
 const type = ref("total");
 const current = ref(1);
 const getTVL = (t) => {
   // 将t赋值给type，并实现响应式
   type.value = t;
-  getList()
+  getList();
 };
 const getList = async (page = 1) => {
-  current.value = page
-  if(type.value === "total"){
+  current.value = page;
+  if (type.value === "total") {
     getScoreRank();
-  }else{
+  } else {
     getScoreRankGroup();
   }
-}
+};
 const handleChange = (page, pageSize) => {
-  getList(page)
-}
+  getList(page);
+};
 const porps = defineProps({
   GroupName: String,
 });
-watch(() => porps.GroupName, (newValue, oldValue) => {
-  if(oldValue){
-    type.value = newValue;
-    getTVL(newValue)
+watch(
+  () => porps.GroupName,
+  (newValue, oldValue) => {
+    if (oldValue) {
+      type.value = newValue;
+      getTVL(newValue);
+    }
   }
-})
+);
 const total = ref(0);
 
 // 获取某个军团的积分排名
 const ScoreRankGroup = ref(null);
 const getScoreRankGroup = async () => {
-  const data = await getGroupScoreRankData({ Offset: current.value, Limit: 10, groupName:porps.GroupName });
+  const data = await getGroupScoreRankData({
+    Offset: current.value,
+    Limit: 10,
+    groupName: porps.GroupName,
+  });
   total.value = data.result.TotalListNumber;
 
   ScoreRankGroup.value = data.result.OwnersInfo;
@@ -131,7 +142,7 @@ const getScoreRank = async () => {
   total.value = data.result.TotalListNumber;
 };
 onMounted(() => {
-  getList()
+  getList();
 });
 </script>
 <style scoped lang="scss">

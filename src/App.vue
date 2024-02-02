@@ -13,7 +13,7 @@ import Header from "./views/header.vue";
 </template>
 
 <style scoped></style>
-<style >
+<style>
 .w1400 {
   width: 1400px;
   margin: 0 auto;
@@ -21,5 +21,8 @@ import Header from "./views/header.vue";
 .w1440 {
   width: 1440px;
   margin: 0 auto;
+}
+.ant-modal {
+  top: 180px;
 }
 </style>

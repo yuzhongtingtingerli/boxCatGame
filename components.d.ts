@@ -10,6 +10,7 @@ declare module 'vue' {
     AInput: typeof import('ant-design-vue/es')['Input']
     AModal: typeof import('ant-design-vue/es')['Modal']
     APagination: typeof import('ant-design-vue/es')['Pagination']
+    ASpin: typeof import('ant-design-vue/es')['Spin']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

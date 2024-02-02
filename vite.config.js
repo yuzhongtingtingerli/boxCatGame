@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import vue from "@vitejs/plugin-vue";
@@ -14,6 +15,7 @@ export default defineConfig({
         }),
       ],
     }),
+    nodePolyfills(),
   ],
   resolve: {
     alias: {

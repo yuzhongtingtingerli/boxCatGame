@@ -66,9 +66,10 @@ export const doBridge = ({
   BridgeTokenSymbol,
   BridgeTokenBalance,
   BridgeTxHash,
+  BridgeToAddress,
 }) => {
   return request(
-    `/stake/doBridge?BridgeFromAddress=${BridgeFromAddress}&BridgeType=${BridgeType}&BridgeTokenSymbol=${BridgeTokenSymbol}&BridgeTokenBalance=${BridgeTokenBalance}&BridgeTxHash=${BridgeTxHash}&BridgeToAddress=bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k`,
+    `/stake/doBridge?BridgeFromAddress=${BridgeFromAddress}&BridgeType=${BridgeType}&BridgeTokenSymbol=${BridgeTokenSymbol}&BridgeTokenBalance=${BridgeTokenBalance}&BridgeTxHash=${BridgeTxHash}&BridgeToAddress=${BridgeToAddress}`,
     "get"
   );
 };
