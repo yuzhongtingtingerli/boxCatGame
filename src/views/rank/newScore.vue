@@ -7,40 +7,57 @@
         <div class="TVL">TVL</div>
         <div class="Time">Time</div>
       </div>
-      <div class="lists">
-        <div class="list" v-for="(item, index) in LastScoreRank" :key="index">
-          <div class="Address">
-            <div class="img">
-              <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
+      <a-spin :spinning="spinning">
+        <div class="lists" ref="scrollContainer" @scroll="handleScroll">
+          <div class="list" v-for="(item, index) in LastScoreRank" :key="index">
+            <div class="Address">
+              <div class="img">
+                <img width="20px" :src="item.OwnersLogo" alt="" srcset="" />
+              </div>
+              <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
             </div>
-            <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
+            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="Time">{{ item.OwnersTime }}</div>
           </div>
-          <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-          <div class="Time">{{ item.OwnersTime }}</div>
         </div>
-      </div>
+      </a-spin>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-} from "vue";
+import { ref, onMounted } from "vue";
 import { getMoney, getAddress } from "./../../utils/Tools.js";
-import {
-  getLastScoreRankData,
-} from "@/services/index";
+import { getLastScoreRankData } from "@/services/index";
 
 onMounted(() => {
   getLastScoreRank();
 });
+const spinning = ref(false);
+const offset = ref(1);
+const total = ref(1);
 // 获取最新积分信息
 const LastScoreRank = ref(null);
 const getLastScoreRank = async () => {
-  const data = await getLastScoreRankData({ Offset: 1, Limit: 30 });
-  LastScoreRank.value = data.result.OwnersInfo;
+  spinning.value = true;
+  const data = await getLastScoreRankData({ Offset: offset.value, Limit: 20 });
+  LastScoreRank.value = [...LastScoreRank.value||[], ...data.result.OwnersInfo];
+  total.value = data.result.TotalListNumber
+  spinning.value = false;
+};
+
+// 容器引用
+const scrollContainer = ref(null);
+
+// 滚动处理函数
+const handleScroll = () => {
+  if (spinning.value || total.value <= LastScoreRank.value?.length) return
+  const container = scrollContainer.value;
+  if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+    console.log("触底了");
+    offset.value++;
+    getLastScoreRank();
+  }
 };
 </script>
 <style scoped lang="scss">
