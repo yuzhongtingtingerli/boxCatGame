@@ -29,6 +29,7 @@ import {
   getJoinGroupData,
   getGroupListData,
 } from "@/services/index";
+import { getUniSatAddress } from "@/utils/Tools";
 /**
  * 仓库
  */
@@ -46,17 +47,31 @@ const router = useRouter();
  * 数据部分
  */
 const error = ref(null);
+const Address = ref("");
+const getAddress = async () => {
+  const addr = await getUniSatAddress();
+  Address.value = addr;
+};
 // 获取军团列表
-const Address = ref("0x1BaF1035d5b6B3DaBc1AB89a34ca1343da1F296e");
+// const Address = ref(
+//   "bc1p52xewzyr2923u68309ceyrtz393hltktgdrwq4elyh2elestdchsjrmza4"
+// );
+// console.log(window.address, "window.address");
+// const Address = localStorage.getItem("address");
+// console.log(Address.value);
 const ScoreData = ref(null);
 const getScore = async () => {
-  const data = await getScoreData(Address.value);
+  const addr = await getUniSatAddress();
+  const data = await getScoreData(
+    "bc1p52xewzyr2923u68309ceyrtz393hltktgdrwq4elyh2elestdchsjrmza4"
+  );
   ScoreData.value = data.result;
 };
 // 加入军团列表
 const JoinGroupData = ref(null);
 const getJoinGroup = async () => {
-  const data = await getJoinGroupData(Address.value);
+  const addr = await getUniSatAddress();
+  const data = await getJoinGroupData(addr);
   JoinGroupData.value = data.result.GroupInfo;
 };
 // 获取军团列表
@@ -66,6 +81,7 @@ const getGroupList = async () => {
   groupListData.value = data.result.GroupInfo;
 };
 const data = reactive({});
+
 onBeforeMount(() => {
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });

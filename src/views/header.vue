@@ -23,7 +23,9 @@
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>
-      <div class="Wallet" @click="connectWallet">Connect Wallet</div>
+      <div class="Wallet" @click="connectWallet">
+        {{ address === "" ? "Connect Wallet" : getAddress(address) }}
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +43,7 @@ import {
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { requestWallet } from "@/services/request.js";
+import { getAddress, getUniSatAddress } from "@/utils/Tools";
 /**
  * 仓库
  */
@@ -58,7 +61,7 @@ const router = useRouter();
  * 数据部分
  */
 //  https://open-api.unisat.io/v1/indexer/brc20/list
-
+const address = ref("");
 const getBrc20List = async () => {
   // loading.value = true;
   try {
@@ -106,13 +109,10 @@ const connectWallet = async () => {
     window.open("https://unisat.io/");
     return;
   }
+  if (window.address) return;
   // 链接钱包
   try {
-    let unisat = window.unisat;
-    const accounts = await unisat?.requestAccounts();
-    if (accounts && accounts.length > 0)
-      localStorage.setItem("address", accounts[0]);
-    // console.log("connect success", accounts);
+    getUniSatAddressData();
     // let res = await unisat?.getInscriptions(0, 10);
     // console.log(res, "rrr");
     // this.setAccount(accounts[0]);
@@ -124,8 +124,14 @@ const connectWallet = async () => {
     // });
   }
 };
+const getUniSatAddressData = async () => {
+  const addr = await getUniSatAddress();
+  address.value = addr;
+  window.address = addr;
+};
 const data = reactive({});
 onBeforeMount(() => {
+  getUniSatAddressData();
   //console.log('2.组件挂载页面之前执行----onBeforeMount')
 });
 onMounted(() => {

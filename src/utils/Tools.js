@@ -11,3 +11,14 @@ export const getMoney = (money) => {
     });
   });
 };
+
+export const getUniSatAddress = async () => {
+  if (window.unisat) {
+    if (window.address) return window.address;
+    let unisat = window.unisat;
+    const accounts = await unisat?.requestAccounts();
+    if (accounts && accounts.length > 0) {
+      return accounts[0];
+    }
+  }
+};
