@@ -26,48 +26,22 @@
 <script setup>
 import {
   ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
   onMounted,
-  watchEffect,
-  computed,
 } from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
 import { getMoney, getAddress } from "./../../utils/Tools.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const data = reactive({});
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+import {
+  getLastScoreRankData,
+} from "@/services/index";
+
 onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
+  getLastScoreRank();
 });
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-const props = defineProps({
-  LastScoreRank: Array,
-});
-defineExpose({
-  ...toRefs(data),
-});
+// 获取最新积分信息
+const LastScoreRank = ref(null);
+const getLastScoreRank = async () => {
+  const data = await getLastScoreRankData({ Offset: 1, Limit: 30 });
+  LastScoreRank.value = data.result.OwnersInfo;
+};
 </script>
 <style scoped lang="scss">
 .title {

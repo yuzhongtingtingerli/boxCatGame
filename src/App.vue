@@ -13,3 +13,13 @@ import Header from "./views/header.vue";
 </template>
 
 <style scoped></style>
+<style >
+.w1400 {
+  width: 1400px;
+  margin: 0 auto;
+}
+.w1440 {
+  width: 1440px;
+  margin: 0 auto;
+}
+</style>

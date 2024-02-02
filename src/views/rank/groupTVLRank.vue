@@ -12,8 +12,8 @@
           total
         </div>
         <div
-          :class="`ordi ${type === 'ordi' ? 'active' : ''}`"
-          @click="getTVL('ordi')"
+          :class="`ordi ${type === porps.GroupName ? 'active' : ''}`"
+          @click="getTVL(porps.GroupName)"
         >
           {{ GroupName }}
         </div>
@@ -46,7 +46,8 @@
             <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
           </div>
         </div>
-        <a-pagination :total="50" size="small" />
+        <a-pagination v-model:current="current" :total="total" size="small"  @change="handleChange"/>
+
       </template>
       <template v-else>
         <div class="list">
@@ -68,7 +69,7 @@
             <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
           </div>
         </div>
-        <a-pagination :total="50" size="small" />
+        <a-pagination v-model:current="current" :total="total" size="small"  @change="handleChange"/>
       </template>
     </div>
   </div>
@@ -77,58 +78,60 @@
 <script setup>
 import {
   ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
   onMounted,
-  watchEffect,
-  computed,
+  watch
 } from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import {
+  getGroupScoreRankData,
+  getScoreRankData
+} from "@/services/index";
 import { getMoney, getAddress } from "./../../utils/Tools.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const props = defineProps({
-  ScoreRankGroup: Array,
-  ScoreRank: Array,
-  GroupName: String,
-});
-const type = ref("");
-const ScoreRankData = ref(null);
+const type = ref("total");
+const current = ref(1);
 const getTVL = (t) => {
   // 将t赋值给type，并实现响应式
   type.value = t;
+  getList()
 };
-const TotalListNumber = ref(10);
+const getList = async (page = 1) => {
+  current.value = page
+  if(type.value === "total"){
+    getScoreRank();
+  }else{
+    getScoreRankGroup();
+  }
+}
+const handleChange = (page, pageSize) => {
+  getList(page)
+}
+const porps = defineProps({
+  GroupName: String,
+});
+watch(() => porps.GroupName, (newValue, oldValue) => {
+  if(oldValue){
+    type.value = newValue;
+    getTVL(newValue)
+  }
+})
+const total = ref(0);
 
-const data = reactive({});
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+// 获取某个军团的积分排名
+const ScoreRankGroup = ref(null);
+const getScoreRankGroup = async () => {
+  const data = await getGroupScoreRankData({ Offset: current.value, Limit: 10, groupName:porps.GroupName });
+  total.value = data.result.TotalListNumber;
+
+  ScoreRankGroup.value = data.result.OwnersInfo;
+};
+// 获取积分排名
+const ScoreRank = ref(null);
+const getScoreRank = async () => {
+  const data = await getScoreRankData({ Offset: current.value, Limit: 10 });
+  ScoreRank.value = data.result.OwnersInfo;
+  total.value = data.result.TotalListNumber;
+};
 onMounted(() => {
-  getTVL("total");
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
+  getList()
 });
 </script>
 <style scoped lang="scss">

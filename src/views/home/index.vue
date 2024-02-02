@@ -1,10 +1,12 @@
 <template>
   <div class="bjs">
-    <div class="home">
+    <div class="bg">
       <div class="left1"></div>
       <div class="left2"></div>
       <div class="right1"></div>
       <div class="right2"></div>
+    </div>
+    <div class="content w1400">
       <div class="left3">
         <div class="title">BIT PARTY</div>
         <div class="description">The First Brc20 Stake To Earn Game</div>
@@ -69,8 +71,13 @@
         </div>
       </div>
     </div>
-    <Footer />
+    <div class="footer">
+      <Footer />
+
+    </div>
+
   </div>
+
 </template>
 
 <script setup>
@@ -122,14 +129,11 @@ defineExpose({
 <style scoped lang="scss">
 .bjs {
   background-color: #000;
+
 }
-.home {
+.bg {
   position: relative;
-  width: 1440px;
-  margin: 0 auto;
-  height: 812px;
-  overflow: hidden;
-  border-bottom: 1px solid #333;
+  height: 0px;
   .left1 {
     height: 114px;
     width: 119px;
@@ -164,6 +168,23 @@ defineExpose({
     right: 0px;
     background-image: url("@/assets/right2.png");
   }
+  /* 定义动画 */
+  @keyframes updown {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-50px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+.content {
+  position: relative;
+  height: 812px;
+
   .left3 {
     position: absolute;
     top: 196px;
@@ -226,17 +247,9 @@ defineExpose({
       }
     }
   }
-  /* 定义动画 */
-  @keyframes updown {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-50px);
-    }
-    100% {
-      transform: translateY(0);
-    }
-  }
+}
+.footer {
+  border-top: 1px solid #333;
+
 }
 </style>

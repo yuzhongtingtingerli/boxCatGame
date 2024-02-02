@@ -1,5 +1,5 @@
 <template>
-  <div :class="`bjs ${currentRoute === '/rank' ? 'yellow' : 'black'}`">
+  <div :class="`bjs ${currentRoute === '/rank' ? 'yellow ' : 'black '}`">
     <div class="header">
       <div class="left">
         <div class="title">
@@ -23,7 +23,7 @@
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>
-      <div class="Wallet" @click="connectWallet">
+      <div class="Wallet" @click="connectWallet" v-if="address">
         {{ address === "" ? "Connect Wallet" : getAddress(address) }}
       </div>
     </div>
@@ -194,8 +194,6 @@ defineExpose({
   line-height: 60px;
   display: flex;
   justify-content: space-between;
-  width: 1400px;
-  margin: 0 auto;
   .left {
     display: flex;
     justify-self: start;

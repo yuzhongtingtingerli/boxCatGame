@@ -1,5 +1,5 @@
 export const getAddress = (add) => {
-  return add.slice(0, 4) + "......" + add.slice(-4);
+  return add?.slice(0, 4) + "......" + add.slice(-4);
 };
 export const getMoney = (money) => {
   const num = money.toString().split(".")[0].length > 6 ? 3 : 6;
