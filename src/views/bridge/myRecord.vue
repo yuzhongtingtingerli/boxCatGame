@@ -18,13 +18,20 @@
             {{ item.BridgeTokenSymbol }}
           </div>
           <div :class="`wait ${item.BridgeWorkFlow == '2' ? 'active' : ''}`">
-            <span class="point"></span><span class="point"></span
-            ><span class="point"></span> Wait The BTC Network Confirm
+            <div class="point">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <span> Wait The BTC Network Confirm</span>
           </div>
           <div :class="`tokens ${item.BridgeWorkFlow == '3' ? 'active' : ''}`">
-            <span class="point"></span><span class="point"></span
-            ><span class="point"></span>Bitparty Smactcontract Sent Your ERC20
-            Tokens
+            <div class="point">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <span>Bitparty Smactcontract Sent Your ERC20 Tokens</span>
           </div>
         </div>
         <div
@@ -164,17 +171,20 @@ watch(
       .left {
         display: flex;
         justify-self: start;
-
+        align-items: center;
         .wait {
           margin-left: 15px;
         }
         .point {
-          width: 8px;
-          height: 8px;
-          display: inline-block;
-          border-radius: 4px;
-          background-color: #fff;
           margin-right: 8px;
+          display: inline-flex;
+          div {
+            background-color: #fff;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 4px;
+          }
         }
         .tokens {
           margin-left: 15px;
@@ -182,7 +192,50 @@ watch(
         .active {
           color: #ffaa08;
           .point {
+            font-size: 0;
+            color: #ffaa08;
+          }
+          .point > div {
+            display: inline-block;
+            float: none;
             background-color: #ffaa08;
+            border: 0 solid currentColor;
+          }
+
+          .point {
+            width: 54px;
+          }
+          .point > div:nth-child(1) {
+            animation-delay: -200ms;
+          }
+
+          .point > div:nth-child(2) {
+            animation-delay: -100ms;
+          }
+
+          .point > div:nth-child(3) {
+            animation-delay: 0ms;
+          }
+
+          .point > div {
+            width: 10px;
+            height: 10px;
+            margin: 4px;
+            border-radius: 100%;
+            animation: ball-pulse 1s ease infinite;
+          }
+          @keyframes ball-pulse {
+            0%,
+            60%,
+            100% {
+              opacity: 1;
+              transform: scale(1);
+            }
+
+            30% {
+              opacity: 0.1;
+              transform: scale(0.01);
+            }
           }
         }
       }
@@ -191,6 +244,7 @@ watch(
         border-radius: 4px;
         text-align: center;
         color: #000;
+        cursor: pointer;
       }
       .white {
         background-color: #fff;

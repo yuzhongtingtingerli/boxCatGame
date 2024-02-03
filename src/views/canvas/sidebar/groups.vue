@@ -30,63 +30,52 @@
       <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
     </div>
     <div class="search-group" v-if="groupList"></div>
-    <div class="list">
-      <div
-        class="list-item"
-        v-for="item in groupListData"
-        :key="item.GroupRankNumber"
-      >
-        <div class="RankNumber">{{ item.GroupRankNumber }}</div>
-        <div class="bg"></div>
-        <div class="img">
-          <img src="@/assets/cat_ava.png" alt="" srcset="" />
+    <a-spin :spinning="props.spinning">
+      <div class="list" ref="scrollContainer" @scroll="handleScroll">
+        <div
+          class="list-item"
+          v-for="item in groupListData"
+          :key="item.GroupRankNumber"
+        >
+          <div class="RankNumber">{{ item.GroupRankNumber }}</div>
+          <div class="bg"></div>
+          <div class="img">
+            <img src="@/assets/cat_ava.png" alt="" srcset="" />
+          </div>
+          <div class="name">{{ item.GroupName }}</div>
+          <div class="GroupTokenPerson">
+            <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
+              item.GroupTokenPerson
+            }}
+          </div>
+          <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
         </div>
-        <div class="name">{{ item.GroupName }}</div>
-        <div class="GroupTokenPerson">
-          <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />{{
-            item.GroupTokenPerson
-          }}
-        </div>
-        <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
       </div>
-    </div>
+    </a-spin>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
 import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { request } from "@/services/request.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
+const emit = defineEmits(["load"]);
+
+// 容器引用
+const scrollContainer = ref(null);
+const handleScroll = () => {
+  const container = scrollContainer.value;
+  if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+    console.log("触底了");
+    emit("load");
+  }
+};
+
 const props = defineProps({
   groupListData: Array,
+  spinning: Boolean,
 });
 const GroupName = ref("");
 const getGroupName = () => {
@@ -115,19 +104,6 @@ const getGroupSearch = async (groupName) => {
     // loading.value = false;
   }
 };
-const data = reactive({});
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
-onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
-});
 </script>
 <style>
 .group
@@ -148,8 +124,8 @@ defineExpose({
   }
 }
 .list {
+  overflow-y: auto;
   height: 240px;
-  overflow-y: scroll;
   overflow-x: hidden;
   width: 220px;
   box-sizing: border-box;

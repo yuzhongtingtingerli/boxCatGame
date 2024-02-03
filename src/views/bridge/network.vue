@@ -276,6 +276,7 @@ onMounted(() => {
       font-size: 15px;
       font-weight: 400;
       padding: 0 18px;
+      cursor: pointer;
     }
     .amount {
       display: flex;
@@ -286,6 +287,7 @@ onMounted(() => {
         .max {
           margin-left: 12px;
           color: #ffaa08;
+          cursor: pointer;
         }
       }
     }
@@ -325,6 +327,7 @@ onMounted(() => {
     letter-spacing: 0em;
     border-radius: 8px;
     margin-top: 30px;
+    cursor: pointer;
   }
   .BTCWallet {
     width: 520px;

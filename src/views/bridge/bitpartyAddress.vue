@@ -114,6 +114,7 @@ defineExpose({ open, close });
     font-weight: 400;
     border-radius: 8px;
     margin-top: 42px;
+    cursor: pointer;
   }
 }
 </style>

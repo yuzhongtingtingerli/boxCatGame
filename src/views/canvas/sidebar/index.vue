@@ -1,23 +1,41 @@
 <template>
-  <div class="Sidebar">
-    <YourBrc20 />
-    <YourScore :ScoreData="ScoreData" />
-    <Joined :JoinGroupData="JoinGroupData" />
-    <Groups :groupListData="groupListData" />
-    <div class="JoinGroup">Join Group</div>
+  <div class="Sidebar" ref="SidebarRef">
+    <a-drawer
+      v-model:open="open"
+      class="custom-class"
+      :closable="false"
+      :mask="false"
+      :getContainer="SidebarRef"
+      root-class-name="root-class-name"
+      :contentWrapperStyle="{ maxWidth: '100%' }"
+      @after-open-change="afterOpenChange"
+    >
+      <template v-if="Address.getBTCaddress">
+        <YourBrc20 />
+        <YourScore :ScoreData="ScoreData" />
+        <Joined :JoinGroupData="JoinGroupData" />
+      </template>
+      <Groups
+        :groupListData="groupListData"
+        :spinning="spinning"
+        @load="handleScroll"
+      />
+
+      <div class="JoinGroup">Join Group</div>
+      <img
+        class="close-drawer"
+        src="@/assets/close-drawer.png"
+        @click="closeDrawer"
+      />
+    </a-drawer>
+    <div class="open-drawer">
+      <img src="@/assets/open-drawer.png" @click="open = true" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import YourBrc20 from "./yourBrc20.vue";
@@ -30,74 +48,76 @@ import {
   getGroupListData,
 } from "@/services/index";
 import { getUniSatAddress } from "@/utils/Tools";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const error = ref(null);
-const Address = ref("");
-const getAddress = async () => {
-  const addr = await getUniSatAddress();
-  Address.value = addr;
+import { useAddressStore } from "@/store/address";
+
+const Address = useAddressStore();
+const open = ref(true);
+const closeDrawer = () => {
+  open.value = false;
 };
-// 获取军团列表
-// const Address = ref(
-//   "bc1p52xewzyr2923u68309ceyrtz393hltktgdrwq4elyh2elestdchsjrmza4"
-// );
-// console.log(window.address, "window.address");
-// const Address = localStorage.getItem("address");
-// console.log(Address.value);
+
+const SidebarRef = ref(null);
 const ScoreData = ref(null);
 const getScore = async () => {
-  const addr = await getUniSatAddress();
-  const data = await getScoreData(
-    "bc1p52xewzyr2923u68309ceyrtz393hltktgdrwq4elyh2elestdchsjrmza4"
-  );
+  const data = await getScoreData(Address.getBTCaddress);
   ScoreData.value = data.result;
 };
 // 加入军团列表
 const JoinGroupData = ref(null);
 const getJoinGroup = async () => {
-  const addr = await getUniSatAddress();
-  const data = await getJoinGroupData(addr);
+  const data = await getJoinGroupData(Address.getBTCaddress);
   JoinGroupData.value = data.result.GroupInfo;
 };
+
 // 获取军团列表
 const groupListData = ref(null);
 const getGroupList = async () => {
-  const data = await getGroupListData({ Offset: 1, Limit: 10 });
-  groupListData.value = data.result.GroupInfo;
+  spinning.value = true;
+  const data = await getGroupListData({ Offset: offset.value, Limit: 6 });
+  groupListData.value = [
+    ...(groupListData.value || []),
+    ...data.result.GroupInfo,
+  ];
+  total.value = data.result.TotalListNumber;
+  spinning.value = false;
 };
-const data = reactive({});
+const spinning = ref(false);
+const offset = ref(1);
+const total = ref(1);
+// 滚动处理函数
+const handleScroll = () => {
+  console.log(spinning.value, total.value, groupListData.value?.length);
+  if (spinning.value || total.value <= groupListData.value?.length) return;
 
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+  offset.value++;
+  getGroupList();
+};
+
+watch(
+  Address.getBTCaddress,
+  () => {
+    if (Address.getBTCaddress) {
+      getScore();
+      getJoinGroup();
+    }
+  },
+  { immediate: true }
+);
 onMounted(() => {
   getGroupList();
-  getScore();
-  getJoinGroup();
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
 });
 </script>
+<style lang="scss">
+.Sidebar {
+  .root-class-name {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 735px;
+  }
+}
+</style>
 <style scoped lang="scss">
 .Sidebar {
   position: fixed;
@@ -105,11 +125,10 @@ defineExpose({
   right: 0;
   width: 260px;
   height: 735px;
-  background-color: #fff;
   border-radius: 7px 0px 0px 7px;
-  box-shadow: 4px 4px 0px 0px #000000;
-  border: 3px solid #000;
-  padding: 16px 20px;
+  // box-shadow: 4px 4px 0px 0px #000000;
+  // border: 3px solid #000;
+  // padding: 16px 20px;
   .JoinGroup {
     position: absolute;
     bottom: 26px;
@@ -128,6 +147,29 @@ defineExpose({
     text-align: center;
     line-height: 48px;
     cursor: pointer;
+  }
+  .close-drawer {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 4px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  .open-drawer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 6px;
+    height: 735px;
+    cursor: pointer;
+    background: #fff;
+    img {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      width: 24px;
+    }
   }
 }
 </style>

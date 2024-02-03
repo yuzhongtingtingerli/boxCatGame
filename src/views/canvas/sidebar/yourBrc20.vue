@@ -23,46 +23,21 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref, watch, onMounted } from "vue";
 import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
-import { requestWallet } from "@/services/request.js";
 import { getTokenLogoData } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
+
+import { useAddressStore } from "@/store/address";
+
+const Address = useAddressStore();
+
 const YourBrc = ref(null);
-// const address = localStorage.getItem("address");
-const address =
-  "bc1pzsm9vs0tgntmjk9nzx0099ve8842n8prhyz8jh0wtts4sm64e7esxl0apk";
-// const error = ref(null);
+
 const getBrcSummary = async () => {
-  if (!address) return;
-  const data = await getBrc20SummaryData(address);
+  if (!Address.getBTCaddress) return;
+  const data = await getBrc20SummaryData(Address.getBTCaddress);
   YourBrc.value = data.data.detail;
 };
 
@@ -72,26 +47,24 @@ const getTokenLogo = async () => {
   TokenLogo.value = data.result;
 };
 const getLogo = (ticker) => {
-  if (ticker in TokenLogo.value) return TokenLogo.value[ticker];
+  if (ticker in TokenLogo.value && TokenLogo.value[ticker] !== "null")
+    return TokenLogo.value[ticker];
   return false;
 };
 const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
-const data = reactive({});
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+watch(
+  Address.getBTCaddress,
+  () => {
+    if (Address.getBTCaddress) {
+      getBrcSummary();
+    }
+  },
+  { immediate: true }
+);
 onMounted(() => {
   getTokenLogo();
-  getBrcSummary();
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
 });
 </script>
 <style scoped lang="scss">
