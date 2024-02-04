@@ -1,19 +1,23 @@
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref } from "vue";
 import { getRecommendedData } from "@/services/wallet.js";
 import { getAddress } from "@/utils/Tools";
-import { getTVLStatusData, doBridgeData } from "@/services/index.js";
+import { doBridgeData } from "@/services/index.js";
 const show = ref(false);
 const BTCAddress = ref("");
 const ETHAddress = ref("");
+const tickData = ref("");
+const amtData = ref("");
 let inscriptionId = ref("");
 
-const open = (btc, eth, insId) => {
+const open = (btc, eth, insId, tick, amt) => {
   getRecommended();
   show.value = true;
   BTCAddress.value = btc;
   ETHAddress.value = eth;
   inscriptionId.value = insId;
+  tickData.value = tick;
+  amtData.value = amt;
 };
 const close = () => {
   show.value = false;
@@ -21,7 +25,6 @@ const close = () => {
 const feeType = ref("Normal");
 const feeData = ref(0);
 const getFee = (fee, type) => {
-  console.log(fee, type);
   feeData.value = fee;
   feeType.value = type;
 };
@@ -32,32 +35,38 @@ const getRecommended = async () => {
   feeData.value = res.halfHourFee;
 };
 const Confirm = async () => {
-  console.log(ETHAddress.value, inscriptionId.value, feeData.value);
-
+  console.log(inscriptionId.value, feeData.value, "11111");
   const txid = await sendInscription(
-    ETHAddress.value,
+    "bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k",
     inscriptionId.value,
     feeData.value
   );
-  console.log(txid);
+  doBridge(
+    BTCAddress.value,
+    "1",
+    tickData.value,
+    amtData.value,
+    txid,
+    ETHAddress.value
+  );
 };
 const sendInscription = async (address, id, { feeRate }) => {
   try {
-    let { txid } = await window.unisat.sendInscription(address, id, feeRate);
+    let txid = await window.unisat.sendInscription(address, id, feeRate);
     return txid;
   } catch (e) {
-    console.log(e);
+    console.log(e, "error");
   }
 };
 
-const doBridge = async ({
+const doBridge = async (
   BridgeFromAddress,
   BridgeType,
   BridgeTokenSymbol,
   BridgeTokenBalance,
   BridgeTxHash,
-  BridgeToAddress,
-}) => {
+  BridgeToAddress
+) => {
   const res = await doBridgeData({
     BridgeFromAddress,
     BridgeType,
@@ -66,6 +75,12 @@ const doBridge = async ({
     BridgeTxHash,
     BridgeToAddress,
   });
+  if (res.result.BridgeStatus === "OK") {
+    close();
+    emit("change", "success");
+  } else {
+    emit("change", "error");
+  }
 };
 defineExpose({ open, close });
 </script>

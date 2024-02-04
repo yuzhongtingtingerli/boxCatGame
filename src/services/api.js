@@ -1,5 +1,9 @@
 import { request } from "./request.js";
 
+export const getGroupDetailInfo = (params) => {
+  return request(`/blockchain//getGroupDetailInfo`, "get");
+};
+
 export const getScore = (params) => {
   return request(`/blockchain/getScore?UserAddress=${params}`, "get");
 };

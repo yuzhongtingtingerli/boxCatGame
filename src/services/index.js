@@ -1,4 +1,5 @@
 import {
+  getGroupDetailInfo,
   getScore,
   getJoinGroup,
   getGroupList,
@@ -18,6 +19,20 @@ import {
   doStake,
   getTVLStatus,
 } from "./api";
+
+export const getGroupDetailInfoData = async () => {
+  try {
+    const { code, result, status } = await getGroupDetailInfo();
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
 
 export const getScoreData = async (params) => {
   try {

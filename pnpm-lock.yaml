@@ -33,7 +33,7 @@ dependencies:
     specifier: ^4.0.2
     version: 4.0.2(vue@3.3.11)
   web3:
-    specifier: ^4.4.0
+    specifier: '4'
     version: 4.4.0(typescript@5.3.3)
 
 devDependencies:

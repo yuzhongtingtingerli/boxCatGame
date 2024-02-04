@@ -103,7 +103,7 @@
 
     <selectToken ref="selectTokenRef" @change="changeToken" />
     <selectAmount ref="selectAmountRef" @change="changeAmount" />
-    <transferModal ref="transferModalRef" />
+    <transferModal ref="transferModalRef" @change="isSuccess" />
   </div>
 </template>
 
@@ -146,6 +146,10 @@ const amountInfo = ref();
 const changeAmount = (data) => {
   amountInfo.value = data;
 };
+const isSuccess = (type) => {
+  if (type == "success") {
+  }
+};
 
 // transfer 弹框
 
@@ -154,7 +158,9 @@ const showTransferModal = () => {
   transferModalRef.value.open(
     Address.getBTCaddress,
     Address.getETHaddress,
-    amountInfo.value.inscriptionId
+    amountInfo.value.inscriptionId,
+    amountInfo.value.data.tick,
+    amountInfo.value.data.amt
   );
 };
 

@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { arr } from "../../utils/data";
 import cut1920 from "../../assets/cut/1920.mp4";
 import blackfloor from "../../assets/blackfloor.png";
@@ -21,6 +21,12 @@ import { useMouse } from "./mouse";
 import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
+import { getGroupDetailInfoData } from "@/services/index";
+
+const getGroupDetailInfo = async () => {
+  const res = await getGroupDetailInfoData();
+  drawInit(res.result.GroupInfo);
+};
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();
 const { getCat } = useCat();
@@ -29,12 +35,21 @@ const SizeW = 250; // 单个网格宽度
 const SizeH = 150; // 单个网格高度
 const minWidth = 35; // 横向网格个数
 const minHeight = 35; // 纵向网格个数
-const { wSize, hSize, groups } = computeSize(arr, minWidth, minHeight);
-
+let wSize = null;
+let hSize = null;
+let groups = null;
 let bgImg = null;
 let floorImg = null;
 let dialogBoxImg = null;
 let count = 0;
+function drawInit(arr) {
+  const option = computeSize(arr, minWidth, minHeight);
+  console.log(option);
+  wSize = option.wSize;
+  hSize = option.hSize;
+  groups = option.groups;
+  drawGrid();
+}
 function drawGrid() {
   count++;
   const gridSizeW = SizeW * scale.value; // 单个网格宽度
@@ -159,7 +174,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const imgX = x * w + ox - (imgw - w) / 2;
   const imgY = y * h + oy - 2.4 * h; // 2.4块砖的高度
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
-  ctx.font = `${40 * Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
+  ctx.font = `${40 * Math.min(scale.value, 1)}px LilitaOne`; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
   const t1 = `${group.GroupName} Group`;
   const text1Width = ctx.measureText(t1).width;
@@ -167,8 +182,8 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const text1Y = imgY + imgh / 3;
   ctx.fillText(t1, text1X, text1Y); // 在指定位置绘制文字
 
-  ctx.font = `${28 * Math.min(scale.value, 1)}px Arial`; // 设置字体大小和类型
-  const t2 = `${group.GroupName} Group`;
+  ctx.font = `${28 * Math.min(scale.value, 1)}px LilitaOne`; // 设置字体大小和类型
+  const t2 = `TVL: ${group.GroupSVL} BTC`;
   const text2Width = ctx.measureText(t2).width;
   const text2X = imgX + (imgw - text2Width) / 2;
   const text2Y = imgY + imgh / 1.4;
@@ -177,7 +192,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
 onMounted(async () => {
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
-  Promise.all([
+  await Promise.all([
     loadImage(blackfloor),
     loadImage(floor),
     loadImage(dialogBox),
@@ -187,8 +202,9 @@ onMounted(async () => {
     dialogBoxImg = dialogBox;
     offsetX.value = -Math.floor(wSize / 3) * SizeW;
     offsetY.value = -Math.floor(hSize / 3) * SizeH;
-    drawGrid();
   });
+
+  getGroupDetailInfo();
 });
 </script>
 

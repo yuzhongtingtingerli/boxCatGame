@@ -1,12 +1,49 @@
 <script setup>
+import Web3 from "web3";
 import { ref, onMounted } from "vue";
+import erc20Abi from "@/abi/erc20.json";
+import stakeAbi from "@/abi/stake.json";
 const emit = defineEmits(["change"]);
+const amountData = ref(null);
+const record = ref();
 const show = ref(false);
-const open = () => {
+const open = (symbol) => {
   show.value = true;
+  record.value = symbol;
 };
 const close = () => {
   show.value = false;
+};
+const Confirm = () => {
+  console.log(record.value, "BridgeTokenSymbol.value");
+  console.log(amountData.value, "amountData.value");
+  if (amountData.value) {
+    goStake();
+  }
+};
+const goStake = async () => {
+  var stakeAddress = "0x0058616ba6bE4cE5e588c0453332dbA13aea32d0";
+  let web3 = new Web3(window.web3.currentProvider);
+
+  let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
+  let fromAddresses = await web3.eth.getAccounts();
+  let amount = amountData.value * 10 ** 18;
+
+  let brc20Contract = new web3.eth.Contract(
+    erc20Abi,
+    record.value.BridgeTokenContractAddress
+  );
+  // debugger;
+  brc20Contract.methods
+    .approve(stakeAddress, amount)
+    .send({ from: fromAddresses[0] })
+    .then(async (r) => {
+      console.log("approve res", r);
+      const res = await contract.methods
+        .stake(record.value.BridgeTokenContractAddress, amount)
+        .send({ from: fromAddresses[0] });
+      close();
+    });
 };
 
 onMounted(() => {});
@@ -31,13 +68,24 @@ defineExpose({ open, close });
       <div class="title">To bitparty address</div>
       <div class="desc">it will cost 30 mins</div>
       <div class="sats">
-        <div class="txt">sats account</div>
+        <div class="txt">{{ record.BridgeTokenSymbol }} account</div>
         <div class="txt">to</div>
-        <div class="txt">sats group</div>
+        <div class="txt">{{ record.BridgeTokenSymbol }} group</div>
       </div>
       <div class="sats">
-        <div class="txt">amount <span class="amount">0.222</span></div>
-        <div class="txt">sats <span class="max">maximum</span></div>
+        <div class="txt input_style">
+          amount
+          <a-input
+            class="amount"
+            v-model:value="amountData"
+            placeholder="0.222"
+            size="small"
+          ></a-input>
+        </div>
+        <div class="txt">
+          {{ record.BridgeTokenSymbol }}
+          <span class="max">maximum</span>
+        </div>
       </div>
       <div class="warn">you should do something first</div>
 
@@ -94,6 +142,9 @@ defineExpose({ open, close });
       color: #ffaa08;
       margin-left: 10px;
     }
+    .input_style {
+      display: flex;
+    }
   }
   .warn {
     font-family: LilitaOne;
@@ -115,6 +166,19 @@ defineExpose({ open, close });
     border-radius: 8px;
     margin-top: 42px;
     cursor: pointer;
+  }
+}
+</style>
+
+<style>
+.input_style .ant-input.ant-input-sm.css-dev-only-do-not-override-19yxfbp {
+  background-color: #ededed;
+  border: none;
+  input {
+    background-color: #ededed;
+    font-family: LilitaOne;
+    font-size: 15px;
+    font-weight: 400;
   }
 }
 </style>
