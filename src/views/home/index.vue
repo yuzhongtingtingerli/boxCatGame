@@ -4,68 +4,94 @@
       <div class="left1"></div>
       <div class="left2"></div>
       <div class="right1"></div>
+      <div class="right1_bg"></div>
       <div class="right2"></div>
     </div>
-    <div class="content w1400">
+    <div class="main w1400">
       <div class="left3">
         <div class="title">BIT PARTY</div>
-        <div class="description">The First Brc20 Stake To Earn Game</div>
+        <div class="description">
+          The First <span class="active">Brc20</span> Stake To Earn Game
+        </div>
         <div class="list">
           <div class="list-item">
             <div class="top" @click="unfolding(1)">
               <div :class="`text ${active === 1 ? 'active' : ''}`">
-                Powered by brc20 brc30
+                Powered By BTC、Brc20、Smart Contract、ERC20
               </div>
               <div class="right" v-if="active === 1">
                 <img src="@/assets/Vector.png" alt="" srcset="" />
               </div>
-              <div class="right" v-else>></div>
+              <div class="right" v-else>
+                <img src="@/assets/right_logo.png" height="11px" />
+              </div>
             </div>
             <div class="content" v-if="active === 1">
-              Dive into "The Managers," an innovative NFT collection harnessing
-              the power of ERC6551 or TokenBound Account (TBA) technology. Your
-              NFT isn't just an art piece - it's your wallet. For the first
-              time, manage assets directly with your NFT. Curious? Learn more in
-              our comprehensive guide on TBAs Start exploring the future of NFTs
-              today.（展开的样式占位 具体内容根据安全审计反馈而定）
+              <div>
+                Learn BTC：<a target="_blank" href="https://bitcoin.org/"
+                  >bitcoin.org</a
+                >
+              </div>
+              <div>
+                Learn BRC20：<a
+                  target="_blank"
+                  href="https://domo-2.gitbook.io/brc-20-experiment/"
+                  >domo-2.gitbook.io/brc-20-experiment/</a
+                >
+              </div>
+              <div>
+                Learn smartcontract：<a
+                  target="_blank"
+                  href="https://ethereum.org/en/smart-contracts"
+                  >ethereum.org/en/smart-contracts</a
+                >
+              </div>
+              <div>
+                Learn erc20：<a
+                  target="_blank"
+                  href="https://eips.ethereum.org/EIPS/eip-20"
+                  >https://eips.ethereum.org/EIPS/eip-20</a
+                >
+              </div>
             </div>
           </div>
           <div class="list-item">
             <div class="top" @click="unfolding(2)">
               <div :class="`text ${active === 2 ? 'active' : ''}`">
-                Stake pool by okx
+                Stake Pool By Temporary Address Stream
               </div>
               <div class="right" v-if="active === 2">
                 <img src="@/assets/Vector.png" alt="" srcset="" />
               </div>
-              <div class="right" v-else>></div>
+              <div class="right" v-else>
+                <img src="@/assets/right_logo.png" height="11px" />
+              </div>
             </div>
             <div class="content" v-if="active === 2">
-              Dive into "The Managers," an innovative NFT collection harnessing
-              the power of ERC6551 or TokenBound Account (TBA) technology. Your
-              NFT isn't just an art piece - it's your wallet. For the first
-              time, manage assets directly with your NFT. Curious? Learn more in
-              our comprehensive guide on TBAs Start exploring the future of NFTs
-              today.（展开的样式占位 具体内容根据安全审计反馈而定）
+              Learn temporary address stream ：
             </div>
           </div>
           <div class="list-item">
             <div class="top" @click="unfolding(3)">
               <div :class="`text ${active === 3 ? 'active' : ''}`">
-                Security by slowmist
+                Code Audit By Slowmist
               </div>
               <div class="right" v-if="active === 3">
                 <img src="@/assets/Vector.png" alt="" srcset="" />
               </div>
-              <div class="right" v-else>></div>
+              <div class="right" v-else>
+                <img src="@/assets/right_logo.png" height="11px" />
+              </div>
             </div>
             <div class="content" v-if="active === 3">
-              Dive into "The Managers," an innovative NFT collection harnessing
-              the power of ERC6551 or TokenBound Account (TBA) technology. Your
-              NFT isn't just an art piece - it's your wallet. For the first
-              time, manage assets directly with your NFT. Curious? Learn more in
-              our comprehensive guide on TBAs Start exploring the future of NFTs
-              today.（展开的样式占位 具体内容根据安全审计反馈而定）
+              <div>The code has been audited and there are no problems</div>
+              <div>
+                Codesite：<a
+                  target="_blank"
+                  href="https://www.github.com/bitparty"
+                  >www.github.com/bitparty code</a
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -73,37 +99,14 @@
     </div>
     <div class="footer">
       <Footer />
-
     </div>
-
   </div>
-
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
 import Footer from "@/views/footer.vue";
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
+
 const active = ref(0);
 const unfolding = (index) => {
   if (active.value === index) {
@@ -112,26 +115,14 @@ const unfolding = (index) => {
     active.value = index;
   }
 };
-const data = reactive({});
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
-onMounted(() => {
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
-});
 </script>
 <style scoped lang="scss">
 .bjs {
   background-color: #000;
-
 }
 .bg {
+  width: 1440px;
+  margin: 0 auto;
   position: relative;
   height: 0px;
   .left1 {
@@ -141,6 +132,7 @@ defineExpose({
     top: 98px;
     left: 0px;
     background-image: url("@/assets/left1.png");
+    animation: updown2 6s ease infinite;
   }
   .left2 {
     height: 40px;
@@ -159,6 +151,22 @@ defineExpose({
     background-image: url("@/assets/blackCatScene.gif");
     background-size: 595px 521px;
     animation: updown 4s ease infinite;
+    z-index: 2;
+  }
+  .right1_bg {
+    height: 724px;
+    width: 666px;
+    top: 180px;
+    right: 40px;
+    position: absolute;
+    z-index: 1;
+    background: radial-gradient(
+        38.96% 38.96% at 49.96% 40.87%,
+        rgba(0, 10, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 100%,
+        rgba(0, 255, 255, 0) 100%
+      )
+      /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
   }
   .right2 {
     height: 114px;
@@ -167,6 +175,7 @@ defineExpose({
     top: 462px;
     right: 0px;
     background-image: url("@/assets/right2.png");
+    animation: updown2 6s ease infinite;
   }
   /* 定义动画 */
   @keyframes updown {
@@ -180,8 +189,19 @@ defineExpose({
       transform: translateY(0);
     }
   }
+  @keyframes updown2 {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
 }
-.content {
+.main {
   position: relative;
   height: 812px;
 
@@ -207,13 +227,16 @@ defineExpose({
       letter-spacing: 0em;
       text-align: left;
     }
+    .active {
+      color: #feac14;
+    }
     .list {
       margin-top: 60px;
       .list-item {
         padding-left: 20px;
         padding-right: 40px;
         width: 500px;
-
+        border-radius: 4px;
         margin-bottom: 16px;
         font-family: LilitaOne;
         font-size: 14px;
@@ -232,9 +255,7 @@ defineExpose({
           line-height: 60px;
           cursor: pointer;
         }
-        .top.active {
-          color: #feac14;
-        }
+
         .content {
           font-family: LilitaOne;
           font-size: 14px;
@@ -243,6 +264,9 @@ defineExpose({
           letter-spacing: 0em;
           text-align: left;
           padding-bottom: 30px;
+          a {
+            color: #fff;
+          }
         }
       }
     }
@@ -250,6 +274,5 @@ defineExpose({
 }
 .footer {
   border-top: 1px solid #333;
-
 }
 </style>
