@@ -1,7 +1,7 @@
 import { request } from "./request.js";
 
-export const getGroupDetailInfo = (params) => {
-  return request(`/blockchain//getGroupDetailInfo`, "get");
+export const getGroupDetailInfo = () => {
+  return request(`/blockchain/getGroupDetailInfo`, "get");
 };
 
 export const getScore = (params) => {
@@ -52,7 +52,7 @@ export const getLastScoreRank = ({ Offset, Limit }) => {
   );
 };
 
-export const getGroupSearch = ({ groupName }) => {
+export const getGroupSearch = (groupName) => {
   return request(`/blockchain/getGroupSearch?TokenSymbol=${groupName}`, "get");
 };
 

@@ -2,7 +2,12 @@
   <div class="corpsRanking">
     <div class="title">Brc20 corps Ranking</div>
     <div class="search">
-      <a-input v-model:value="groupName" placeholder="Brc20" size="small">
+      <a-input
+        v-model:value="groupName"
+        @keyup.enter="getName"
+        placeholder="Brc20"
+        size="small"
+      >
         <template #suffix>
           <a-tooltip title="Extra information">
             <SearchOutlined
@@ -30,7 +35,10 @@
           </div>
         </div>
         <div class="right">
-          <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+          <div class="svl">
+            {{ getMoney(groupList.GroupSVL) }}
+            <div class="unit">TVL(BTC)</div>
+          </div>
         </div>
       </div>
       <div class="search-group" v-if="groupList"></div>
@@ -55,7 +63,10 @@
           </div>
         </div>
         <div class="right">
-          <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
+          <div class="svl">
+            {{ getMoney(item.GroupSVL) }}
+            <div class="unit">TVL(BTC)</div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,10 +75,7 @@
 
 <script setup>
 import { SearchOutlined } from "@ant-design/icons-vue";
-import {
-  ref,
-  defineProps,
-} from "vue";
+import { ref, defineProps } from "vue";
 import { getGroupSearchData } from "@/services/index.js";
 import { getMoney } from "@/utils/Tools.js";
 const groupName = ref("");
@@ -81,7 +89,7 @@ const getName = () => {
 };
 const groupList = ref(null);
 const getGroupSearch = async (groupName) => {
-  const data =await getGroupSearchData(groupName);
+  const data = await getGroupSearchData(groupName);
   groupList.value = data.result;
 };
 const porps = defineProps({
@@ -93,7 +101,6 @@ const emit = defineEmits(["group-search"]);
 const getGroupName = (GroupName) => {
   emit("group-search", GroupName);
 };
-
 </script>
 <style>
 .ant-input.ant-input-sm.css-dev-only-do-not-override-19yxfbp {
@@ -184,6 +191,19 @@ const getGroupName = (GroupName) => {
         display: flex;
         justify-self: start;
         align-items: center;
+      }
+      .svl {
+        position: relative;
+        .unit {
+          position: absolute;
+          top: 14px;
+          right: 0px;
+          font-family: LilitaOne;
+          font-size: 8px;
+          font-weight: 400;
+          color: #000;
+          text-shadow: none;
+        }
       }
     }
   }

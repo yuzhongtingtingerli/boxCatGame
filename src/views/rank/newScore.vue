@@ -4,7 +4,7 @@
     <div class="content">
       <div class="list header">
         <div class="Address">Address</div>
-        <div class="TVL">TVL</div>
+        <div class="TVL">TVL(BTC)</div>
         <div class="Time">Time</div>
       </div>
       <a-spin :spinning="spinning">
@@ -16,7 +16,7 @@
               </div>
               <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
             </div>
-            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="TVL">+ {{ getMoney(item.OwnersTVL) }}</div>
             <div class="Time">{{ item.OwnersTime }}</div>
           </div>
         </div>
@@ -41,8 +41,11 @@ const LastScoreRank = ref(null);
 const getLastScoreRank = async () => {
   spinning.value = true;
   const data = await getLastScoreRankData({ Offset: offset.value, Limit: 20 });
-  LastScoreRank.value = [...LastScoreRank.value||[], ...data.result.OwnersInfo];
-  total.value = data.result.TotalListNumber
+  LastScoreRank.value = [
+    ...(LastScoreRank.value || []),
+    ...data.result.OwnersInfo,
+  ];
+  total.value = data.result.TotalListNumber;
   spinning.value = false;
 };
 
@@ -51,7 +54,7 @@ const scrollContainer = ref(null);
 
 // 滚动处理函数
 const handleScroll = () => {
-  if (spinning.value || total.value <= LastScoreRank.value?.length) return
+  if (spinning.value || total.value <= LastScoreRank.value?.length) return;
   const container = scrollContainer.value;
   if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
     console.log("触底了");

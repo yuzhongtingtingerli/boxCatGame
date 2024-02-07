@@ -30,7 +30,7 @@
             </div>
             <div class="name">{{ item.GroupName }} Group</div>
           </div>
-          <div class="svl">+$ {{ getMoney(item.GroupTVL) }}</div>
+          <div class="svl">+ {{ getMoney(item.GroupTVL) }} BTC</div>
         </div>
       </div>
       <div class="ownersInfo" v-if="type === 'individual'">
@@ -47,7 +47,7 @@
               {{ getAddress(item.OwnersAddress) }}
             </div>
           </div>
-          <div class="svl">+$ {{ getMoney(item.OwnersTVL) }}</div>
+          <div class="svl">+ {{ getMoney(item.OwnersTVL) }} BTC</div>
         </div>
       </div>
     </div>
@@ -55,15 +55,9 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted
-} from "vue";
+import { ref, onMounted } from "vue";
 import { getMoney, getAddress } from "./../../utils/Tools.js";
-import {
-  getGroupTVLRankData,
-  getPersonalTVLRankData,
-} from "@/services/index";
+import { getGroupTVLRankData, getPersonalTVLRankData } from "@/services/index";
 const type = ref("group");
 const getTVL = (t) => {
   // 将t赋值给type，并实现响应式

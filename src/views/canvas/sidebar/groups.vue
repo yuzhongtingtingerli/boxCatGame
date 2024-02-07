@@ -3,7 +3,12 @@
     <div class="top">
       <Title title="Groups" />
       <div class="search">
-        <a-input v-model:value="GroupName" placeholder="Brc20" size="small">
+        <a-input
+          v-model:value="GroupName"
+          @keyup.enter="getGroupName"
+          placeholder="Brc20"
+          size="small"
+        >
           <template #suffix>
             <a-tooltip title="Extra information">
               <SearchOutlined
@@ -27,11 +32,19 @@
           groupList.GroupOwners
         }}
       </div>
-      <div class="svl">SVL：$ {{ getMoney(groupList.GroupSVL) }}</div>
+      <div class="svl">
+        {{ getMoney(groupList.GroupSVL) }}
+        <div class="unit">TVL(BTC)</div>
+      </div>
     </div>
     <div class="search-group" v-if="groupList"></div>
     <a-spin :spinning="props.spinning">
-      <div class="list" ref="scrollContainer" @scroll="handleScroll">
+      <div
+        class="list"
+        :style="`height: ${Address.getBTCaddress ? '240px' : '570px'}`"
+        ref="scrollContainer"
+        @scroll="handleScroll"
+      >
         <div
           class="list-item"
           v-for="item in groupListData"
@@ -48,7 +61,10 @@
               item.GroupTokenPerson
             }}
           </div>
-          <div class="svl">SVL：$ {{ getMoney(item.GroupSVL) }}</div>
+          <div class="svl">
+            {{ getMoney(item.GroupSVL) }}
+            <div class="unit">TVL(BTC)</div>
+          </div>
         </div>
       </div>
     </a-spin>
@@ -61,6 +77,8 @@ import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { request } from "@/services/request.js";
+import { useAddressStore } from "@/store/address";
+const Address = useAddressStore();
 const emit = defineEmits(["load"]);
 
 // 容器引用
@@ -206,6 +224,7 @@ const getGroupSearch = async (groupName) => {
     text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
   }
   .svl {
+    position: relative;
     font-family: Inter;
     font-size: 10px;
     font-weight: 900;
@@ -214,6 +233,16 @@ const getGroupSearch = async (groupName) => {
     color: #fff;
     text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
     margin-right: 6px;
+    .unit {
+      position: absolute;
+      top: 10px;
+      right: 0px;
+      font-family: LilitaOne;
+      font-size: 8px;
+      font-weight: 400;
+      color: #000;
+      text-shadow: none;
+    }
   }
 }
 </style>

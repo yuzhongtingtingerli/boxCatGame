@@ -15,8 +15,6 @@ const close = () => {
   show.value = false;
 };
 const Confirm = () => {
-  console.log(record.value, "BridgeTokenSymbol.value");
-  console.log(amountData.value, "amountData.value");
   if (amountData.value) {
     goStake();
   }
@@ -31,7 +29,7 @@ const goStake = async () => {
 
   let brc20Contract = new web3.eth.Contract(
     erc20Abi,
-    record.value.BridgeTokenContractAddress
+    record.value.BridgeTokenContractAddress || record.value.TokenContractAddress
   );
   // debugger;
   brc20Contract.methods
@@ -40,7 +38,11 @@ const goStake = async () => {
     .then(async (r) => {
       console.log("approve res", r);
       const res = await contract.methods
-        .stake(record.value.BridgeTokenContractAddress, amount)
+        .stake(
+          record.value.BridgeTokenContractAddress ||
+            record.value.TokenContractAddress,
+          amount
+        )
         .send({ from: fromAddresses[0] });
       close();
     });
@@ -68,9 +70,13 @@ defineExpose({ open, close });
       <div class="title">To bitparty address</div>
       <div class="desc">it will cost 30 mins</div>
       <div class="sats">
-        <div class="txt">{{ record.BridgeTokenSymbol }} account</div>
+        <div class="txt">
+          {{ record.BridgeTokenSymbol || record.TokenSymbol }} account
+        </div>
         <div class="txt">to</div>
-        <div class="txt">{{ record.BridgeTokenSymbol }} group</div>
+        <div class="txt">
+          {{ record.BridgeTokenSymbol || record.TokenSymbol }} group
+        </div>
       </div>
       <div class="sats">
         <div class="txt input_style">
@@ -83,7 +89,7 @@ defineExpose({ open, close });
           ></a-input>
         </div>
         <div class="txt">
-          {{ record.BridgeTokenSymbol }}
+          {{ record.BridgeTokenSymbol || record.TokenSymbol }}
           <span class="max">maximum</span>
         </div>
       </div>

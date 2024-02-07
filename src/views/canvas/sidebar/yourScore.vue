@@ -2,7 +2,9 @@
   <div class="YourScore">
     <Title title="Your Score" />
     <div class="PersonalTotalScore">{{ ScoreData?.PersonalTotalScore }}</div>
-    <div class="PersonalTotalTVL">TVL: ${{ ScoreData?.PersonalTotalTVL }}</div>
+    <div class="PersonalTotalTVL">
+      TVL(BTC)：{{ ScoreData?.PersonalTotalTVL }}
+    </div>
   </div>
 </template>
 

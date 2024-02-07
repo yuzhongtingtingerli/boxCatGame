@@ -18,45 +18,30 @@
           <div class="amount">{{ getMoney(item.TokenAmount) }}</div>
           <div class="stakeBalance">{{ getMoney(item.TokenStakeBalance) }}</div>
           <div class="availableStatus">
-            <div class="btn" v-if="item.TokenStakeStatus == 1">Go Stake</div>
+            <div
+              class="btn"
+              v-if="item.TokenStakeStatus == 1"
+              @click="handleStatus(item)"
+            >
+              Go Stake
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <bitpartyAddress ref="bitpartyAddressRef" />
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getWalletStakeInfoData } from "@/services/index";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const data = reactive({});
+import bitpartyAddress from "../bridge/bitpartyAddress.vue";
+const bitpartyAddressRef = ref(null);
+const handleStatus = (item) => {
+  bitpartyAddressRef.value.open(item);
+};
 const props = defineProps({
   address: String,
 });
@@ -65,23 +50,8 @@ const getWalletStakeInfo = async () => {
   const res = await getWalletStakeInfoData({ UserAddress: props.address });
   walletStakeInfo.value = res.result.WalletInfo;
 };
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
 onMounted(() => {
   getWalletStakeInfo();
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect((address) => {
-  // address(() => {
-  //   console.log(porps.address);
-  // });
-});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-
-defineExpose({
-  ...toRefs(data),
 });
 </script>
 <style scoped lang="scss">

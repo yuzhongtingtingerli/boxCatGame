@@ -23,7 +23,7 @@
       <div class="header">
         <div class="Ranking">Ranking</div>
         <div class="Address">Address</div>
-        <div class="TVL">TVL</div>
+        <div class="TVL">TVL(BTC)</div>
         <div class="Score">Score</div>
       </div>
       <template v-if="type === 'total'">
@@ -42,8 +42,10 @@
               </div>
               <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
             </div>
-            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-            <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
+            <div class="TVL">+ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="Score" :title="getMoney(item.OwnersScore)">
+              {{ getMoney(item.OwnersScore) }}
+            </div>
           </div>
         </div>
         <a-pagination
@@ -70,8 +72,10 @@
               </div>
               <div class="text">{{ getAddress(item.OwnersAddress) }}</div>
             </div>
-            <div class="TVL">+$ {{ getMoney(item.OwnersTVL) }}</div>
-            <div class="Score">{{ getMoney(item.OwnersScore) }}</div>
+            <div class="TVL">+ {{ getMoney(item.OwnersTVL) }}</div>
+            <div class="Score" :title="getMoney(item.OwnersScore)">
+              {{ getMoney(item.OwnersScore) }}
+            </div>
           </div>
         </div>
         <a-pagination
@@ -197,7 +201,7 @@ onMounted(() => {
     text-align: center;
     height: 20px;
     .Ranking {
-      width: 80px;
+      width: 60px;
     }
     .Address {
       width: 125px;
@@ -212,6 +216,10 @@ onMounted(() => {
     }
     .Score {
       width: 120px;
+      // 超出显示...
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .header {

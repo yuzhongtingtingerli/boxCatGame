@@ -1,7 +1,7 @@
 <template>
   <div class="joined">
     <Title title="Joined" />
-    <div class="list">
+    <div class="list" v-if="JoinGroupData?.length > 0">
       <div
         class="list-item"
         v-for="item in JoinGroupData"
@@ -16,6 +16,7 @@
         <div class="score">{{ getMoney(item.TokenBalance) }}</div>
       </div>
     </div>
+    <div class="noList" v-else>Not Join Any Group Yet</div>
   </div>
 </template>
 
@@ -28,6 +29,14 @@ const props = defineProps({
 });
 </script>
 <style scoped lang="scss">
+.noList {
+  height: 66px;
+  line-height: 66px;
+  font-family: LilitaOne;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+}
 .list {
   height: 66px;
   padding-top: 16px;

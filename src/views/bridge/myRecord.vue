@@ -84,7 +84,6 @@ const getBridgeList = async () => {
 const bitpartyAddressRef = ref(null);
 const handleStatus = (item) => {
   if (item.BridgeTokenStatus === "Go Stake") {
-    console.log(item, "iii");
     bitpartyAddressRef.value.open(item);
   }
 };
