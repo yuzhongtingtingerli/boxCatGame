@@ -65,6 +65,7 @@ function drawGrid() {
       const oy = offsetY.value * scale.value + offsetH.value;
       const x = i * gridSizeW + ox; // 横向间隔为 gridSizeW
       const y = j * gridSizeH + oy; // 纵向间隔为 gridSizeH
+      drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(bgImg, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(
         bgImg,
@@ -73,7 +74,6 @@ function drawGrid() {
         gridSizeW,
         gridSizeH
       );
-      drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH);
     }
   }
   drawGroup(groups, gridSizeW, gridSizeH);
@@ -92,7 +92,7 @@ function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
     ctx.fillStyle = "#000";
     ctx.fill();
   }
-  if (j >= hSize - 0.5) {
+  if (j >= hSize - 1) {
     // 绘制三角形
     ctx.beginPath();
     ctx.moveTo(x + gridSizeW / 2, y + gridSizeH); // 左顶点
@@ -114,7 +114,7 @@ function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
     ctx.fillStyle = "#000";
     ctx.fill();
   }
-  if (i >= wSize - 0.5) {
+  if (i >= wSize - 1) {
     // 绘制三角形
     ctx.beginPath();
     ctx.moveTo(x + gridSizeW, y + gridSizeH / 2); // 左顶点
