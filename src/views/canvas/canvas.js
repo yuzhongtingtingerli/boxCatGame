@@ -138,14 +138,17 @@ function transitionLocation(groups, wSize, hSize) {
     w = wSize;
   let wt = Math.max(Math.ceil(wSize / 2), 0);
   let ht = Math.max(Math.ceil(hSize / 2), 0);
+  // 第一个军团的中心位置
+  // 中心中心中心中心中心中心中心中心
   let count = wt / 2;
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     count = count + Number(group.RectSize) / 2 + 1;
     group.location = {
       x: 2 * wt - count,
-      y: 2 * ht - count,
+      y: 2 * ht - count
     };
+    
     let cx = group.location.x;
     let cy = group.location.y;
     for (let j = 0; j < group.CurrentGroupInfo.length; j++) {

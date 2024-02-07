@@ -25,7 +25,8 @@ import { getGroupDetailInfoData } from "@/services/index";
 
 const getGroupDetailInfo = async () => {
   const res = await getGroupDetailInfoData();
-  drawInit(res.result.GroupInfo);
+  res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
+  // drawInit(arr);
 };
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();
@@ -48,6 +49,8 @@ function drawInit(arr) {
   wSize = option.wSize;
   hSize = option.hSize;
   groups = option.groups;
+  offsetX.value = -SizeW * (option.groups[0].location.x - 3);
+  offsetY.value = -SizeH * (option.groups[0].location.y - 3);
   drawGrid();
 }
 function drawGrid() {
@@ -200,8 +203,6 @@ onMounted(async () => {
     bgImg = blackfloor;
     floorImg = floor;
     dialogBoxImg = dialogBox;
-    offsetX.value = -Math.floor(wSize / 3) * SizeW;
-    offsetY.value = -Math.floor(hSize / 3) * SizeH;
   });
 
   getGroupDetailInfo();
