@@ -1,5 +1,12 @@
 <template>
-  <div class="footer"></div>
+  <div class="footer w">
+    <div class="title">
+      <img src="@/assets/Union.png" style="margin-right: 12px" width="42" />
+      BIT PARTY
+      <span>©The Bit Party, 2024</span>
+    </div>
+    <div class="right">MAKE BTC FUN AGAIN</div>
+  </div>
 </template>
 
 <script setup>
@@ -47,5 +54,29 @@ defineExpose({
 <style scoped lang="scss">
 .footer {
   height: 328px;
+  line-height: 328px;
+  display: flex;
+  justify-content: space-between;
+  .title {
+    margin-left: 130px;
+    color: #fff;
+    font-family: LuckiestGuy;
+    font-size: 30px;
+    font-weight: 400;
+    span {
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.3);
+      margin-left: 17px;
+    }
+  }
+  .right {
+    font-family: LuckiestGuy;
+    font-size: 30px;
+    font-weight: 400;
+    color: #fff;
+    margin-right: 172px;
+  }
 }
 </style>
