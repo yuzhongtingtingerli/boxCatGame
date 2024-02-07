@@ -34,12 +34,26 @@
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>
-      <div class="Wallet" @click="connectWallet">
-        {{
-          Address.getBTCaddress === ""
-            ? "Connect Wallet"
-            : getAddress(Address.getBTCaddress)
-        }}
+      <div class="right">
+        <div class="icon">
+          <a href=""><img src="@/assets/head_dog.png" alt="" srcset="" /></a>
+          <a href=""><img src="@/assets/head-f.png" alt="" srcset="" /></a>
+          <a href=""><img src="@/assets/head_t.png" alt="" srcset="" /></a>
+        </div>
+        <div class="Wallet" @click="connectWallet">
+          <img
+            v-if="Address.getBTCaddress"
+            src="@/assets/uniset-logo.png"
+            width="32px"
+            alt=""
+            srcset=""
+          />
+          {{
+            Address.getBTCaddress === ""
+              ? "Connect BTC Wallet"
+              : getAddress(Address.getBTCaddress)
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -125,19 +139,37 @@ const connectWallet = async () => {
       color: #000;
     }
   }
+
+  .right {
+    display: flex;
+    justify-self: start;
+    .icon {
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: 20px;
+      }
+    }
+  }
   .Wallet {
-    width: 155px;
+    width: 180px;
     height: 40px;
     line-height: 40px;
     font-family: LilitaOne;
     font-size: 16px;
     text-align: center;
-    background-color: #fff;
+    background-color: #ffaa08;
     color: #000;
     border: 2px solid #000;
     border-radius: 4px;
     box-shadow: 2px 2px 0 #000;
     margin-top: 10px;
+    cursor: pointer;
+    img {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 7px;
+    }
   }
 }
 </style>
