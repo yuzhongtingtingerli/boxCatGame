@@ -1,10 +1,17 @@
 <template>
   <div class="myRecord">
     <div class="title">
-      <span class="left">My Record</span>
-      <span class="right" v-if="Address.getBTCaddress">{{
-        getAddress(Address.getBTCaddress)
-      }}</span>
+      <div class="left">My Record</div>
+      <div class="right" v-if="Address.getBTCaddress">
+        <img
+          src="@/assets/uniset-logo.png"
+          width="32px"
+          style="margin-right: 16px"
+          alt=""
+          srcset=""
+        />
+        {{ getAddress(Address.getBTCaddress) }}
+      </div>
     </div>
     <div v-if="myRecord?.length > 0" class="information">
       <div
@@ -123,7 +130,9 @@ watch(
 .myRecord {
   margin-top: 32px;
   .title {
-    width: 332px;
+    display: flex;
+    justify-self: start;
+    width: 388px;
     height: 70px;
     line-height: 70px;
     text-align: center;
@@ -138,12 +147,12 @@ watch(
       font-weight: 400;
       letter-spacing: 0em;
       margin-right: 27px;
+      margin-left: 40px;
     }
     .right {
       font-family: LilitaOne;
       font-size: 13px;
       font-weight: 400;
-      letter-spacing: 0em;
     }
   }
   .information {

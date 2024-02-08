@@ -36,9 +36,33 @@
       </div>
       <div class="right">
         <div class="icon">
-          <a href=""><img src="@/assets/head_dog.png" alt="" srcset="" /></a>
-          <a href=""><img src="@/assets/head-f.png" alt="" srcset="" /></a>
-          <a href=""><img src="@/assets/head_t.png" alt="" srcset="" /></a>
+          <a href="">
+            <img
+              v-if="currentRoute === '/rank'"
+              src="@/assets/head_dog-black.png"
+              alt=""
+              srcset=""
+            />
+            <img v-else src="@/assets/head_dog.png" alt="" srcset="" />
+          </a>
+          <a href="">
+            <img
+              v-if="currentRoute === '/rank'"
+              src="@/assets/head-f-black.png"
+              alt=""
+              srcset=""
+            />
+            <img v-else src="@/assets/head-f.png" alt="" srcset="" />
+          </a>
+          <a href="">
+            <img
+              v-if="currentRoute === '/rank'"
+              src="@/assets/head_t-black.png"
+              alt=""
+              srcset=""
+            />
+            <img v-else src="@/assets/head_t.png" alt="" srcset="" />
+          </a>
         </div>
         <div class="Wallet" @click="connectWallet">
           <img
@@ -90,6 +114,7 @@ const connectWallet = async () => {
     }
     .active {
       color: #fff;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
     }
   }
   .title {
@@ -158,7 +183,7 @@ const connectWallet = async () => {
     font-family: LilitaOne;
     font-size: 16px;
     text-align: center;
-    background-color: #ffaa08;
+    background-color: #fff;
     color: #000;
     border: 2px solid #000;
     border-radius: 4px;

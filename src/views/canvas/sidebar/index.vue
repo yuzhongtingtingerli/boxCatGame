@@ -21,7 +21,7 @@
         @load="handleScroll"
       />
 
-      <div class="JoinGroup">Join Group</div>
+      <div class="JoinGroup" @click="handleJoinGroup">Join Group</div>
       <img
         class="close-drawer"
         src="@/assets/close-drawer.png"
@@ -61,6 +61,10 @@ const ScoreData = ref(null);
 const getScore = async () => {
   const data = await getScoreData(Address.getBTCaddress);
   ScoreData.value = data.result;
+};
+const router = useRouter();
+const handleJoinGroup = () => {
+  router.push("stake");
 };
 // 加入军团列表
 const JoinGroupData = ref(null);

@@ -40,7 +40,7 @@
     <div class="search-group" v-if="groupList"></div>
     <a-spin :spinning="props.spinning">
       <div
-        class="list"
+        class="list scroll-wrap"
         :style="`height: ${Address.getBTCaddress ? '240px' : '570px'}`"
         ref="scrollContainer"
         @scroll="handleScroll"
@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
 import { SearchOutlined } from "@ant-design/icons-vue";
@@ -94,15 +94,23 @@ const handleScroll = () => {
   }
 };
 
-const changeGroupName = ref("");
-const changeGroup = (item) => {
-  changeGroupName.value = item.GroupName;
-};
-
 const props = defineProps({
   groupListData: Array,
   spinning: Boolean,
 });
+watch(
+  () => props.groupListData,
+  (newVal, oldVal) => {
+    if (newVal && newVal.length > 0) {
+      changeGroup(newVal[0]);
+    }
+  },
+  { immediate: true }
+);
+const changeGroupName = ref("");
+const changeGroup = (item) => {
+  changeGroupName.value = item.GroupName;
+};
 const GroupName = ref("");
 const getGroupName = () => {
   if (GroupName.value === "") {
@@ -153,7 +161,7 @@ const getGroupSearch = async (groupName) => {
   overflow-y: auto;
   height: 240px;
   overflow-x: hidden;
-  width: 220px;
+  width: 232px;
   box-sizing: border-box;
 }
 .search-group {

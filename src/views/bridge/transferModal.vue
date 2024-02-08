@@ -9,7 +9,7 @@ const ETHAddress = ref("");
 const tickData = ref("");
 const amtData = ref("");
 let inscriptionId = ref("");
-
+const emit = defineEmits(["change"]);
 const open = (btc, eth, insId, tick, amt) => {
   getRecommended();
   show.value = true;
@@ -35,7 +35,6 @@ const getRecommended = async () => {
   feeData.value = res.halfHourFee;
 };
 const Confirm = async () => {
-  console.log(inscriptionId.value, feeData.value, "11111");
   const txid = await sendInscription(
     "bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k",
     inscriptionId.value,
@@ -77,9 +76,9 @@ const doBridge = async (
   });
   if (res.result.BridgeStatus === "OK") {
     close();
-    // emit("change", "success");
+    emit("change", "success");
   } else {
-    // emit("change", "error");
+    emit("change", "error");
   }
 };
 defineExpose({ open, close });

@@ -20,7 +20,7 @@
         }px`"
       ></div>
       <div class="currentStakeTime">
-        <!-- {{ seasonData.CurrentStakeTime }} days Left -->
+        {{ seasonData.CurrentStakeTime }} days Left
       </div>
     </div>
     <div class="info">
@@ -47,10 +47,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-} from "vue";
+import { ref, onMounted } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getTotalStakeInfoData } from "@/services/index";
 
@@ -66,16 +63,16 @@ const getWidth = (total, current) => {
 onMounted(() => {
   getTotalStakeInfo();
 });
-
 </script>
 <style scoped lang="scss">
 .season {
   position: relative;
   height: 416px;
   backdrop-filter: blur(10px);
-    background-color: rgba(0,191,255, 0.075);
-    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+  background-color: rgba(0, 191, 255, 0.075);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
   padding: 40px 60px;
+  border-radius: 4px;
   .title {
     display: flex;
     justify-self: start;

@@ -1,21 +1,19 @@
 <template>
   <div class="bg" id="rankBg">
     <div class="rank w1400">
-
       <a-spin :spinning="spinning">
-      <div class="corpsRanking" ref="scrollContainer" @scroll="handleScroll">
-        <CorpsRanking
-          :groupListData="groupListData"
-          :groupListTotal="groupListTotal"
-          :GroupName="GroupName"
-          @group-search="getScoreRankGroup"
-        />
-      </div>
-    </a-spin>
+        <div class="corpsRanking" ref="scrollContainer" @scroll="handleScroll">
+          <CorpsRanking
+            :groupListData="groupListData"
+            :groupListTotal="groupListTotal"
+            :GroupName="GroupName"
+            @group-search="getScoreRankGroup"
+          />
+        </div>
+      </a-spin>
       <div class="middle">
         <div class="hoursTVL">
-          <HoursTVL
-          />
+          <HoursTVL />
         </div>
         <div class="groupTVLRank">
           <GroupTVLRank :GroupName="GroupName" />
@@ -29,18 +27,13 @@
 </template>
 
 <script setup>
-import {
-  onMounted,
-  ref
-} from "vue";
+import { onMounted, ref } from "vue";
 
 import CorpsRanking from "./corpsRanking.vue";
 import GroupTVLRank from "./groupTVLRank.vue";
 import HoursTVL from "./hoursTVL.vue";
 import NewScore from "./newScore.vue";
-import {
-  getGroupListData,
-} from "@/services/index";
+import { getGroupListData } from "@/services/index";
 // 当窗口变化时，获取浏览器窗口宽高
 window.onresize = () => {
   return (() => {
@@ -59,12 +52,15 @@ const GroupName = ref("");
 const getGroupList = async () => {
   spinning.value = true;
   const data = await getGroupListData({ Offset: current.value, Limit: 10 });
-  groupListData.value = [...groupListData.value||[], ...data.result.GroupInfo];
+  groupListData.value = [
+    ...(groupListData.value || []),
+    ...data.result.GroupInfo,
+  ];
   groupListTotal.value = data.result.TotalListNumber;
-  GroupName.value = data.result.GroupInfo[0].GroupName
+  GroupName.value = data.result.GroupInfo[0].GroupName;
   spinning.value = false;
 };
-const getScoreRankGroup =  (val) => {
+const getScoreRankGroup = (val) => {
   GroupName.value = val;
 };
 
@@ -73,7 +69,8 @@ const scrollContainer = ref(null);
 
 // 滚动处理函数
 const handleScroll = () => {
-  if (spinning.value || groupListTotal.value <= groupListData.value?.length) return
+  if (spinning.value || groupListTotal.value <= groupListData.value?.length)
+    return;
   const container = scrollContainer.value;
   if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
     console.log("触底了");
@@ -82,7 +79,7 @@ const handleScroll = () => {
   }
 };
 onMounted(() => {
-  getGroupList()
+  getGroupList();
   window.fullHeight = document.documentElement.clientHeight;
   // 获取bg模块并设置高度
   document.getElementById("rankBg").style.height =
@@ -106,6 +103,7 @@ onMounted(() => {
 }
 .corpsRanking {
   width: 320px;
+  // padding: 0 6px 0 20px;
   height: 720px;
   background-color: #000;
 }

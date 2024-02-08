@@ -1,5 +1,5 @@
 <template>
-  <div class="corpsRanking">
+  <div class="corps-ranking">
     <div class="title">Brc20 corps Ranking</div>
     <div class="search">
       <a-input
@@ -18,7 +18,7 @@
         </template>
       </a-input>
     </div>
-    <div class="list">
+    <div class="list scroll-write-wrap">
       <div class="list_item" v-if="groupList">
         <div class="RankNumber">{{ groupList.GroupRank }}</div>
         <div class="bg"></div>
@@ -108,9 +108,9 @@ const getGroupName = (GroupName) => {
 }
 </style>
 <style scoped lang="scss">
-.corpsRanking {
-  width: 280px !important;
-  margin: 0 auto;
+.corps-ranking {
+  width: 294px;
+  margin-left: 20px;
   .title {
     padding-top: 20px;
     padding-bottom: 17px;
@@ -120,6 +120,7 @@ const getGroupName = (GroupName) => {
   }
   .search {
     height: 24px;
+    width: 280px;
     border-radius: 2px;
     font-family: LilitaOne;
   }
@@ -133,12 +134,14 @@ const getGroupName = (GroupName) => {
     }
     .search-group {
       height: 1px;
+      width: 280px;
       border: 1px dashed #d9d9d9;
       margin-bottom: 10px;
     }
     .list_item {
       position: relative;
       height: 48px;
+      width: 280px;
       background-color: #fff;
       margin-bottom: 12px;
       border-radius: 2px;

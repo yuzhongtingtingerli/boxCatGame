@@ -10,12 +10,33 @@
           @click="getTVL('total')"
         >
           total
+          <span v-if="type === 'total'">
+            <img src="@/assets/i.png" width="2px" />
+            <div class="hover">
+              <img width="240px" src="@/assets/hover-rank.png" alt="" />
+              <p>
+                Rank each address according to the current total points in Bit
+                party; TVL is the total tvl contributed by this address in bit
+                party.
+              </p>
+            </div>
+          </span>
         </div>
         <div
           :class="`ordi ${type === porps.GroupName ? 'active' : ''}`"
           @click="getTVL(porps.GroupName)"
         >
           {{ GroupName }}
+          <span v-if="type === porps.GroupName">
+            <img src="@/assets/i.png" width="2px" />
+            <div class="hover">
+              <img width="240px" src="@/assets/hover-rank.png" alt="" />
+              <p>
+                Ranked by TVL contributed by each address in view group; The
+                Scores are the total points of this address.
+              </p>
+            </div>
+          </span>
         </div>
       </div>
     </div>
@@ -170,15 +191,53 @@ onMounted(() => {
     background-color: #fff;
     border-radius: 4px;
     div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 100px;
       height: 32px;
-      line-height: 32px;
-      text-align: center;
       color: #ccc;
       font-size: 16px;
       font-weight: 400;
       border-radius: 4px;
       cursor: pointer;
+      span {
+        display: inline-flex;
+        margin-left: 11px;
+        align-items: center;
+        justify-content: center;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid #f6cb37;
+        position: relative;
+        cursor: pointer;
+        &:hover .hover {
+          display: block;
+        }
+        .hover {
+          display: none;
+          position: absolute;
+          top: 18px;
+          left: -166px;
+          width: 240px;
+          height: 76px;
+          img {
+            position: absolute;
+          }
+          p {
+            position: absolute;
+            font-family: Inter;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 12px;
+            letter-spacing: 0em;
+            text-align: left;
+            padding: 28px 10px 0;
+            margin: 0;
+          }
+        }
+      }
     }
     .active {
       background-color: #000;

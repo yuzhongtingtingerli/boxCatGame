@@ -3,6 +3,13 @@
     <div class="top">
       <div class="title">MY STAKE</div>
       <div class="wallet" @click="connectETHWallet">
+        <img
+          src="@/assets/matemask.png"
+          width="32px"
+          style="margin-right: 12px"
+          alt=""
+          srcset=""
+        />
         {{
           Address.ETHaddress ? getAddress(Address.ETHaddress) : "Connect Wallet"
         }}

@@ -8,7 +8,11 @@
         <div class="Time">Time</div>
       </div>
       <a-spin :spinning="spinning">
-        <div class="lists" ref="scrollContainer" @scroll="handleScroll">
+        <div
+          class="lists scroll-write-wrap"
+          ref="scrollContainer"
+          @scroll="handleScroll"
+        >
           <div class="list" v-for="(item, index) in LastScoreRank" :key="index">
             <div class="Address">
               <div class="img">

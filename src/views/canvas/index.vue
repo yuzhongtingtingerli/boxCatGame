@@ -158,7 +158,14 @@ function drawGroup(groups, w, h) {
         const img = getCat(isRedCat, count);
         img && ctx.drawImage(img, x, y, w * 0.88, catH * 0.88);
 
-        // 绘制点
+        // 绘制token
+        ctx.font = `${14 * Math.min(scale.value, 1)}px LilitaOne`; // 设置字体大小和类型
+        ctx.fillStyle = "#fff"; // 设置文字颜色
+        const t1 = `${group.GroupName}`;
+        const text1Width = ctx.measureText(t1).width;
+        const text1X = x + (w * 0.68 - text1Width) / 2;
+        const text1Y = y + (catH * 0.98) / 3;
+        ctx.fillText(t1, text1X, text1Y); // 在指定位置绘制文字
       });
       infoList.push({ x, y, w, h, group });
       // 在指定位置绘制文字

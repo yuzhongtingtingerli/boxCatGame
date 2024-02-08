@@ -13,7 +13,7 @@ import Header from "./views/header.vue";
 </template>
 
 <style scoped></style>
-<style>
+<style lang="scss">
 .w1400 {
   width: 1400px;
   margin: 0 auto;
@@ -24,5 +24,25 @@ import Header from "./views/header.vue";
 }
 .ant-modal {
   top: 180px;
+}
+
+.scroll-wrap {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 2px;
+  }
+}
+
+.scroll-write-wrap {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 2px;
+  }
 }
 </style>

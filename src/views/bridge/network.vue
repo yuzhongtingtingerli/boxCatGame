@@ -2,11 +2,16 @@
   <div class="network">
     <div class="BTCWallet">
       <div class="btn" @click="connectBTCWallet">
-        {{
-          Address.getBTCaddress === ""
-            ? "Connect BTC Wallet"
-            : getAddress(Address.getBTCaddress)
-        }}
+        <div class="img" v-if="Address.getBTCaddress">
+          <img src="@/assets/uniset-logo.png" width="32px" alt="" srcset="" />
+        </div>
+        <div class="text">
+          {{
+            Address.getBTCaddress === ""
+              ? "Connect BTC Wallet"
+              : getAddress(Address.getBTCaddress)
+          }}
+        </div>
       </div>
       <div class="title">BRC20 NETWORK</div>
       <div class="tips" v-if="summaryData?.length === 0">
@@ -26,8 +31,8 @@
         <div class="amount change" @click="showAmount">
           <div class="left">Amount</div>
           <div class="right">
-            <span>{{ amountInfo?.data.amt }}</span>
-            <div class="max" @click="getMax">Max</div>
+            <span>{{ amountInfo?.data.amt || "0.00" }}</span>
+            <img src="@/assets/Vector.png" />
           </div>
         </div>
       </div>
@@ -69,11 +74,16 @@
     </div>
     <div class="ETHWallet">
       <div class="btn" @click="connectETHWallet">
-        {{
-          Address.getETHaddress === ""
-            ? "Connect ETH Wallet"
-            : getAddress(Address.getETHaddress)
-        }}
+        <div class="img" v-if="Address.getETHaddress">
+          <img src="@/assets/matemask.png" width="32px" alt="" srcset="" />
+        </div>
+        <div class="text">
+          {{
+            Address.getETHaddress === ""
+              ? "Connect ETH Wallet"
+              : getAddress(Address.getETHaddress)
+          }}
+        </div>
       </div>
       <div class="title">ERC20 NETWORK</div>
 
@@ -220,6 +230,8 @@ onMounted(() => {
   .btn {
     width: 270px;
     height: 44px;
+    display: flex;
+    justify-self: start;
     text-align: center;
     line-height: 44px;
     font-family: LilitaOne;
@@ -229,6 +241,14 @@ onMounted(() => {
     color: #000;
     border-radius: 8px;
     cursor: pointer;
+    .img {
+      width: 56px;
+      border-right: 1px solid rgba(138, 91, 2, 0.5);
+    }
+    .text {
+      width: 214px;
+      text-align: center;
+    }
   }
   .title {
     margin-top: 16px;
@@ -283,21 +303,6 @@ onMounted(() => {
       font-weight: 400;
       padding: 0 18px;
       cursor: pointer;
-    }
-    .amount {
-      display: flex;
-      justify-content: space-between;
-      .right {
-        display: flex;
-        justify-self: start;
-        .max {
-          margin-left: 12px;
-          color: #ffaa08;
-          cursor: pointer;
-        }
-      }
-    }
-    .brc20 {
       display: flex;
       justify-content: space-between;
       cursor: pointer;
@@ -307,6 +312,21 @@ onMounted(() => {
       span {
         opacity: 0.3;
       }
+    }
+    .amount {
+      display: flex;
+      justify-content: space-between;
+      // .right {
+      //   display: flex;
+      //   justify-self: start;
+      //   .max {
+      //     margin-left: 12px;
+      //     color: #ffaa08;
+      //     cursor: pointer;
+      //   }
+      // }
+    }
+    .brc20 {
     }
     .address {
       font-family: LilitaOne;
@@ -344,8 +364,9 @@ onMounted(() => {
       rgba(255, 255, 255, 0.1) 100%
     );
     border: 1px solid #777e90;
+    border-radius: 4px;
     .btn {
-      background-color: #f6cb37;
+      background-color: #ffaa08;
     }
   }
 

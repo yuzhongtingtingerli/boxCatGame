@@ -1,7 +1,7 @@
 <template>
   <div class="joined">
     <Title title="Joined" />
-    <div class="list" v-if="JoinGroupData?.length > 0">
+    <div class="list scroll-wrap" v-if="JoinGroupData?.length > 0">
       <div
         class="list-item"
         v-for="item in JoinGroupData"
@@ -41,14 +41,16 @@ const props = defineProps({
   height: 66px;
   padding-top: 16px;
   padding-right: 7px;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-bottom: 10px;
+  width: 232px;
   .list-item {
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 20px;
+    width: 210px;
     .left {
       display: flex;
       justify-self: start;
