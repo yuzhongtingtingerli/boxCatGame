@@ -6,7 +6,8 @@
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
-    <Error :message="message" :title="msgtitle" />
+    <!-- <Error :message="message" :title="msgtitle" /> -->
+    <!-- <Error :message="message" /> -->
   </div>
 </template>
 
@@ -23,7 +24,7 @@ import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
 import { getGroupDetailInfoData } from "@/services/index";
-import Error from "@/components/error-msg.vue";
+import Error from "@/components/error-info.vue";
 
 const message = ref(
   "Welcome to Bit party !  Looking forward to achieving great results together in the project! "

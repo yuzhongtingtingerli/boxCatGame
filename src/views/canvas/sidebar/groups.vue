@@ -46,9 +46,12 @@
         @scroll="handleScroll"
       >
         <div
-          class="list-item"
           v-for="item in groupListData"
           :key="item.GroupRankNumber"
+          @click="changeGroup(item)"
+          :class="`list-item ${
+            changeGroupName === item.GroupName ? 'changeGroup' : ''
+          }`"
         >
           <div class="RankNumber">{{ item.GroupRankNumber }}</div>
           <div class="bg"></div>
@@ -89,6 +92,11 @@ const handleScroll = () => {
     console.log("触底了");
     emit("load");
   }
+};
+
+const changeGroupName = ref("");
+const changeGroup = (item) => {
+  changeGroupName.value = item.GroupName;
 };
 
 const props = defineProps({
@@ -153,6 +161,7 @@ const getGroupSearch = async (groupName) => {
   border: 1px dashed #d9d9d9;
   margin-bottom: 10px;
 }
+
 .list-item {
   position: relative;
   width: 220px;
@@ -170,6 +179,7 @@ const getGroupSearch = async (groupName) => {
   line-height: 12px;
   letter-spacing: 0em;
   overflow: hidden;
+  cursor: pointer;
   .RankNumber {
     position: absolute;
     top: 2px;
@@ -244,5 +254,8 @@ const getGroupSearch = async (groupName) => {
       text-shadow: none;
     }
   }
+}
+.changeGroup {
+  border: 3px solid #ffc500;
 }
 </style>

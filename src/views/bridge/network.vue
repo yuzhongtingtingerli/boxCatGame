@@ -186,7 +186,7 @@ const openTransfer = async () => {
     StakeTokenSymbol: token.value.ticker,
     StakeTokenBalance: amountInfo.value.data.amt,
   });
-  if (TVLStatus == 0) return;
+  // if (TVLStatus == 0) return;
   showTransferModal();
 };
 

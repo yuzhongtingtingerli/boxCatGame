@@ -77,9 +77,9 @@ const doBridge = async (
   });
   if (res.result.BridgeStatus === "OK") {
     close();
-    emit("change", "success");
+    // emit("change", "success");
   } else {
-    emit("change", "error");
+    // emit("change", "error");
   }
 };
 defineExpose({ open, close });
@@ -100,7 +100,7 @@ defineExpose({ open, close });
       <div class="top">
         <div class="title">It Will Cost 30 Mins</div>
         <div class="close" @click="close">
-          <img src="@/assets/close.png" alt="" srcset="" />
+          <img src="@/assets/close.png" height="24px" alt="" srcset="" />
         </div>
       </div>
       <div class="list">
@@ -173,6 +173,9 @@ defineExpose({ open, close });
     font-family: LilitaOne;
     font-size: 15px;
     font-weight: 400;
+  }
+  .close {
+    cursor: pointer;
   }
   .list {
     display: flex;

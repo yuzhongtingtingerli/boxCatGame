@@ -79,7 +79,7 @@ defineExpose({ open, close });
     <div class="modal_style">
       <img class="head-img" src="@/assets/cat_ava.png" />
       <div class="close" @click="close">
-        <img src="@/assets/close.png" alt="" srcset="" />
+        <img src="@/assets/close.png" height="24px" alt="" srcset="" />
       </div>
       <div class="title">Select A Token</div>
       <div class="search">
@@ -132,6 +132,7 @@ defineExpose({ open, close });
     position: absolute;
     right: -16px;
     top: -14px;
+    cursor: pointer;
   }
   .search {
     width: 100%;
