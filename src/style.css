@@ -36,3 +36,7 @@ body {
 .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
   text-align: center;
 }
+/* ::-webkit-scrollbar {
+  width: 3px;
+  height: 25px;
+} */

@@ -6,6 +6,7 @@
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
+    <Error :message="message" :title="msgtitle" />
   </div>
 </template>
 
@@ -22,7 +23,12 @@ import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
 import { getGroupDetailInfoData } from "@/services/index";
+import Error from "@/components/error-msg.vue";
 
+const message = ref(
+  "Welcome to Bit party !  Looking forward to achieving great results together in the project! "
+);
+const msgtitle = ref("there are something wrong");
 const getGroupDetailInfo = async () => {
   const res = await getGroupDetailInfoData();
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
