@@ -13,8 +13,6 @@ declare module 'vue' {
     APagination: typeof import('ant-design-vue/es')['Pagination']
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
-    copy: typeof import('./src/components/error-info copy.vue')['default']
-    Error: typeof import('./src/components/error.vue')['default']
     ErrorInfo: typeof import('./src/components/error-info.vue')['default']
     ErrorMsg: typeof import('./src/components/error-msg.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

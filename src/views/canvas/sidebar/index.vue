@@ -31,6 +31,9 @@
     <div class="open-drawer">
       <img src="@/assets/open-drawer.png" @click="open = true" />
     </div>
+    <div :style="`display: ${errorShow ? 'block' : 'none'}`">
+      <ErrorInfo :message="errorInfoTitle" />
+    </div>
   </div>
 </template>
 
@@ -42,6 +45,7 @@ import YourBrc20 from "./yourBrc20.vue";
 import YourScore from "./yourScore.vue";
 import Joined from "./joined.vue";
 import Groups from "./groups.vue";
+import ErrorInfo from "@/components/error-info.vue";
 import {
   getScoreData,
   getJoinGroupData,
@@ -63,8 +67,19 @@ const getScore = async () => {
   ScoreData.value = data.result;
 };
 const router = useRouter();
+const errorInfoTitle = ref("");
+const errorShow = ref(false);
 const handleJoinGroup = () => {
-  router.push("stake");
+  if (Address.getBTCaddress) {
+    router.push("stake");
+  } else {
+    errorShow.value = true;
+    errorInfoTitle.value =
+      "You should connect your BTC wallet first, Explorer!";
+    setTimeout(() => {
+      errorShow.value = false;
+    }, 3000);
+  }
 };
 // 加入军团列表
 const JoinGroupData = ref(null);
