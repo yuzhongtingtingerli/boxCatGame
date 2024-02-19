@@ -4,7 +4,7 @@
       <div class="logo">
         <img src="@/assets/error_logo.png" height="300px" alt="" srcset="" />
       </div>
-      {{ message }}
+      <div class="msg">{{ message }}</div>
     </div>
   </div>
 </template>
@@ -48,6 +48,10 @@ const props = defineProps({
     bottom: -76px;
     left: -71px;
     z-index: 2;
+  }
+  .msg {
+    width: 715px;
+    margin: 0 auto;
   }
 }
 </style>

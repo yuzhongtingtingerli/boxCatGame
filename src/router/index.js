@@ -5,8 +5,21 @@ import Canvas from "../views/canvas/index.vue";
 import Rank from "../views/rank/index.vue";
 import Bridge from "../views/bridge/index.vue";
 import Stake from "../views/stake/index.vue";
-
+import Empty from "../views/empty.vue";
+import { requestM } from "@/services/request.js";
+const getIp = async () => {
+  const ipconfig = await requestM("https://ifconfig.me/ip");
+  const { countryCode } = await requestM(
+    `http://ip-api.com/json/${ipconfig}?lang=en`
+  );
+  return countryCode;
+};
 const routes = [
+  {
+    path: "/empty",
+    name: "Empty",
+    component: Empty,
+  },
   {
     path: "/",
     name: "Home",
@@ -37,6 +50,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  const countryCode = await getIp();
+  if (to.name !== "Empty" && (countryCode === "CN" || countryCode === "US"))
+    next({ name: "Empty" });
+  else next();
 });
 
 export default router;

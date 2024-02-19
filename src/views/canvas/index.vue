@@ -2,12 +2,14 @@
   <div class="canvas">
     <!-- {{ offsetX }} -->
     <!-- {{ offsetY }} -->
+    <Loading ref="loadingRef" />
     <video muted autoplay controls ref="videoRef" :src="cut1920"></video>
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
-    <!-- <Error :message="message" :title="msgtitle" /> -->
-    <!-- <Error :message="message" /> -->
+    <div :style="`display: ${errorShow ? 'block' : 'none'}`">
+      <ErrorInfo :message="errorInfoTitle" />
+    </div>
   </div>
 </template>
 
@@ -24,16 +26,33 @@ import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
 import { getGroupDetailInfoData } from "@/services/index";
-import Error from "@/components/error-info.vue";
+import ErrorInfo from "@/components/error-info.vue";
+import Loading from "./loading.vue";
 
-const message = ref(
-  "Welcome to Bit party !  Looking forward to achieving great results together in the project! "
-);
-const msgtitle = ref("there are something wrong");
+// 错误弹窗
+const errorInfoTitle = ref("");
+const errorShow = ref(false);
+const loadingRef = ref(null);
+const onStart = (flag) => {
+  loadingRef.value.startOrStop(flag);
+};
 const getGroupDetailInfo = async () => {
   const res = await getGroupDetailInfoData();
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
+  await onStart(false);
+  await isShowError(
+    "Welcome to Bit party !  Join the BRC20 Group you hold and win BTZ. Good luck !",
+    5000
+  );
   // drawInit(arr);
+};
+
+const isShowError = (title, time = 3000) => {
+  errorShow.value = true;
+  errorInfoTitle.value = title;
+  setTimeout(() => {
+    errorShow.value = false;
+  }, time);
 };
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();
@@ -207,6 +226,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   ctx.fillText(t2, text2X, text2Y);
 }
 onMounted(async () => {
+  await onStart(true);
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   await Promise.all([
@@ -224,6 +244,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.canvas {
+  position: relative;
+}
 video {
   width: 0px;
   opacity: 0;

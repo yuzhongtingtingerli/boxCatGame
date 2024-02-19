@@ -51,10 +51,12 @@ import {
   getJoinGroupData,
   getGroupListData,
 } from "@/services/index";
-import { getUniSatAddress } from "@/utils/Tools";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
+// 错误弹窗
+const errorInfoTitle = ref("");
+const errorShow = ref(false);
 const open = ref(true);
 const closeDrawer = () => {
   open.value = false;
@@ -67,19 +69,20 @@ const getScore = async () => {
   ScoreData.value = data.result;
 };
 const router = useRouter();
-const errorInfoTitle = ref("");
-const errorShow = ref(false);
 const handleJoinGroup = () => {
   if (Address.getBTCaddress) {
     router.push("stake");
   } else {
-    errorShow.value = true;
-    errorInfoTitle.value =
-      "You should connect your BTC wallet first, Explorer!";
-    setTimeout(() => {
-      errorShow.value = false;
-    }, 3000);
+    isShowError("You should connect your BTC wallet first, Explorer!");
   }
+};
+
+const isShowError = (title, time = 3000) => {
+  errorShow.value = true;
+  errorInfoTitle.value = title;
+  setTimeout(() => {
+    errorShow.value = false;
+  }, time);
 };
 // 加入军团列表
 const JoinGroupData = ref(null);
