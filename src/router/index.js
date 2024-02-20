@@ -1,5 +1,5 @@
 // router/index.js
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/home/index.vue";
 import Canvas from "../views/canvas/index.vue";
 import Rank from "../views/rank/index.vue";
@@ -48,12 +48,14 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
-
+let countryCode;
 router.beforeEach(async (to, from, next) => {
-  const countryCode = await getIp();
+  if (!countryCode) {
+    // countryCode = await getIp();
+  }
   if (to.name !== "Empty" && (countryCode === "CN" || countryCode === "US"))
     next({ name: "Empty" });
   else next();

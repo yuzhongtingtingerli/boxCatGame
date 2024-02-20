@@ -26,7 +26,6 @@
 </template>
 
 <script setup>
-import Web3 from "web3";
 import { ref, onMounted } from "vue";
 import MyTokenList from "./myTokenList.vue";
 import MyStakeList from "./myStakeList.vue";
@@ -34,12 +33,12 @@ import { getAddress } from "@/utils/Tools";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
-const address = ref("");
 const connectETHWallet = async () => {
   Address.linkETHWallet();
 };
 onMounted(() => {
   Address.getETHWallet();
+  Address.getBTCWallet();
 });
 </script>
 <style scoped lang="scss">

@@ -71,7 +71,7 @@ const getScore = async () => {
 const router = useRouter();
 const handleJoinGroup = () => {
   if (Address.getBTCaddress) {
-    router.push("stake");
+    router.push({ path: "/stake", query: { from: "JoinGroup" } });
   } else {
     isShowError("You should connect your BTC wallet first, Explorer!");
   }

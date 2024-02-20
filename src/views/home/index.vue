@@ -97,7 +97,7 @@
         </div>
       </div>
     </div>
-    <div class="footer">
+    <div class="bottom">
       <Footer />
     </div>
   </div>
@@ -272,7 +272,7 @@ const unfolding = (index) => {
     }
   }
 }
-.footer {
+.bottom {
   border-top: 1px solid #333;
 }
 </style>

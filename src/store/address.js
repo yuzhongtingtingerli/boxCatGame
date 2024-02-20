@@ -10,9 +10,8 @@ export const useAddressStore = defineStore("address", {
   // 也可以定义为
   // state: () => ({ count: 0 })
   getters: {
-    getBTCaddress: (state) =>
-      state.BTCaddress || localStorage.getItem("BTCaddress") || "",
-    getETHaddress: (state, actions) => state.ETHaddress || "",
+    getBTCaddress: (state) => state.BTCaddress || "",
+    getETHaddress: (state) => state.ETHaddress || "",
   },
   actions: {
     async linkWallet() {
@@ -29,9 +28,7 @@ export const useAddressStore = defineStore("address", {
       try {
         let unisat = window.unisat;
         const accounts = await unisat?.requestAccounts();
-        console.log("connect success", accounts);
         this.BTCaddress = accounts[0];
-        localStorage.setItem("BTCaddress", accounts[0]);
         this.subscribeProvider();
       } catch (error) {
         console.log(error, "error");
@@ -43,7 +40,6 @@ export const useAddressStore = defineStore("address", {
       window.unisat?.on("accountsChanged", (accounts) => {
         console.log(accounts, "accountsChanged");
         this.BTCaddress = accounts[0] || "";
-        localStorage.setItem("BTCaddress", accounts[0] || "");
       });
     },
 
@@ -60,6 +56,12 @@ export const useAddressStore = defineStore("address", {
         if (res.length > 0) {
           this.ETHaddress = res[0];
         }
+        // 监听地址变化事件
+        web3.currentProvider.on("accountsChanged", (accounts) => {
+          // 处理地址变化事件
+          this.ETHaddress = accounts[0] || "";
+          console.log("Address changed:", accounts);
+        });
       }
     },
 
@@ -68,8 +70,13 @@ export const useAddressStore = defineStore("address", {
       const web3 = new Web3(window.ethereum);
       const res = await web3.eth.getAccounts();
       if (res.length > 0) {
-        this.ETHaddress = res[0];
+        this.ETHaddress = res[0] || "";
       }
+    },
+    async getBTCWallet() {
+      let res = await window?.unisat.getAccounts();
+      console.log(res);
+      this.BTCaddress = res[0] || "";
     },
   },
 });

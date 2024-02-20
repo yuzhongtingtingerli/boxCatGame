@@ -1,6 +1,6 @@
 <template>
   <div class="YourBrc20">
-    <Title title="Your Brc20" />
+    <Title title="Your Assets" />
     <div class="list">
       <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
         <div class="left">

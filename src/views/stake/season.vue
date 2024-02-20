@@ -3,6 +3,7 @@
     <div class="title">
       <div class="title-item">Season 1</div>
       <div class="title-item">Season 2</div>
+      <div class="title-item">Season 3</div>
     </div>
     <div class="progress">
       <div
@@ -20,7 +21,7 @@
         }px`"
       ></div>
       <div class="currentStakeTime">
-        {{ seasonData.CurrentStakeTime }} days Left
+        Will End At BTC Block Height {{ seasonData.CurrentBlockNumber }}
       </div>
     </div>
     <div class="info">
@@ -117,7 +118,7 @@ onMounted(() => {
       background-image: url("@/assets/season.png");
     }
     .currentStakeTime {
-      margin-right: 20px;
+      margin-right: 60px;
     }
   }
   .info {

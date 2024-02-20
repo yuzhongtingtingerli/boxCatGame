@@ -70,6 +70,7 @@
           </div>
         </div>
         <a-pagination
+          v-if="total > 10"
           v-model:current="current"
           :pageSize="10"
           :total="total"
@@ -100,6 +101,7 @@
           </div>
         </div>
         <a-pagination
+          v-if="total > 10"
           v-model:current="current"
           :pageSize="10"
           :total="total"

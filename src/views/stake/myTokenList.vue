@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getWalletStakeInfoData } from "@/services/index";
 import bitpartyAddress from "../bridge/bitpartyAddress.vue";
@@ -50,6 +50,13 @@ const getWalletStakeInfo = async () => {
   const res = await getWalletStakeInfoData({ UserAddress: props.address });
   walletStakeInfo.value = res.result.WalletInfo;
 };
+watch(
+  props.address,
+  (newVal, oldVal) => {
+    getWalletStakeInfo();
+  },
+  { immediate: true }
+);
 onMounted(() => {
   getWalletStakeInfo();
 });

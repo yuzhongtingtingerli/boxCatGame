@@ -33,7 +33,7 @@ import Loading from "./loading.vue";
 const errorInfoTitle = ref("");
 const errorShow = ref(false);
 const loadingRef = ref(null);
-const onStart = (flag) => {
+const onStart = async (flag) => {
   loadingRef.value.startOrStop(flag);
 };
 const getGroupDetailInfo = async () => {
@@ -246,6 +246,7 @@ onMounted(async () => {
 <style scoped>
 .canvas {
   position: relative;
+  background: #fff;
 }
 video {
   width: 0px;

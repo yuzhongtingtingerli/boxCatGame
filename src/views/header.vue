@@ -35,7 +35,14 @@
         </div>
       </div>
       <div class="right">
-        <div class="icon">
+        <div
+          class="icon"
+          v-if="
+            currentRoute != '/bridge' &&
+            currentRoute != '/stake' &&
+            currentRoute != '/rank'
+          "
+        >
           <a href="">
             <img
               v-if="currentRoute === '/rank'"
@@ -64,7 +71,11 @@
             <img v-else src="@/assets/head_t.png" alt="" srcset="" />
           </a>
         </div>
-        <div class="Wallet" @click="connectWallet">
+        <div
+          class="Wallet"
+          @click="connectWallet"
+          v-if="currentRoute != '/bridge' && currentRoute != '/stake'"
+        >
           <img
             v-if="Address.getBTCaddress"
             src="@/assets/uniset-logo.png"

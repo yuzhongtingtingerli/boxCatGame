@@ -51,7 +51,7 @@
     </div>
     <div v-else class="information noInformation">No Information</div>
     <a-pagination
-      v-if="myRecord?.length > 0"
+      v-if="myRecord?.length > 0 && total > 4"
       v-model:current="current"
       :pageSize="4"
       :total="total"

@@ -118,7 +118,6 @@
 </template>
 
 <script setup>
-import Web3 from "web3";
 import { ref, reactive, onBeforeMount, onMounted } from "vue";
 import { InfoCircleOutlined } from "@ant-design/icons-vue";
 import { getAddress, getUniSatAddress } from "@/utils/Tools";
@@ -205,6 +204,7 @@ const connectETHWallet = async () => {
 };
 onMounted(() => {
   Address.getETHWallet();
+  Address.getBTCWallet();
 });
 </script>
 <style>

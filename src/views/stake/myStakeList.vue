@@ -9,12 +9,12 @@
         <div class="mean">My Total TVL</div>
         <div class="num">{{ getMoney(SakeList.TotalTVL) }} BTC</div>
       </div>
-      <div class="time" v-if="treasureData.TimeTreasure == 1">
+      <div class="time" v-if="treasureData?.TimeTreasure == 1">
         <div class="stake1"></div>
         <div class="stake2"></div>
         <div class="text">Time Treasure</div>
       </div>
-      <div class="score" v-if="treasureData.ScoreTreasure == 1">
+      <div class="score" v-if="treasureData?.ScoreTreasure == 1">
         <div class="stake1"></div>
         <div class="stake2"></div>
         <div class="text">Score Treasure</div>
@@ -52,6 +52,7 @@
 <script setup>
 import {
   ref,
+  watch,
   reactive,
   toRefs,
   onBeforeMount,
@@ -95,23 +96,18 @@ const getTreasure = async () => {
   const res = await getTreasureData({ UserAddress: props.address });
   treasureData.value = res.result;
 };
-// const treasureData = {
-//   TimeTreasure: "1",
-//   ScoreTreasure: "1",
-// };
-onBeforeMount(() => {
-  //console.log('2.组件挂载页面之前执行----onBeforeMount')
-});
+watch(
+  props.address,
+  (newVal, oldVal) => {
+    getSakeList();
+    getTreasure();
+  },
+  { immediate: true }
+);
 onMounted(() => {
-  getSakeList();
-  getTreasure();
+  // getSakeList();
+  // getTreasure();
   //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
-watchEffect(() => {});
-// 使用toRefs解构
-// let { } = { ...toRefs(data) }
-defineExpose({
-  ...toRefs(data),
 });
 </script>
 <style scoped lang="scss">

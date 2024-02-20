@@ -1,5 +1,5 @@
 <template>
-  <div class="error-msg">
+  <div class="error-msg" :style="`display: ${isShow ? 'block' : 'none'}`">
     <div class="info">
       <div class="logo">
         <img src="@/assets/cat_ava.png" height="100px" alt="" srcset="" />
@@ -8,7 +8,7 @@
         <div class="close" @click="colse">
           <img src="@/assets/close.png" height="24px" alt="" srcset="" />
         </div>
-        <div class="title1">Woops!</div>
+        <div class="title1">{{ headline }}</div>
         <div class="title2">{{ title }}</div>
         <div class="msg">{{ message }}</div>
       </div>
@@ -17,13 +17,21 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { ref, defineProps, defineExpose } from "vue";
 
 const props = defineProps({
   message: String,
   title: String,
+  headline: String,
 });
-const colse = () => {};
+const isShow = ref(false);
+const colse = () => {
+  isShow.value = false;
+};
+const open = () => {
+  isShow.value = true;
+};
+defineExpose({ open, close });
 </script>
 <style scoped lang="scss">
 .error-msg {
@@ -34,6 +42,7 @@ const colse = () => {};
   left: 0;
   top: 0;
   z-index: 9999;
+  color: #000;
   .info {
     position: absolute;
     top: 50%;
