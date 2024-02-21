@@ -13,7 +13,10 @@
         {{ getAddress(Address.getBTCaddress) }}
       </div>
     </div>
-    <div v-if="myRecord?.length > 0" class="information">
+    <div
+      v-if="myRecord?.length > 0 && Address.getBTCaddress"
+      class="information"
+    >
       <div
         class="list-item"
         v-for="item in myRecord"
@@ -51,7 +54,7 @@
     </div>
     <div v-else class="information noInformation">No Information</div>
     <a-pagination
-      v-if="myRecord?.length > 0 && total > 4"
+      v-if="myRecord?.length > 0 && total > 4 && Address.getBTCaddress"
       v-model:current="current"
       :pageSize="4"
       :total="total"
@@ -78,6 +81,7 @@ const handleChange = (page, pageSize) => {
   getBridgeList();
 };
 const getBridgeList = async () => {
+  if (!Address.getBTCaddress) return;
   const res = await getBridgeListData({
     BridgeType: 1,
     UserAddress: Address.getBTCaddress,
@@ -113,8 +117,9 @@ const getStatusColor = (status) => {
   return color;
 };
 watch(
-  Address.getBTCaddress,
+  Address,
   (newVal, oldVal) => {
+    console.log(newVal, oldVal, Address.getBTCaddress, "Address.getBTCaddress");
     getBridgeList();
   },
   { immediate: true }

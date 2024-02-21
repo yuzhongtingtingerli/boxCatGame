@@ -1,5 +1,5 @@
 <template>
-  <div class="error-info">
+  <div class="error-info" :style="`display: ${errorShow ? 'block' : 'none'}`">
     <div class="info">
       <div class="logo">
         <img src="@/assets/error_logo.png" height="300px" alt="" srcset="" />
@@ -10,11 +10,17 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
-
-const props = defineProps({
-  message: String,
-});
+import { ref } from "vue";
+const errorShow = ref(false);
+const message = ref("");
+const open = (title, time = 3000) => {
+  message.value = title;
+  errorShow.value = true;
+  setTimeout(() => {
+    errorShow.value = false;
+  }, time);
+};
+defineExpose({ open });
 </script>
 <style scoped lang="scss">
 .error-info {
@@ -52,6 +58,7 @@ const props = defineProps({
   .msg {
     width: 715px;
     margin: 0 auto;
+    color: #000;
   }
 }
 </style>

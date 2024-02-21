@@ -18,11 +18,14 @@ import {
   getTreasure,
   doStake,
   getTVLStatus,
+  checkAddressMapping,
+  insertAddressMapping,
+  getETHContractAddress,
 } from "./api";
 
-export const getGroupDetailInfoData = async () => {
+export const getGroupDetailInfoData = async (params) => {
   try {
-    const { code, result, status } = await getGroupDetailInfo();
+    const { code, result, status } = await getGroupDetailInfo(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };
@@ -275,6 +278,48 @@ export const doStakeData = async (params) => {
 export const getTVLStatusData = async (params) => {
   try {
     const { code, result, status } = await getTVLStatus(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const checkAddressMappingData = async (params) => {
+  try {
+    const { code, result, status } = await checkAddressMapping(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const insertAddressMappingData = async (params) => {
+  try {
+    const { code, result, status } = await insertAddressMapping(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getETHContractAddressData = async (params) => {
+  try {
+    const { code, result, status } = await getETHContractAddress(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

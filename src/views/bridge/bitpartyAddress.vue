@@ -45,6 +45,7 @@ const goStake = async () => {
         )
         .send({ from: fromAddresses[0] });
       close();
+      emit("change", res.transactionHash);
     });
 };
 

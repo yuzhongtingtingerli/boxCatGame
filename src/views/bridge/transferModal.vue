@@ -76,7 +76,7 @@ const doBridge = async (
   });
   if (res.result.BridgeStatus === "OK") {
     close();
-    emit("change", "success");
+    emit("change", "success", BridgeTxHash);
   } else {
     emit("change", "error");
   }

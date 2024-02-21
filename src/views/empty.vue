@@ -1,6 +1,5 @@
 <template>
   <div class="empty">
-    11111
     <ErrorInfo :message="errorInfoTitle" />
   </div>
 </template>

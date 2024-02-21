@@ -7,9 +7,7 @@
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
-    <div :style="`display: ${errorShow ? 'block' : 'none'}`">
-      <ErrorInfo :message="errorInfoTitle" />
-    </div>
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
@@ -28,7 +26,9 @@ import Sidebar from "./sidebar/index.vue";
 import { getGroupDetailInfoData } from "@/services/index";
 import ErrorInfo from "@/components/error-info.vue";
 import Loading from "./loading.vue";
+import { useAddressStore } from "@/store/address";
 
+const Address = useAddressStore();
 // 错误弹窗
 const errorInfoTitle = ref("");
 const errorShow = ref(false);
@@ -36,8 +36,8 @@ const loadingRef = ref(null);
 const onStart = async (flag) => {
   loadingRef.value.startOrStop(flag);
 };
-const getGroupDetailInfo = async () => {
-  const res = await getGroupDetailInfoData();
+const getGroupDetailInfo = async (Address) => {
+  const res = await getGroupDetailInfoData(Address);
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
   await isShowError(
@@ -46,13 +46,18 @@ const getGroupDetailInfo = async () => {
   );
   // drawInit(arr);
 };
-
-const isShowError = (title, time = 3000) => {
-  errorShow.value = true;
-  errorInfoTitle.value = title;
-  setTimeout(() => {
-    errorShow.value = false;
-  }, time);
+watch(
+  Address.getBTCaddress,
+  () => {
+    if (Address.getBTCaddress) {
+      getGroupDetailInfo(Address.getBTCaddress);
+    }
+  },
+  { immediate: true }
+);
+const errorInfoRef = ref(null);
+const isShowError = (title) => {
+  errorInfoRef.value.open(title);
 };
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();

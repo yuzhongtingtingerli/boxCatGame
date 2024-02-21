@@ -31,9 +31,7 @@
     <div class="open-drawer">
       <img src="@/assets/open-drawer.png" @click="open = true" />
     </div>
-    <div :style="`display: ${errorShow ? 'block' : 'none'}`">
-      <ErrorInfo :message="errorInfoTitle" />
-    </div>
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
@@ -54,9 +52,6 @@ import {
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
-// 错误弹窗
-const errorInfoTitle = ref("");
-const errorShow = ref(false);
 const open = ref(true);
 const closeDrawer = () => {
   open.value = false;
@@ -77,12 +72,9 @@ const handleJoinGroup = () => {
   }
 };
 
-const isShowError = (title, time = 3000) => {
-  errorShow.value = true;
-  errorInfoTitle.value = title;
-  setTimeout(() => {
-    errorShow.value = false;
-  }, time);
+const errorInfoRef = ref(null);
+const isShowError = (title) => {
+  errorInfoRef.value.open(title);
 };
 // 加入军团列表
 const JoinGroupData = ref(null);

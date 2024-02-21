@@ -14,10 +14,9 @@
         </div>
       </div>
       <div class="title">BRC20 NETWORK</div>
-      <div class="tips" v-if="summaryData?.length === 0">
-        You Should Do Something First<InfoCircleOutlined
-          style="font-size: 12px; margin-left: 10px"
-        />
+      <div class="tips" v-if="errorMsg">
+        {{ errorMsg
+        }}<InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
         <div class="tip">You Should Do Something First</div>
       </div>
       <div class="content">
@@ -98,13 +97,13 @@
           <div class="left">Amount</div>
           <div class="right">{{ amountInfo?.data.amt }}</div>
         </div>
-        <div class="address">
-          Ordi eth contract address:
-          {{
-            getAddress(
-              "bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k"
-            )
-          }}
+        <div
+          class="address"
+          v-if="TokenContractAddress"
+          @click="goTokenContractAddress"
+        >
+          {{ token?.ticker }} eth contract address:
+          {{ getAddress(TokenContractAddress) }}
           <img src="@/assets/Magnifying.png" alt="" />
         </div>
       </div>
@@ -114,20 +113,28 @@
     <selectToken ref="selectTokenRef" @change="changeToken" />
     <selectAmount ref="selectAmountRef" @change="changeAmount" />
     <transferModal ref="transferModalRef" @change="isSuccess" />
+    <ErrorInfo ref="errorInfoRef" />
+    <SuccessMsg ref="successMsgRef" />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onBeforeMount, onMounted } from "vue";
 import { InfoCircleOutlined } from "@ant-design/icons-vue";
-import { getAddress, getUniSatAddress } from "@/utils/Tools";
-import { getRecommendedData } from "@/services/wallet.js";
-import { getTVLStatusData } from "@/services/index.js";
+import { getAddress } from "@/utils/Tools";
+import {
+  getTVLStatusData,
+  getETHContractAddressData,
+  checkAddressMappingData,
+  insertAddressMappingData,
+} from "@/services/index.js";
 
 import { useAddressStore } from "@/store/address";
 import selectToken from "./selectToken.vue";
 import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
+import ErrorInfo from "@/components/error-info.vue";
+import SuccessMsg from "@/components/success-msg.vue";
 const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
@@ -144,6 +151,18 @@ const showModal = () => {
 const token = ref(null);
 const changeToken = (data) => {
   token.value = data;
+  getETHContractAddress(data.ticker);
+};
+
+const TokenContractAddress = ref("");
+const getETHContractAddress = async (TokenSymbol) => {
+  const res = await getETHContractAddressData({ TokenSymbol });
+  TokenContractAddress.value = res.result.TokenContractAddress;
+};
+
+const goTokenContractAddress = () => {
+  const url = `https://etherscan.io/address/${TokenContractAddress.value}`;
+  window.open(url, "_blank");
 };
 
 // amount 弹框
@@ -155,8 +174,10 @@ const amountInfo = ref();
 const changeAmount = (data) => {
   amountInfo.value = data;
 };
-const isSuccess = (type) => {
+const successMsgRef = ref(null);
+const isSuccess = (type, txid) => {
   if (type == "success") {
+    successMsgRef.value.open(txid);
   }
 };
 
@@ -188,15 +209,50 @@ const getTVLStatus = async ({ StakeTokenSymbol, StakeTokenBalance }) => {
   const res = await getTVLStatusData({ StakeTokenSymbol, StakeTokenBalance });
   return res.result.TVLStatus;
 };
-
+const errorMsg = ref("");
+const errorInfoRef = ref(null);
+const isShowError = (title) => {
+  errorInfoRef.value.open(title);
+};
 const openTransfer = async () => {
   if (!token.value) return;
+  const CheckMappingStatus = await checkAddressMapping();
+  if (CheckMappingStatus == 2) {
+    const InsertMappingStatus = await insertAddressMapping();
+    if (InsertMappingStatus !== "OK") {
+      isShowError(
+        "The logging btc address is not matching the logging ethereum address!"
+      );
+      return;
+    }
+  } else if (CheckMappingStatus == 0) {
+    isShowError(
+      "Can not create mapping between bitcoin address and ethereum address！"
+    );
+    return;
+  }
   const TVLStatus = await getTVLStatus({
     StakeTokenSymbol: token.value.ticker,
     StakeTokenBalance: amountInfo.value.data.amt,
   });
   // if (TVLStatus == 0) return;
   showTransferModal();
+};
+
+const checkAddressMapping = async () => {
+  const res = await checkAddressMappingData({
+    BtcAddress: Address.getBTCaddress,
+    EthAddress: Address.getETHaddress,
+  });
+  return res.result.CheckMappingStatus;
+};
+
+const insertAddressMapping = async () => {
+  const res = await insertAddressMappingData({
+    BtcAddress: Address.getBTCaddress,
+    EthAddress: Address.getETHaddress,
+  });
+  return res.result.InsertMappingStatus;
 };
 
 const connectETHWallet = async () => {
@@ -338,6 +394,7 @@ onMounted(() => {
       margin-bottom: 30px;
       text-decoration: underline;
       margin-top: 12px;
+      cursor: pointer;
     }
   }
   .transfer {

@@ -22,3 +22,7 @@ export const getUniSatAddress = async () => {
     }
   }
 };
+
+export const toUpperCase = (str) => {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+};

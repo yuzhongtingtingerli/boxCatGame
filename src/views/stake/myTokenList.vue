@@ -29,7 +29,8 @@
         </div>
       </div>
     </div>
-    <bitpartyAddress ref="bitpartyAddressRef" />
+    <bitpartyAddress ref="bitpartyAddressRef" @change="isSuccess" />
+    <StakeSuccess ref="stakeSuccessRef" />
   </div>
 </template>
 
@@ -38,8 +39,15 @@ import { ref, onMounted, watch } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getWalletStakeInfoData } from "@/services/index";
 import bitpartyAddress from "../bridge/bitpartyAddress.vue";
+import StakeSuccess from "@/components/stake-success.vue";
+const stakeSuccessRef = ref(null);
 const bitpartyAddressRef = ref(null);
+const isSuccess = (txid) => {
+  stakeSuccessRef.value.open(txid, TokenSymbol.value);
+};
+const TokenSymbol = ref("");
 const handleStatus = (item) => {
+  TokenSymbol.value = item.TokenSymbol;
   bitpartyAddressRef.value.open(item);
 };
 const props = defineProps({

@@ -1,7 +1,7 @@
 import { request } from "./request.js";
 
-export const getGroupDetailInfo = () => {
-  return request(`/blockchain/getGroupDetailInfo`, "get");
+export const getGroupDetailInfo = (params) => {
+  return request(`/blockchain/getGroupDetailInfo?UserAddress=${params}`, "get");
 };
 
 export const getScore = (params) => {
@@ -109,6 +109,27 @@ export const doStake = ({
 export const getTVLStatus = ({ StakeTokenSymbol, StakeTokenBalance }) => {
   return request(
     `/stake/getTVLStatus?StakeTokenSymbol=${StakeTokenSymbol}&StakeTokenBalance=${StakeTokenBalance}`,
+    "get"
+  );
+};
+
+export const checkAddressMapping = ({ BtcAddress, EthAddress }) => {
+  return request(
+    `/stake/checkAddressMapping?BtcAddress=${BtcAddress}&EthAddress=${EthAddress}`,
+    "get"
+  );
+};
+
+export const insertAddressMapping = ({ BtcAddress, EthAddress }) => {
+  return request(
+    `/stake/insertAddressMapping?BtcAddress=${BtcAddress}&EthAddress=${EthAddress}`,
+    "get"
+  );
+};
+
+export const getETHContractAddress = ({ TokenSymbol }) => {
+  return request(
+    `/stake/getETHContractAddress?TokenSymbol=${TokenSymbol}`,
     "get"
   );
 };
