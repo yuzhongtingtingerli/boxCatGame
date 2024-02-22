@@ -1,29 +1,34 @@
 <template>
   <div class="myStakeList" v-if="SakeList">
     <div class="top">
-      <div class="myScore">
-        <div class="mean">My Total Score</div>
-        <div class="num">{{ getMoney(SakeList.TotalScore) }}</div>
+      <div class="left">
+        <div class="myScore">
+          <div class="mean">My Total Score</div>
+          <div class="num">{{ getMoney(SakeList?.TotalScore || 0) }}</div>
+        </div>
+        <div class="myTotal">
+          <div class="mean">My Total TVL</div>
+          <div class="num">{{ getMoney(SakeList?.TotalTVL || 0) }} BTC</div>
+        </div>
       </div>
-      <div class="myTotal">
-        <div class="mean">My Total TVL</div>
-        <div class="num">{{ getMoney(SakeList.TotalTVL) }} BTC</div>
-      </div>
-      <div class="time" v-if="treasureData?.TimeTreasure == 1">
-        <div class="stake1"></div>
-        <div class="stake2"></div>
-        <div class="text">Time Treasure</div>
-      </div>
-      <div class="score" v-if="treasureData?.ScoreTreasure == 1">
-        <div class="stake1"></div>
-        <div class="stake2"></div>
-        <div class="text">Score Treasure</div>
+      <div class="right">
+        <div class="time" v-if="treasureData?.TimeTreasure == 1">
+          <div class="stake1"></div>
+          <div class="stake2"></div>
+          <div class="text">Time Treasure</div>
+        </div>
+        <div class="score" v-if="treasureData?.ScoreTreasure == 1">
+          <div class="stake1"></div>
+          <div class="stake2"></div>
+          <div class="text">Score Treasure</div>
+        </div>
       </div>
     </div>
-    <div class="nomain" v-if="StakeInfo?.length === 0">Empty</div>
-    <div class="main" v-else>
+    <!-- <div class="nomain" v-if="StakeInfo?.length === 0"></div> -->
+    <div class="main">
       <div class="title">My Stake List</div>
-      <div class="content">
+      <div class="nocontent" v-if="StakeInfo?.length === 0">Empty</div>
+      <div class="content" v-else>
         <div class="list header">
           <div class="token">Token</div>
           <div class="amount">Amount</div>
@@ -50,65 +55,34 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  watch,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  watchEffect,
-  computed,
-} from "vue";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { ref, watch } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getSakeListData, getTreasureData } from "@/services/index";
-/**
- * 仓库
- */
-const store = useStore();
-/**
- * 路由对象
- */
-const route = useRoute();
-/**
- * 路由实例
- */
-const router = useRouter();
-//console.log('1-开始创建组件-setup')
-/**
- * 数据部分
- */
-const data = reactive({});
-const props = defineProps({
-  address: String,
-});
+import { useAddressStore } from "@/store/address";
+
+const Address = useAddressStore();
 const SakeList = ref(null);
 const StakeInfo = ref(null);
 const getSakeList = async () => {
-  const res = await getSakeListData({ UserAddress: props.address });
+  const res = await getSakeListData({ UserAddress: Address.ETHaddress });
   SakeList.value = res.result;
-  StakeInfo.value = res.result.StakeInfo;
+  StakeInfo.value = res.result.StakeInfo || [];
 };
 const treasureData = ref(null);
 const getTreasure = async () => {
-  const res = await getTreasureData({ UserAddress: props.address });
+  const res = await getTreasureData({ UserAddress: Address.ETHaddress });
   treasureData.value = res.result;
 };
 watch(
-  props.address,
+  Address,
   (newVal, oldVal) => {
-    getSakeList();
-    getTreasure();
+    if (Address.ETHaddress) {
+      getSakeList();
+      getTreasure();
+    }
   },
   { immediate: true }
 );
-onMounted(() => {
-  // getSakeList();
-  // getTreasure();
-  //console.log('3.-组件挂载到页面之后执行-------onMounted')
-});
 </script>
 <style scoped lang="scss">
 .myStakeList {
@@ -118,6 +92,15 @@ onMounted(() => {
     justify-content: space-between;
     margin-bottom: 50px;
     margin-top: 10px;
+    height: 80px;
+    .left {
+      display: flex;
+      justify-self: start;
+    }
+    .right {
+      display: flex;
+      justify-self: start;
+    }
     .myScore,
     .myTotal {
       width: 143px;
@@ -181,7 +164,7 @@ onMounted(() => {
       }
     }
   }
-  .nomain {
+  .nocontent {
     height: 200px;
     line-height: 200px;
     text-align: center;

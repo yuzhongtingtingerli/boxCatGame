@@ -35,11 +35,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import { getMoney } from "@/utils/Tools.js";
 import { getWalletStakeInfoData } from "@/services/index";
 import bitpartyAddress from "../bridge/bitpartyAddress.vue";
 import StakeSuccess from "@/components/stake-success.vue";
+import { useAddressStore } from "@/store/address";
+
+const Address = useAddressStore();
 const stakeSuccessRef = ref(null);
 const bitpartyAddressRef = ref(null);
 const isSuccess = (txid) => {
@@ -50,24 +53,20 @@ const handleStatus = (item) => {
   TokenSymbol.value = item.TokenSymbol;
   bitpartyAddressRef.value.open(item);
 };
-const props = defineProps({
-  address: String,
-});
 const walletStakeInfo = ref(null);
 const getWalletStakeInfo = async () => {
-  const res = await getWalletStakeInfoData({ UserAddress: props.address });
+  const res = await getWalletStakeInfoData({ UserAddress: Address.ETHaddress });
   walletStakeInfo.value = res.result.WalletInfo;
 };
 watch(
-  props.address,
+  Address,
   (newVal, oldVal) => {
-    getWalletStakeInfo();
+    if (Address.ETHaddress) {
+      getWalletStakeInfo();
+    }
   },
   { immediate: true }
 );
-onMounted(() => {
-  getWalletStakeInfo();
-});
 </script>
 <style scoped lang="scss">
 .myTokenList {

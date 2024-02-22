@@ -20,7 +20,7 @@ const Confirm = () => {
   }
 };
 const goStake = async () => {
-  var stakeAddress = "0x0058616ba6bE4cE5e588c0453332dbA13aea32d0";
+  var stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
   let web3 = new Web3(window.web3.currentProvider);
 
   let contract = new web3.eth.Contract(stakeAbi, stakeAddress);

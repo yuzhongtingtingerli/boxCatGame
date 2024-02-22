@@ -21,6 +21,7 @@ import {
   checkAddressMapping,
   insertAddressMapping,
   getETHContractAddress,
+  getTransferInfo,
 } from "./api";
 
 export const getGroupDetailInfoData = async (params) => {
@@ -320,6 +321,20 @@ export const insertAddressMappingData = async (params) => {
 export const getETHContractAddressData = async (params) => {
   try {
     const { code, result, status } = await getETHContractAddress(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getTransferInfoData = async () => {
+  try {
+    const { code, result, status } = await getTransferInfo();
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

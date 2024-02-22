@@ -108,7 +108,7 @@ const handleScroll = () => {
 };
 
 watch(
-  Address.getBTCaddress,
+  Address,
   () => {
     if (Address.getBTCaddress) {
       getScore();

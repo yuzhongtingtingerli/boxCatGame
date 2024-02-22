@@ -133,3 +133,7 @@ export const getETHContractAddress = ({ TokenSymbol }) => {
     "get"
   );
 };
+
+export const getTransferInfo = () => {
+  return request(`/stake/getTransferInfo`, "get");
+};

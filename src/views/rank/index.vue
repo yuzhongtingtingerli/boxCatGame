@@ -39,7 +39,7 @@ window.onresize = () => {
   return (() => {
     window.fullHeight = document.documentElement.clientHeight;
     // 获取bg模块并设置高度
-    document.getElementById("rankBg")[0].style.height =
+    document.getElementById("rankBg").style.height =
       window.fullHeight - 60 + "px";
   })();
 };

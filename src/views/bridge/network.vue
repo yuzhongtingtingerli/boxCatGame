@@ -168,9 +168,10 @@ const goTokenContractAddress = () => {
 // amount 弹框
 const selectAmountRef = ref(null);
 const showAmount = () => {
+  if (!token.value) return;
   selectAmountRef.value.open(Address.getBTCaddress, token.value?.ticker);
 };
-const amountInfo = ref();
+const amountInfo = ref(null);
 const changeAmount = (data) => {
   amountInfo.value = data;
 };
@@ -178,6 +179,8 @@ const successMsgRef = ref(null);
 const isSuccess = (type, txid) => {
   if (type == "success") {
     successMsgRef.value.open(txid);
+    token.value = null;
+    amountInfo.value = null;
   }
 };
 
@@ -215,7 +218,7 @@ const isShowError = (title) => {
   errorInfoRef.value.open(title);
 };
 const openTransfer = async () => {
-  if (!token.value) return;
+  if (!token.value || !amountInfo.value) return;
   const CheckMappingStatus = await checkAddressMapping();
   if (CheckMappingStatus == 2) {
     const InsertMappingStatus = await insertAddressMapping();
@@ -235,7 +238,7 @@ const openTransfer = async () => {
     StakeTokenSymbol: token.value.ticker,
     StakeTokenBalance: amountInfo.value.data.amt,
   });
-  // if (TVLStatus == 0) return;
+  if (TVLStatus == 0) return;
   showTransferModal();
 };
 

@@ -55,7 +55,7 @@ const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
 watch(
-  Address.getBTCaddress,
+  Address,
   () => {
     if (Address.getBTCaddress) {
       getBrcSummary();

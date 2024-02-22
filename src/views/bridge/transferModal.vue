@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { getRecommendedData } from "@/services/wallet.js";
 import { getAddress } from "@/utils/Tools";
-import { doBridgeData } from "@/services/index.js";
+import { doBridgeData, getTransferInfoData } from "@/services/index.js";
 const show = ref(false);
 const BTCAddress = ref("");
 const ETHAddress = ref("");
@@ -12,12 +12,20 @@ let inscriptionId = ref("");
 const emit = defineEmits(["change"]);
 const open = (btc, eth, insId, tick, amt) => {
   getRecommended();
+  getTransferInfo();
   show.value = true;
   BTCAddress.value = btc;
   ETHAddress.value = eth;
   inscriptionId.value = insId;
   tickData.value = tick;
   amtData.value = amt;
+};
+const serviceFee = ref("");
+const toAddress = ref("");
+const getTransferInfo = async () => {
+  const res = await getTransferInfoData();
+  serviceFee.value = res.result.ServiceFee;
+  toAddress.value = res.result.ToAddress;
 };
 const close = () => {
   show.value = false;
@@ -34,9 +42,16 @@ const getRecommended = async () => {
   recommendedData.value = res;
   feeData.value = res.halfHourFee;
 };
+const sendBitcoin = async () => {
+  const txid = await unisat.sendBitcoin(toAddress.value, amtData.value);
+  console.log(txid, "rrrrr");
+};
+
 const Confirm = async () => {
+  // sendBitcoin();
+  // return;
   const txid = await sendInscription(
-    "bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k",
+    toAddress.value,
     inscriptionId.value,
     feeData.value
   );
@@ -112,17 +127,13 @@ defineExpose({ open, close });
       <div class="list">
         <div class="left">To BITPARTY Safe Address:</div>
         <div class="right">
-          <span>{{
-            getAddress(
-              "bc1p8qspx28qqxterluxhwxka5jqe50t90pa378xgxhag59l2m8y588spwlq7k"
-            )
-          }}</span>
+          <span>{{ getAddress(toAddress) }}</span>
           <img src="@/assets/copy.png" alt="" srcset="" />
         </div>
       </div>
       <div class="list">
         <div class="left">Service Fee:</div>
-        <div class="right">0.001 BTC</div>
+        <div class="right">{{ serviceFee }} BTC</div>
       </div>
       <div class="list tran">
         <div class="fee">Transaction Fee</div>
@@ -142,10 +153,17 @@ defineExpose({ open, close });
         </div>
         <div
           :class="`Normal ${feeType === 'Rapid' ? 'active' : ''}`"
-          @click="getFee(recommendedData.fastestFee, 'Rapid')"
+          @click="
+            getFee(
+              Number(((recommendedData?.fastestFee || 0) * 1.4).toFixed(0)),
+              'Rapid'
+            )
+          "
         >
           <div>Rapid</div>
-          <div>{{ recommendedData?.fastestFee }} sats/vb</div>
+          <div>
+            {{ (recommendedData?.fastestFee * 1.4).toFixed(0) }} sats/vb
+          </div>
         </div>
       </div>
       <div class="btn" @click="Confirm">Confirm</div>
@@ -223,6 +241,7 @@ defineExpose({ open, close });
     font-size: 20px;
     font-weight: 400;
     border-radius: 8px;
+    cursor: pointer;
   }
 }
 </style>

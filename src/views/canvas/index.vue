@@ -47,7 +47,7 @@ const getGroupDetailInfo = async (Address) => {
   // drawInit(arr);
 };
 watch(
-  Address.getBTCaddress,
+  Address,
   () => {
     if (Address.getBTCaddress) {
       getGroupDetailInfo(Address.getBTCaddress);
