@@ -18,7 +18,11 @@
         </template>
       </a-input>
     </div>
-    <div class="list scroll-write-wrap">
+    <div
+      class="list scroll-write-wrap"
+      ref="scrollContainer"
+      @scroll="handleScroll"
+    >
       <div class="list_item" v-if="groupList">
         <div class="RankNumber">{{ groupList.GroupRank }}</div>
         <div class="bg"></div>
@@ -87,6 +91,7 @@ const getName = () => {
     getGroupSearch(name);
   }
 };
+
 const groupList = ref(null);
 const getGroupSearch = async (groupName) => {
   const data = await getGroupSearchData(groupName);
@@ -96,10 +101,26 @@ const porps = defineProps({
   groupListData: Array,
   GroupName: String,
   groupListTotal: Number,
+  spinning: Boolean,
 });
-const emit = defineEmits(["group-search"]);
+const emit = defineEmits(["group-search", "group-list"]);
 const getGroupName = (GroupName) => {
   emit("group-search", GroupName);
+};
+
+// 容器引用
+const scrollContainer = ref(null);
+
+// 滚动处理函数
+const handleScroll = () => {
+  if (porps.spinning || porps.groupListTotal <= porps.groupListData?.length)
+    return;
+  // debugger;
+  const container = scrollContainer.value;
+  if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+    console.log("触底了");
+    emit("group-list");
+  }
 };
 </script>
 <style>

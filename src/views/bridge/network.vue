@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { InfoCircleOutlined } from "@ant-design/icons-vue";
 import { getAddress } from "@/utils/Tools";
 import {
@@ -238,7 +238,7 @@ const openTransfer = async () => {
     StakeTokenSymbol: token.value.ticker,
     StakeTokenBalance: amountInfo.value.data.amt,
   });
-  if (TVLStatus == 0) return;
+  // if (TVLStatus == 0) return;
   showTransferModal();
 };
 

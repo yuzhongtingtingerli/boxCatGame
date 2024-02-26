@@ -8,6 +8,12 @@
 
     <Sidebar />
     <ErrorInfo ref="errorInfoRef" />
+    <MinificationMap
+      v-if="scale <= 0.5"
+      ref="minificationMapRef"
+      :GroupInfo="GroupInfo"
+      @wheel="handleWheel"
+    />
   </div>
 </template>
 
@@ -26,18 +32,19 @@ import Sidebar from "./sidebar/index.vue";
 import { getGroupDetailInfoData } from "@/services/index";
 import ErrorInfo from "@/components/error-info.vue";
 import Loading from "./loading.vue";
+import MinificationMap from "./minificationMap/index.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
 // 错误弹窗
-const errorInfoTitle = ref("");
-const errorShow = ref(false);
 const loadingRef = ref(null);
 const onStart = async (flag) => {
   loadingRef.value.startOrStop(flag);
 };
+const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address) => {
   const res = await getGroupDetailInfoData(Address);
+  GroupInfo.value = res.result.GroupInfo;
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
   await isShowError(
@@ -80,15 +87,23 @@ function drawInit(arr) {
   wSize = option.wSize;
   hSize = option.hSize;
   groups = option.groups;
-  offsetX.value = -SizeW * (option.groups[0].location.x - 3);
-  offsetY.value = -SizeH * (option.groups[0].location.y - 3);
+  const i = Math.floor(option.groups.length / 2);
+  offsetX.value = -SizeW * (option.groups[i].location.x - 3);
+  offsetY.value = -SizeH * (option.groups[i].location.y - 3);
   drawGrid();
 }
+const handleWheel = () => {
+  scale.value = 0.51;
+};
+const minificationMapRef = ref(null);
 function drawGrid() {
+  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
+  if (scale.value <= 0.5) {
+    return requestAnimationFrame(drawGrid);
+  }
   count++;
   const gridSizeW = SizeW * scale.value; // 单个网格宽度
   const gridSizeH = SizeH * scale.value; // 单个网格高度
-  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
 
   for (let i = 0; i < wSize; i++) {
     for (let j = 0; j < hSize; j++) {
@@ -96,7 +111,7 @@ function drawGrid() {
       const oy = offsetY.value * scale.value + offsetH.value;
       const x = i * gridSizeW + ox; // 横向间隔为 gridSizeW
       const y = j * gridSizeH + oy; // 纵向间隔为 gridSizeH
-      drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH);
+      // drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(bgImg, x, y, gridSizeW, gridSizeH);
       ctx.drawImage(
         bgImg,
@@ -251,7 +266,7 @@ onMounted(async () => {
 <style scoped>
 .canvas {
   position: relative;
-  background: #fff;
+  background: #000;
 }
 video {
   width: 0px;

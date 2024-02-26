@@ -37,7 +37,7 @@ export function useMouse() {
     isDragging = false;
   }
   function wheel(event) {
-    let zoomSpeed = 0.1; // 缩放速度
+    let zoomSpeed = 0.01; // 缩放速度
 
     if (event.deltaY < 0) {
       // 向上滚动，放大画布
@@ -52,6 +52,8 @@ export function useMouse() {
     offsetH.value = (window.innerHeight - window.innerHeight * scale.value) / 2;
     event.preventDefault(); // 阻止页面滚动
   }
+
+  function name(params) {}
 
   onMounted(() => {
     const canvas = canvasRef.value;
@@ -74,6 +76,21 @@ export function useMouse() {
     canvas.addEventListener("mouseup", mouseup);
     canvas.addEventListener("mouseleave", mouseleave);
     canvas.addEventListener("wheel", wheel);
+    window.onresize = () => {
+      var windowWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+
+      // 获取浏览器窗口高度
+      var windowHeight =
+        window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight;
+
+      canvas.width = windowWidth;
+      canvas.height = windowHeight - 60;
+    };
   });
   onUnmounted(() => {
     const canvas = canvasRef.value;

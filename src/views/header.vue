@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useAddressStore } from "@/store/address";
 import { useRouter } from "vue-router";
 import { getAddress } from "@/utils/Tools";
@@ -111,6 +111,9 @@ const connectWallet = async () => {
   // 没有钱包就跳转
   Address.linkWallet();
 };
+onMounted(() => {
+  Address.getBTCWallet();
+});
 </script>
 <style scoped lang="scss">
 .yellow {

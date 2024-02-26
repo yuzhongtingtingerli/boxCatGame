@@ -43,26 +43,32 @@ const getRecommended = async () => {
   feeData.value = res.halfHourFee;
 };
 const sendBitcoin = async () => {
-  const txid = await unisat.sendBitcoin(toAddress.value, amtData.value);
-  console.log(txid, "rrrrr");
+  const txid = await unisat.sendBitcoin(
+    toAddress.value,
+    Number((serviceFee.value / 0.00000001).toFixed(0))
+  );
+  return txid;
 };
 
 const Confirm = async () => {
-  // sendBitcoin();
-  // return;
-  const txid = await sendInscription(
-    toAddress.value,
-    inscriptionId.value,
-    feeData.value
-  );
-  doBridge(
-    BTCAddress.value,
-    "1",
-    tickData.value,
-    amtData.value,
-    txid,
-    ETHAddress.value
-  );
+  const id = await sendBitcoin();
+  if (!id) return;
+  setTimeout(async () => {
+    const txid = await sendInscription(
+      toAddress.value,
+      inscriptionId.value,
+      feeData.value
+    );
+    if (!txid) return;
+    doBridge(
+      BTCAddress.value,
+      "1",
+      tickData.value,
+      amtData.value,
+      txid,
+      ETHAddress.value
+    );
+  }, 5000);
 };
 const sendInscription = async (address, id, { feeRate }) => {
   try {
@@ -155,7 +161,7 @@ defineExpose({ open, close });
           :class="`Normal ${feeType === 'Rapid' ? 'active' : ''}`"
           @click="
             getFee(
-              Number(((recommendedData?.fastestFee || 0) * 1.4).toFixed(0)),
+              Number((recommendedData?.fastestFee * 1.4).toFixed(0)),
               'Rapid'
             )
           "
