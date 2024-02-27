@@ -87,7 +87,7 @@ const getJoinGroup = async () => {
 const groupListData = ref(null);
 const getGroupList = async () => {
   spinning.value = true;
-  const data = await getGroupListData({ Offset: offset.value, Limit: 6 });
+  const data = await getGroupListData({ Offset: offset.value, Limit: 10 });
   groupListData.value = [
     ...(groupListData.value || []),
     ...data.result.GroupInfo,

@@ -39,6 +39,17 @@
     <div class="cat">
       <img src="@/assets/center_cat.png" alt="" />
     </div>
+    <div class="footer">
+      <div class="top">
+        <div class="text">TVL：98,999.000012 BTC</div>
+        <div class="text">Created by：111,111 BRC20 holders</div>
+        <div class="text">Special thanks to ：bxfx......9876</div>
+      </div>
+      <div class="bottom">
+        <div class="text">Support by</div>
+        <div class="text">Powered by：BBR2|BBR2|BBR2|BBR2</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -258,6 +269,9 @@ onMounted(() => {
         }
       }
     }
+  }
+  .footer {
+    color: #fff;
   }
 }
 </style>

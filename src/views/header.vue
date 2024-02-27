@@ -30,7 +30,9 @@
           <router-link :class="getCurrentRoute('/stake')" to="/stake"
             >Stake</router-link
           >
-          <router-link to="/">Whitepaper</router-link>
+          <router-link :class="getCurrentRoute('/whitepaper')" to="/whitepaper"
+            >Whitepaper</router-link
+          >
           <router-link to="/">Safe And Privacy</router-link>
         </div>
       </div>

@@ -6,6 +6,7 @@ import Rank from "../views/rank/index.vue";
 import Bridge from "../views/bridge/index.vue";
 import Stake from "../views/stake/index.vue";
 import Empty from "../views/empty.vue";
+import Whitepaper from "../views/whitepaper.vue";
 import { requestM } from "@/services/request.js";
 const getIp = async () => {
   const ipconfig = await requestM("https://ifconfig.me/ip");
@@ -44,6 +45,11 @@ const routes = [
     path: "/stake",
     name: "Stake",
     component: Stake,
+  },
+  {
+    path: "/whitepaper",
+    name: "Whitepaper",
+    component: Whitepaper,
   },
 ];
 
