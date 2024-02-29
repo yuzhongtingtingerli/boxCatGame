@@ -162,6 +162,7 @@ export async function dummySendBTC({
     feeRate,
     enableRBF,
   });
+  console.log(psbt, "psbt----");
 
   await wallet.signPsbt(psbt, { autoFinalized: true, toSignInputs });
   const tx = psbt.extractTransaction(true);

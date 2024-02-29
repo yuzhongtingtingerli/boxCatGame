@@ -15,45 +15,43 @@ import Guidelines from "./guidelines.vue";
 import Network from "./network.vue";
 import MyRecord from "./myRecord.vue";
 
-import { expect } from "chai";
 import { AddressType } from "@unisat/wallet-sdk";
 import { ErrorCodes } from "@unisat/wallet-sdk/es/error";
 import { NetworkType } from "@unisat/wallet-sdk/es/network";
 import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
+import { dummySendInscriptions, genDummyUtxo } from "./utils.ts";
 import { onMounted } from "vue";
-console.log(ErrorCodes);
+// console.log(ErrorCodes);
 onMounted(() => {
   const testAddressTypes = [
     AddressType.P2TR,
-    AddressType.P2SH_P2WPKH,
-    AddressType.P2PKH,
-    AddressType.P2SH_P2WPKH,
-    AddressType.M44_P2TR, // deprecated
-    AddressType.M44_P2WPKH, // deprecated
+    // AddressType.P2SH_P2WPKH,
+    // AddressType.P2PKH,
+    // AddressType.P2SH_P2WPKH,
+    // AddressType.M44_P2TR, // deprecated
+    // AddressType.M44_P2WPKH, // deprecated
   ];
   testAddressTypes.forEach(async (addressType) => {
     const fromBtcWallet = LocalWallet.fromRandom(
       addressType,
       NetworkType.MAINNET
     );
-
     const fromAssetWallet = LocalWallet.fromRandom(
       addressType,
       NetworkType.MAINNET
     );
-
     const toWallet = LocalWallet.fromRandom(addressType, NetworkType.MAINNET);
-
     const ret = await dummySendInscriptions({
-      toAddress: toWallet.address,
-      assetWallet: fromAssetWallet,
+      toAddress: toWallet.address, // 接口地址
+      assetWallet: fromAssetWallet, // 我的地址
       assetUtxos: [
         genDummyUtxo(fromAssetWallet, 10000, {
-          inscriptions: [{ inscriptionId: "001", offset: 1000 }],
+          // 我的地址 satoshis
+          inscriptions: [{ inscriptionId: "001", offset: 1000 }], // offset== amt
         }),
       ],
-      btcWallet: fromBtcWallet,
-      btcUtxos: [genDummyUtxo(fromBtcWallet, 10000)],
+      btcWallet: fromBtcWallet, // 我的地址
+      btcUtxos: [genDummyUtxo(fromBtcWallet, 10000)], // Service Fee
       feeRate: 1,
     });
     console.log(ret);

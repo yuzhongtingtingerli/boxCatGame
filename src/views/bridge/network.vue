@@ -193,7 +193,8 @@ const showTransferModal = () => {
     Address.getETHaddress,
     amountInfo.value.inscriptionId,
     amountInfo.value.data.tick,
-    amountInfo.value.data.amt
+    amountInfo.value.data.amt,
+    amountInfo.value.satoshi
   );
 };
 

@@ -19,6 +19,9 @@ export default defineConfig({
     nodePolyfills(),
     wasm(),
   ],
+  build: {
+    target: ["edge90", "chrome90", "firefox90", "safari15"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

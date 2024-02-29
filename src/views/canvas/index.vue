@@ -9,9 +9,10 @@
     <Sidebar />
     <ErrorInfo ref="errorInfoRef" />
     <MinificationMap
-      v-if="scale <= 0.5"
+      v-if="scale <= 0.3"
       ref="minificationMapRef"
       :GroupInfo="GroupInfo"
+      :seasonData="seasonData"
       @wheel="handleWheel"
     />
   </div>
@@ -29,7 +30,10 @@ import { useMouse } from "./mouse";
 import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
-import { getGroupDetailInfoData } from "@/services/index";
+import {
+  getGroupDetailInfoData,
+  getTotalStakeInfoData,
+} from "@/services/index";
 import ErrorInfo from "@/components/error-info.vue";
 import Loading from "./loading.vue";
 import MinificationMap from "./minificationMap/index.vue";
@@ -44,6 +48,7 @@ const onStart = async (flag) => {
 const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address) => {
   const res = await getGroupDetailInfoData(Address);
+  if (res.result === "请求失败") return;
   GroupInfo.value = res.result.GroupInfo;
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
@@ -53,11 +58,18 @@ const getGroupDetailInfo = async (Address) => {
   );
   // drawInit(arr);
 };
+// 获取season数据
+const seasonData = ref(null);
+const getTotalStakeInfo = async () => {
+  const res = await getTotalStakeInfoData();
+  seasonData.value = res.result;
+};
 watch(
   Address,
   () => {
+    getGroupDetailInfo(Address.getBTCaddress || undefined);
     if (Address.getBTCaddress) {
-      getGroupDetailInfo(Address.getBTCaddress);
+      // getGroupDetailInfo(Address.getBTCaddress);
     }
   },
   { immediate: true }
@@ -93,12 +105,12 @@ function drawInit(arr) {
   drawGrid();
 }
 const handleWheel = () => {
-  scale.value = 0.51;
+  scale.value = 0.31;
 };
 const minificationMapRef = ref(null);
 function drawGrid() {
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
-  if (scale.value <= 0.5) {
+  if (scale.value <= 0.3) {
     return requestAnimationFrame(drawGrid);
   }
   count++;
@@ -259,7 +271,7 @@ onMounted(async () => {
     dialogBoxImg = dialogBox;
   });
 
-  getGroupDetailInfo();
+  getTotalStakeInfo();
 });
 </script>
 

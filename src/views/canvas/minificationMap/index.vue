@@ -39,15 +39,17 @@
     <div class="cat">
       <img src="@/assets/center_cat.png" alt="" />
     </div>
-    <div class="footer">
+    <div class="footer" v-if="props.seasonData">
       <div class="top">
-        <div class="text">TVL：98,999.000012 BTC</div>
-        <div class="text">Created by：111,111 BRC20 holders</div>
-        <div class="text">Special thanks to ：bxfx......9876</div>
-      </div>
-      <div class="bottom">
-        <div class="text">Support by</div>
-        <div class="text">Powered by：BBR2|BBR2|BBR2|BBR2</div>
+        <div class="t">
+          TVL：{{ getMoney(props.seasonData?.TotalStakeToken) }} BTC
+        </div>
+        <div class="t">
+          Created by：{{ getMoney(props.seasonData?.Staker) }} BRC20 holders
+        </div>
+        <div class="t">
+          Special thanks to ：{{ getAddress(Address.getBTCaddress) }}
+        </div>
       </div>
     </div>
   </div>
@@ -55,8 +57,13 @@
 
 <script setup>
 import { ref, watch, defineProps, onMounted } from "vue";
+import { useAddressStore } from "@/store/address";
+import { getAddress, getMoney } from "@/utils/Tools";
+
+const Address = useAddressStore();
 const props = defineProps({
   GroupInfo: Object,
+  seasonData: Object,
 });
 const emit = defineEmits(["wheel"]);
 const GroupInfoData = ref([]);
@@ -182,7 +189,6 @@ const getGroupInfo = (GroupInfo) => {
       group.bAlgin = "end";
     }
   });
-  console.log(groupInfo, "groupInfo");
   GroupInfoData.value = groupInfo;
 };
 watch(
@@ -271,7 +277,27 @@ onMounted(() => {
     }
   }
   .footer {
+    position: absolute;
+    bottom: 45px;
+    left: 0;
     color: #fff;
+    width: 100%;
+    text-align: center;
+    .t {
+      display: inline-block;
+      font-family: LilitaOne;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 22px;
+      // css首字母大写
+      text-transform: capitalize;
+    }
+    .top {
+      width: 100%;
+      .t {
+        margin-right: 60px;
+      }
+    }
   }
 }
 </style>

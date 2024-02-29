@@ -1,7 +1,9 @@
 export const getAddress = (add) => {
+  if (add === "") return;
   return add?.slice(0, 4) + "......" + add.slice(-4);
 };
 export const getMoney = (money) => {
+  if (money === "") return;
   const num = money.toString().split(".")[0].length > 6 ? 3 : 6;
   const m = Number(money).toFixed(num);
   // 每隔三位小数加一个,
@@ -24,5 +26,6 @@ export const getUniSatAddress = async () => {
 };
 
 export const toUpperCase = (str) => {
+  if (str === "") return;
   return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
 };
