@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="text">
-      <div class="title">LFG !!! $ BTZ</div>
+      <div class="title">LFG !!! $BTXP</div>
       <div class="title">Story Just Beginning</div>
     </div>
     <div class="cat">

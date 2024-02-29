@@ -26,7 +26,7 @@
     </div>
     <div class="info">
       <div class="will">
-        <div class="num">{{ getMoney(seasonData.WillRelease) }} BTZ</div>
+        <div class="num">{{ getMoney(seasonData.WillRelease) }} $BTXP</div>
         <div class="meaning">Will Release</div>
       </div>
       <div class="total">
