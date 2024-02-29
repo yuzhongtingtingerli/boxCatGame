@@ -9,12 +9,13 @@
     <Sidebar />
     <ErrorInfo ref="errorInfoRef" />
     <MinificationMap
-      v-if="scale <= 0.3"
+      v-if="scale <= 0.3 && seasonData"
       ref="minificationMapRef"
       :GroupInfo="GroupInfo"
       :seasonData="seasonData"
       @wheel="handleWheel"
     />
+    <FixedDisplay :seasonData="seasonData" v-if="scale > 0.3 && seasonData" />
   </div>
 </template>
 
@@ -37,6 +38,7 @@ import {
 import ErrorInfo from "@/components/error-info.vue";
 import Loading from "./loading.vue";
 import MinificationMap from "./minificationMap/index.vue";
+import FixedDisplay from "./fixedDisplay.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();

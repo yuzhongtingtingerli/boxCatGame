@@ -256,6 +256,7 @@ onMounted(() => {
     .groups {
       display: flex;
       margin-bottom: 12px;
+      justify-content: center;
       .group {
         display: flex;
         margin-right: 13px;

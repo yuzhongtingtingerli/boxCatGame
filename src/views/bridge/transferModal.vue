@@ -4,15 +4,11 @@ import { getRecommendedData } from "@/services/wallet.js";
 import { getAddress } from "@/utils/Tools";
 import { doBridgeData, getTransferInfoData } from "@/services/index.js";
 import { expect } from "chai";
-import {
-  dummySendInscriptions,
-  genDummyUtxo,
-  expectFeeRate,
-  dummySendBTC,
-} from "./utils.ts";
+import { dummySendInscriptions, genDummyUtxo } from "./utils.ts";
 import { AddressType } from "@unisat/wallet-sdk";
 import { NetworkType } from "@unisat/wallet-sdk/es/network";
 import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
+import { sendInscriptions } from "@unisat/wallet-sdk/es/tx-helpers";
 const show = ref(false);
 const BTCAddress = ref("");
 const ETHAddress = ref("");
@@ -62,54 +58,45 @@ const sendBitcoin = async () => {
 };
 
 const Confirm = async () => {
-  const fromBtcWallet = LocalWallet.fromRandom(
-    AddressType.P2TR,
-    NetworkType.MAINNET
-  );
-  const fromAssetWallet = LocalWallet.fromRandom(
-    AddressType.P2TR,
-    NetworkType.MAINNET
-  );
-  const ret = await dummySendInscriptions({
-    toAddress: toAddress.value, // 接口地址
-    assetWallet: fromAssetWallet, // 我的地址
-    assetUtxos: [
-      genDummyUtxo(fromAssetWallet, satoshiData.value, {
-        // 我的地址 satoshis
-        inscriptions: [{ inscriptionId: inscriptionId.value, offset: 0 }],
-      }),
-    ],
-    btcWallet: fromBtcWallet, // 我的地址
-    btcUtxos: [
-      genDummyUtxo(
-        fromBtcWallet,
-        Number((serviceFee.value / 0.00000001).toFixed(0))
-      ),
-    ], // Service Fee
-    feeRate: feeData.value,
-  });
-  console.log(ret, "ret");
-  const fromWallet = LocalWallet.fromRandom(
-    AddressType.P2TR,
-    NetworkType.MAINNET
-  );
-  const toWallet = LocalWallet.fromRandom(
-    AddressType.P2TR,
-    NetworkType.MAINNET
-  );
-  const resBTC = await dummySendBTC({
-    wallet: fromWallet,
-    btcUtxos: [
-      genDummyUtxo(
-        fromWallet,
-        Number((serviceFee.value / 0.00000001).toFixed(0))
-      ),
-    ],
-    tos: [{ address: toWallet.address, satoshis: satoshiData.value }],
-    feeRate: feeData.value,
-  });
-  console.log(resBTC, "resBTC");
-  return;
+  // const fromBtcWallet = LocalWallet.fromRandom(
+  //   AddressType.P2TR,
+  //   NetworkType.MAINNET
+  // );
+  // const fromAssetWallet = LocalWallet.fromRandom(
+  //   AddressType.P2TR,
+  //   NetworkType.MAINNET
+  // );
+  // const { psbt, toSignInputs } = await sendInscriptions({
+  //   btcUtxos: [
+  //     genDummyUtxo(
+  //       fromBtcWallet,
+  //       Number((serviceFee.value / 0.00000001).toFixed(0))
+  //     ),
+  //   ],
+  //   assetUtxos: [
+  //     genDummyUtxo(fromAssetWallet, 330, {
+  //       // 我的地址 satoshis
+  //       inscriptions: [
+  //         {
+  //           inscriptionId:
+  //             "773e26907545661840276a59137dd82bc7a7f73f0684fa1457cb2f2b883496b4i0",
+  //           offset: 0,
+  //         },
+  //       ],
+  //     }),
+  //   ],
+  //   toAddress: toAddress.value,
+  //   feeRate: feeData.value,
+  //   networkType: fromBtcWallet.networkType,
+  //   changeAddress: BTCAddress.value,
+  // });
+  // console.log(psbt, toSignInputs, "psbt, toSignInputs");
+  // // return;
+  // // console.log(ret, "ret");
+  // // console.log(ret.psbt.toHex(), "psbt");
+  // let res = await window.unisat.signPsbt(psbt.toHex());
+  // console.log(res, "res");
+  // return;
   const id = await sendBitcoin();
   if (!id) return;
   setTimeout(async () => {
