@@ -53,6 +53,7 @@ const checkRuning = async () => {
     );
   }
 };
+let timer = null;
 const Address = useAddressStore();
 // 错误弹窗
 const loadingRef = ref(null);
@@ -61,9 +62,11 @@ const onStart = async (flag) => {
 };
 const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address) => {
+  await onStart(true);
   const res = await getGroupDetailInfoData(Address);
   if (res.result === "请求失败") return;
   GroupInfo.value = res.result.GroupInfo;
+  timer && cancelAnimationFrame(timer);
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
 
@@ -77,16 +80,15 @@ const getTotalStakeInfo = async () => {
   seasonData.value = res.result;
 };
 watch(
-  Address,
+  () => Address.getBTCaddress,
   async () => {
+    console.log("watch", Address.getBTCaddress);
     if (Address.getBTCaddress) {
-      await onStart(true);
       getGroupDetailInfo(Address.getBTCaddress);
     } else {
       getGroupDetailInfo(undefined);
     }
-  },
-  { immediate: true }
+  }
 );
 const errorInfoRef = ref(null);
 const isShowError = (title, time = 3000) => {
@@ -125,7 +127,8 @@ const minificationMapRef = ref(null);
 function drawGrid() {
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
   if (scale.value <= 0.3) {
-    return requestAnimationFrame(drawGrid);
+    timer = window.requestAnimationFrame(drawGrid);
+    return;
   }
   count++;
   const gridSizeW = SizeW * scale.value; // 单个网格宽度
@@ -149,7 +152,7 @@ function drawGrid() {
     }
   }
   drawGroup(groups, gridSizeW, gridSizeH);
-  requestAnimationFrame(drawGrid);
+  timer = window.requestAnimationFrame(drawGrid);
   // setInterval(drawGrid, 2000);
 }
 function drawBoundary(j, hSize, i, wSize, x, y, gridSizeW, gridSizeH) {
@@ -272,7 +275,6 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   ctx.fillText(t2, text2X, text2Y);
 }
 onMounted(async () => {
-  await onStart(true);
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   await Promise.all([

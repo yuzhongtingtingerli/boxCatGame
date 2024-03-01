@@ -2,7 +2,7 @@
   <div class="loading" :style="`display: ${isShow ? 'block' : 'none'}`">
     <div class="img">
       <img src="@/assets/loading.gif" alt="" srcset="" />
-      <div class="num">{{ num }}%</div>
+      <div class="num">{{ num < 100 ? num : 100 }}%</div>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@ const countdown = () => {
   new Promise((resolve, reject) => {
     let timer = setInterval(() => {
       num.value++;
-      if (num.value == 100) {
+      if (num.value >= 100) {
         clearInterval(timer);
         resolve();
       }
@@ -25,6 +25,7 @@ const countdown = () => {
 const isShow = ref(false);
 const startOrStop = (flag) => {
   if (flag) {
+    num.value = 0;
     isShow.value = true;
     countdown();
   } else {

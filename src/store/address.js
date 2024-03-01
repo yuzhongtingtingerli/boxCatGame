@@ -3,15 +3,15 @@ import Web3 from "web3";
 export const useAddressStore = defineStore("address", {
   state: () => {
     return {
-      BTCaddress: "",
-      ETHaddress: "",
+      BTCaddress: null,
+      ETHaddress: null,
     };
   },
   // 也可以定义为
   // state: () => ({ count: 0 })
   getters: {
-    getBTCaddress: (state) => state.BTCaddress || "",
-    getETHaddress: (state) => state.ETHaddress || "",
+    getBTCaddress: (state) => state.BTCaddress,
+    getETHaddress: (state) => state.ETHaddress,
   },
   actions: {
     async linkWallet() {
@@ -38,7 +38,6 @@ export const useAddressStore = defineStore("address", {
     async subscribeProvider() {
       // 监听切账号
       window.unisat?.on("accountsChanged", (accounts) => {
-        console.log(accounts, "accountsChanged");
         this.BTCaddress = accounts[0] || "";
       });
     },
@@ -117,7 +116,6 @@ export const useAddressStore = defineStore("address", {
       web3.currentProvider.on("accountsChanged", (accounts) => {
         // 处理地址变化事件
         this.ETHaddress = accounts[0] || "";
-        console.log("Address changed:", accounts);
       });
       this.checkNetId();
     },

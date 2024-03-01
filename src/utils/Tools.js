@@ -1,6 +1,6 @@
 export const getAddress = (add) => {
   if (add === "") return "";
-  return add?.slice(0, 4) + "......" + add.slice(-4);
+  return add?.slice(0, 4) + "......" + add?.slice(-4);
 };
 export const getMoney = (money) => {
   if (money === "") return "";
