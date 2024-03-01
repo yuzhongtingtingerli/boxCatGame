@@ -23,25 +23,41 @@
         :key="item.BridgeTokenSymbol"
       >
         <div class="left">
-          <div :class="`sent ${item.BridgeWorkFlow == '1' ? 'active' : ''}`">
+          <div :class="`sent active`">
             Sent {{ getMoney(item.BridgeTokenBalance) }}
             {{ decodeURIComponent(item.BridgeTokenSymbol) }}
           </div>
-          <div :class="`wait ${item.BridgeWorkFlow == '2' ? 'active' : ''}`">
-            <div class="point">
+          <div class="wait">
+            <div
+              :class="`point ${
+                item.BridgeWorkFlow == '1' ? 'flash' : 'active'
+              }`"
+            >
               <div></div>
               <div></div>
               <div></div>
             </div>
-            <span> Wait The BTC Network Confirm</span>
+            <span :class="`${item.BridgeWorkFlow != '1' ? 'active' : ''}`">
+              Wait The BTC Network Confirm</span
+            >
           </div>
-          <div :class="`tokens ${item.BridgeWorkFlow == '3' ? 'active' : ''}`">
-            <div class="point">
+          <div class="tokens">
+            <div
+              :class="`point  ${
+                item.BridgeWorkFlow == '2' || item.BridgeWorkFlow == '3'
+                  ? 'flash'
+                  : item.BridgeWorkFlow == '4'
+                  ? 'active'
+                  : ''
+              }`"
+            >
               <div></div>
               <div></div>
               <div></div>
             </div>
-            <span>Bitparty Smactcontract Sent Your ERC20 Tokens</span>
+            <span :class="`${item.BridgeWorkFlow == '4' ? 'active' : ''}`"
+              >Bitparty Smactcontract Sent Your ERC20 Tokens</span
+            >
           </div>
         </div>
         <div
@@ -205,51 +221,56 @@ watch(
         }
         .active {
           color: #ffaa08;
-          .point {
-            font-size: 0;
-            color: #ffaa08;
-          }
-          .point > div {
-            display: inline-block;
-            float: none;
+        }
+        .point.active {
+          div {
             background-color: #ffaa08;
-            border: 0 solid currentColor;
+          }
+        }
+        .flash {
+          font-size: 0;
+          color: #ffaa08;
+        }
+        .flash > div {
+          display: inline-block;
+          float: none;
+          background-color: #ffaa08;
+          border: 0 solid currentColor;
+        }
+
+        .flash {
+          width: 54px;
+        }
+        .flash > div:nth-child(1) {
+          animation-delay: -200ms;
+        }
+
+        .flash > div:nth-child(2) {
+          animation-delay: -100ms;
+        }
+
+        .flash > div:nth-child(3) {
+          animation-delay: 0ms;
+        }
+
+        .flash > div {
+          width: 10px;
+          height: 10px;
+          margin: 4px;
+          border-radius: 100%;
+          animation: ball-pulse 1s ease infinite;
+        }
+        @keyframes ball-pulse {
+          0%,
+          60%,
+          100% {
+            opacity: 1;
+            transform: scale(1);
           }
 
-          .point {
-            width: 54px;
-          }
-          .point > div:nth-child(1) {
-            animation-delay: -200ms;
-          }
-
-          .point > div:nth-child(2) {
-            animation-delay: -100ms;
-          }
-
-          .point > div:nth-child(3) {
-            animation-delay: 0ms;
-          }
-
-          .point > div {
-            width: 10px;
-            height: 10px;
-            margin: 4px;
-            border-radius: 100%;
-            animation: ball-pulse 1s ease infinite;
-          }
-          @keyframes ball-pulse {
-            0%,
-            60%,
-            100% {
-              opacity: 1;
-              transform: scale(1);
-            }
-
-            30% {
-              opacity: 0.1;
-              transform: scale(0.01);
-            }
+          30% {
+            opacity: 0.1;
+            transform: scale(0.01);
           }
         }
       }
