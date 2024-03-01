@@ -25,7 +25,7 @@
         <div class="left">
           <div :class="`sent ${item.BridgeWorkFlow == '1' ? 'active' : ''}`">
             Sent {{ getMoney(item.BridgeTokenBalance) }}
-            {{ item.BridgeTokenSymbol }}
+            {{ decodeURIComponent(item.BridgeTokenSymbol) }}
           </div>
           <div :class="`wait ${item.BridgeWorkFlow == '2' ? 'active' : ''}`">
             <div class="point">

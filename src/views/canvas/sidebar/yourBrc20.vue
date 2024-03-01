@@ -14,7 +14,7 @@
             />
             <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
           </div>
-          <div class="name">{{ item.ticker }}</div>
+          <div class="name">{{ decodeURIComponent(item.ticker) }}</div>
         </div>
         <div class="score">{{ getMoney(item.overallBalance) }}</div>
       </div>

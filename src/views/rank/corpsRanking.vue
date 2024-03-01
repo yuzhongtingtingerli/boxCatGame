@@ -29,7 +29,7 @@
         <div class="img">
           <img src="@/assets/cat_ava.png" alt="" srcset="" />
         </div>
-        <div class="name">{{ groupList.GroupName }}</div>
+        <div class="name">{{ decodeURIComponent(groupList.GroupName) }}</div>
         <div class="left">
           <div class="left_img">
             <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />
@@ -57,7 +57,7 @@
         <div class="img">
           <img src="@/assets/cat_ava.png" alt="" srcset="" />
         </div>
-        <div class="name">{{ item.GroupName }}</div>
+        <div class="name">{{ decodeURIComponent(item.GroupName) }}</div>
         <div class="left">
           <div class="left_img">
             <img width="20px" src="@/assets/Frame.png" alt="" srcset="" />

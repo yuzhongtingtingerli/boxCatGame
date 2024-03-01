@@ -216,7 +216,7 @@ function drawGroup(groups, w, h) {
         // 绘制token
         ctx.font = `${14 * Math.min(scale.value, 1)}px LilitaOne`; // 设置字体大小和类型
         ctx.fillStyle = "#fff"; // 设置文字颜色
-        const t1 = `${group.GroupName}`;
+        const t1 = `${decodeURIComponent(group.GroupName)}`;
         const text1Width = ctx.measureText(t1).width;
         const text1X = x + (w * 0.68 - text1Width) / 2;
         const text1Y = y + (catH * 0.98) / 3;
@@ -248,7 +248,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   ctx.drawImage(dialogBoxImg, imgX, imgY, imgw, imgh);
   ctx.font = `${40 * Math.min(scale.value, 1)}px LilitaOne`; // 设置字体大小和类型
   ctx.fillStyle = "#000000"; // 设置文字颜色
-  const t1 = `${group.GroupName} Group`;
+  const t1 = `${decodeURIComponent(group.GroupName)} Group`;
   const text1Width = ctx.measureText(t1).width;
   const text1X = imgX + (imgw - text1Width) / 2;
   const text1Y = imgY + imgh / 3;
