@@ -14,6 +14,7 @@ the game is over
 "
       />
     </div>
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
@@ -25,6 +26,18 @@ import Season from "./season.vue";
 import MyStake from "./myStake.vue";
 import { useAddressStore } from "@/store/address";
 import ErrorMsg from "@/components/error-msg.vue";
+import { checkRuningStatus } from "@/services/api.js";
+import ErrorInfo from "@/components/error-info.vue";
+const errorInfoRef = ref(null);
+const isShowError = () => {
+  errorInfoRef.value.open("Things gonna be happen..", "infinite");
+};
+const checkRuning = async () => {
+  const res = await checkRuningStatus();
+  if (res.result.RunningStatus <= 1) {
+    isShowError();
+  }
+};
 const errorMsgRef = ref(null);
 const Address = useAddressStore();
 const route = useRoute();
@@ -38,13 +51,9 @@ watch(
   },
   { immediate: true }
 );
-// onMounted(() => {
-//   console.log(getAddress(Address.ETHaddress), "Address.ETHaddress");
-
-//   if (route.query.from === "JoinGroup" && !Address.ETHaddress) {
-//     errorMsgRef.value.open();
-//   }
-// });
+onMounted(() => {
+  checkRuning();
+});
 </script>
 <style scoped lang="scss">
 .stake {

@@ -40,7 +40,19 @@ import Loading from "./loading.vue";
 import MinificationMap from "./minificationMap/index.vue";
 import FixedDisplay from "./fixedDisplay.vue";
 import { useAddressStore } from "@/store/address";
-
+import { checkRuningStatus } from "@/services/api.js";
+const checkRuning = async () => {
+  const res = await checkRuningStatus();
+  if (res.result.RunningStatus <= 4) {
+    console.log(123);
+    isShowError("Things gonna be happen..", "infinite");
+  } else {
+    isShowError(
+      "Welcome to Bit party !  Join the BRC20 Group you hold and win BTZ. Good luck !",
+      5000
+    );
+  }
+};
 const Address = useAddressStore();
 // 错误弹窗
 const loadingRef = ref(null);
@@ -54,10 +66,8 @@ const getGroupDetailInfo = async (Address) => {
   GroupInfo.value = res.result.GroupInfo;
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
-  await isShowError(
-    "Welcome to Bit party !  Join the BRC20 Group you hold and win BTZ. Good luck !",
-    5000
-  );
+
+  checkRuning();
   // drawInit(arr);
 };
 // 获取season数据
@@ -79,8 +89,8 @@ watch(
   { immediate: true }
 );
 const errorInfoRef = ref(null);
-const isShowError = (title) => {
-  errorInfoRef.value.open(title);
+const isShowError = (title, time = 3000) => {
+  errorInfoRef.value.open(title, time);
 };
 const { canvasRef, scale, offsetX, offsetW, offsetY, offsetH } = useMouse();
 const { drawCut, videoRef } = useCut();

@@ -25,6 +25,7 @@
         <NewScore />
       </div>
     </div>
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
@@ -36,6 +37,18 @@ import GroupTVLRank from "./groupTVLRank.vue";
 import HoursTVL from "./hoursTVL.vue";
 import NewScore from "./newScore.vue";
 import { getGroupListData } from "@/services/index";
+import { checkRuningStatus } from "@/services/api.js";
+import ErrorInfo from "@/components/error-info.vue";
+const errorInfoRef = ref(null);
+const isShowError = () => {
+  errorInfoRef.value.open("Things gonna be happen..", "infinite");
+};
+const checkRuning = async () => {
+  const res = await checkRuningStatus();
+  if (res.result.RunningStatus <= 5) {
+    isShowError();
+  }
+};
 // 当窗口变化时，获取浏览器窗口宽高
 window.onresize = () => {
   return (() => {
@@ -71,6 +84,7 @@ const getScoreRankGroup = (val) => {
 };
 
 onMounted(() => {
+  checkRuning();
   getGroupList();
   window.fullHeight = document.documentElement.clientHeight;
   // 获取bg模块并设置高度

@@ -33,7 +33,7 @@
           <router-link :class="getCurrentRoute('/whitepaper')" to="/whitepaper"
             >Whitepaper</router-link
           >
-          <router-link to="/">Safe And Privacy</router-link>
+          <router-link to="/empty">Safe And Privacy</router-link>
         </div>
       </div>
       <div class="right">

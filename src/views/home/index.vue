@@ -100,13 +100,28 @@
     <div class="bottom">
       <Footer />
     </div>
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Footer from "@/views/footer.vue";
-
+import { checkRuningStatus } from "@/services/api.js";
+import ErrorInfo from "@/components/error-info.vue";
+const errorInfoRef = ref(null);
+const isShowError = () => {
+  errorInfoRef.value.open("Things gonna be happen..", "infinite");
+};
+const checkRuning = async () => {
+  const res = await checkRuningStatus();
+  if (res.result.RunningStatus <= 1) {
+    isShowError();
+  }
+};
+onMounted(() => {
+  checkRuning();
+});
 const active = ref(0);
 const unfolding = (index) => {
   if (active.value === index) {

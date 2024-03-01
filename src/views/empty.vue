@@ -1,21 +1,27 @@
 <template>
   <div class="empty">
-    <ErrorInfo :message="errorInfoTitle" />
+    <ErrorInfo ref="errorInfoRef" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ErrorInfo from "@/components/error-info.vue";
-const errorInfoTitle = ref("Woop,Service Is Not Available In Your Location");
+const errorInfoRef = ref(null);
+const isShowError = () => {
+  errorInfoRef.value.open("Things gonna be happen..", "infinite");
+};
+onMounted(() => {
+  isShowError();
+});
 </script>
 <style scoped lang="scss">
 .empty {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 60px;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: rgba($color: #000000, $alpha: 0.5);
 }
 </style>

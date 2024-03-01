@@ -1,5 +1,9 @@
 <template>
-  <div class="error-info" :style="`display: ${errorShow ? 'block' : 'none'}`">
+  <div
+    class="error-info"
+    :class="glass ? 'glass' : ''"
+    :style="`display: ${errorShow ? 'block' : 'none'}`"
+  >
     <div class="info">
       <div class="logo">
         <img src="@/assets/error_logo.png" height="300px" alt="" srcset="" />
@@ -13,12 +17,17 @@
 import { ref } from "vue";
 const errorShow = ref(false);
 const message = ref("");
+const glass = ref(false);
 const open = (title, time = 3000) => {
   message.value = title;
   errorShow.value = true;
-  setTimeout(() => {
-    errorShow.value = false;
-  }, time);
+  if (time !== "infinite") {
+    setTimeout(() => {
+      errorShow.value = false;
+    }, time);
+  } else {
+    glass.value = true;
+  }
 };
 defineExpose({ open });
 </script>
@@ -29,7 +38,7 @@ defineExpose({ open });
   background: rgba(0, 0, 0, 0.7);
   position: fixed;
   left: 0;
-  top: 0;
+  top: 60px;
   z-index: 9999;
   .info {
     position: absolute;
@@ -60,5 +69,9 @@ defineExpose({ open });
     margin: 0 auto;
     color: #000;
   }
+}
+.glass {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>
