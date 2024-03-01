@@ -45,7 +45,7 @@
             currentRoute != '/rank'
           "
         >
-          <a href="">
+          <a href="https://discord.gg/xyN9KUXpp5" target="_blank">
             <img
               v-if="currentRoute === '/rank'"
               src="@/assets/head_dog-black.png"
@@ -54,7 +54,7 @@
             />
             <img v-else src="@/assets/head_dog.png" alt="" srcset="" />
           </a>
-          <a href="">
+          <a href="https://t.me/bitparty_games" target="_blank">
             <img
               v-if="currentRoute === '/rank'"
               src="@/assets/head-f-black.png"
@@ -63,7 +63,7 @@
             />
             <img v-else src="@/assets/head-f.png" alt="" srcset="" />
           </a>
-          <a href="">
+          <a href="https://twitter.com/BitPartyTech" target="_blank">
             <img
               v-if="currentRoute === '/rank'"
               src="@/assets/head_t-black.png"

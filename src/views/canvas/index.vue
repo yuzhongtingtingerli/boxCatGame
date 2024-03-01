@@ -45,7 +45,7 @@ const Address = useAddressStore();
 // 错误弹窗
 const loadingRef = ref(null);
 const onStart = async (flag) => {
-  loadingRef.value.startOrStop(flag);
+  loadingRef.value?.startOrStop(flag);
 };
 const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address) => {
@@ -68,10 +68,12 @@ const getTotalStakeInfo = async () => {
 };
 watch(
   Address,
-  () => {
-    getGroupDetailInfo(Address.getBTCaddress || undefined);
+  async () => {
     if (Address.getBTCaddress) {
-      // getGroupDetailInfo(Address.getBTCaddress);
+      await onStart(true);
+      getGroupDetailInfo(Address.getBTCaddress);
+    } else {
+      getGroupDetailInfo(undefined);
     }
   },
   { immediate: true }
@@ -272,7 +274,6 @@ onMounted(async () => {
     floorImg = floor;
     dialogBoxImg = dialogBox;
   });
-
   getTotalStakeInfo();
 });
 </script>

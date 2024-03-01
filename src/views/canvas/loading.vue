@@ -18,6 +18,7 @@ const countdown = () => {
       if (num.value == 100) {
         clearInterval(timer);
         resolve();
+        num.value = 0;
       }
     }, 50);
   });

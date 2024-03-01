@@ -11,7 +11,7 @@
           <div class="img">
             <img width="20px" :src="item.TokenPicture" alt="" srcset="" />
           </div>
-          <div class="name">{{ item.TokenSymbol }}</div>
+          <div class="name">{{ decodeURIComponent(item.TokenSymbol) }}</div>
         </div>
         <div class="score">{{ getMoney(item.TokenBalance) }}</div>
       </div>
