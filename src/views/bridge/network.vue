@@ -14,10 +14,10 @@
         </div>
       </div>
       <div class="title">BRC20 NETWORK</div>
-      <div class="tips" v-if="errorMsg">
-        {{ errorMsg
-        }}<InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
-        <div class="tip">You Should Do Something First</div>
+      <div class="tips" v-if="errorMsgBTC">
+        {{ errorMsgBTC }}
+        <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
+        <div class="tip">You Should Do Something First</div> -->
       </div>
       <div class="content">
         <div class="brc20 change" @click="showModal">
@@ -85,7 +85,11 @@
         </div>
       </div>
       <div class="title">ERC20 NETWORK</div>
-
+      <div class="tips" v-if="errorMsgETH">
+        {{ errorMsgETH }}
+        <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
+        <div class="tip">You Should Do Something First</div> -->
+      </div>
       <div class="content">
         <div class="brc20 change">
           <div class="left">Will Get</div>
@@ -135,9 +139,6 @@ import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
-const getFirstLetter = (ticker) => {
-  return ticker.split("")[0];
-};
 
 const Address = useAddressStore();
 const connectBTCWallet = () => {
@@ -213,7 +214,8 @@ const getTVLStatus = async ({ StakeTokenSymbol, StakeTokenBalance }) => {
   const res = await getTVLStatusData({ StakeTokenSymbol, StakeTokenBalance });
   return res.result.TVLStatus;
 };
-const errorMsg = ref("");
+const errorMsgBTC = ref("");
+const errorMsgETH = ref("");
 const errorInfoRef = ref(null);
 const isShowError = (title) => {
   errorInfoRef.value.open(title);
@@ -265,6 +267,18 @@ const connectETHWallet = async () => {
 onMounted(() => {
   Address.getETHWallet();
   Address.getBTCWallet();
+  if (!Address.getBTCaddress) {
+    errorMsgBTC.value = "You should connect your btc wallet first";
+  } else {
+    errorMsgBTC.value =
+      "To send BRC-20, you have to inscribe a TRANSFER inscription first";
+  }
+  if (!Address.getETHaddress) {
+    errorMsgETH.value = "You should connect your eth wallet first";
+  } else {
+    errorMsgETH.value =
+      "Please remember the association between your current btc and eth addresses and make sure you don’t forget it before the game is over";
+  }
 });
 </script>
 <style>

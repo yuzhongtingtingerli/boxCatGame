@@ -18,7 +18,6 @@ const countdown = () => {
       if (num.value == 100) {
         clearInterval(timer);
         resolve();
-        num.value = 0;
       }
     }, 50);
   });
@@ -29,6 +28,7 @@ const startOrStop = (flag) => {
     isShow.value = true;
     countdown();
   } else {
+    // num.value = 0;
     isShow.value = false;
   }
 };
