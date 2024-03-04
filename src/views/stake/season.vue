@@ -26,7 +26,7 @@
     </div>
     <div class="info">
       <div class="will">
-        <div class="num">{{ getMoney(seasonData.WillRelease) }} $BTXP</div>
+        <div class="num">{{ getMoney(seasonData.WillRelease) }} $BTPX</div>
         <div class="meaning">Will Release</div>
       </div>
       <div class="total">
@@ -40,9 +40,9 @@
     </div>
     <div class="content">
       If you have exchanged your BRC20 for the corresponding ERC20 token through
-      our bridge, you can continue to join the pledge and exchange for BTZ
-      tokens. To learn about the value and pledge rules of BTZ, please check the
-      Whitepaper
+      our bridge, you can continue to join the pledge and exchange for BTPX
+      tokens. To learn about the value and pledge rules of BTPX, please check
+      the Whitepaper
     </div>
   </div>
 </template>

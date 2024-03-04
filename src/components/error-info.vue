@@ -27,6 +27,8 @@ const open = (title, time = 3000) => {
     }, time);
   } else {
     glass.value = true;
+    // 当前页禁止滚动
+    document.body.style.overflow = "hidden";
   }
 };
 defineExpose({ open });
@@ -40,6 +42,7 @@ defineExpose({ open });
   left: 0;
   top: 60px;
   z-index: 9999;
+  overflow: hidden;
   .info {
     position: absolute;
     bottom: 76px;
@@ -68,6 +71,7 @@ defineExpose({ open });
     width: 715px;
     margin: 0 auto;
     color: #000;
+    text-transform: capitalize;
   }
 }
 .glass {

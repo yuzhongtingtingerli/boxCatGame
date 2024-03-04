@@ -6,7 +6,7 @@
     </div>
     <div>
       Will release：{{ getMoney(props.seasonData?.WillRelease) }}
-      <span>$btxp</span>
+      <span>$btpx</span>
     </div>
   </div>
 </template>

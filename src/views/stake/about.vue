@@ -1,18 +1,17 @@
 <template>
   <div class="about">
-    <div class="title">Stake BRC20 To EARN BTZ</div>
+    <div class="title">Stake BRC20 To EARN BTPX</div>
     <div class="content">
       If you have exchanged your BRC20 for the corresponding ERC20 token through
-      our bridge, you can continue to join the pledge and exchange for BTZ
-      tokens. To learn about the value and pledge rules of BTZ, please check the
-      Whitepaper
+      our bridge, you can continue to join the pledge and exchange for BTPX
+      tokens. To learn about the value and pledge rules of BTPX, please check
+      the Whitepaper
     </div>
     <div class="bg"></div>
   </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 <style scoped lang="scss">
 .about {
   height: 403px;

@@ -9,13 +9,13 @@
     <Sidebar />
     <ErrorInfo ref="errorInfoRef" />
     <MinificationMap
-      v-if="scale <= 0.3 && seasonData"
+      v-if="scale <= 0.05 && seasonData"
       ref="minificationMapRef"
       :GroupInfo="GroupInfo"
       :seasonData="seasonData"
       @wheel="handleWheel"
     />
-    <FixedDisplay :seasonData="seasonData" v-if="scale > 0.3 && seasonData" />
+    <FixedDisplay :seasonData="seasonData" v-if="scale > 0.05 && seasonData" />
   </div>
 </template>
 
@@ -44,11 +44,13 @@ import { checkRuningStatus } from "@/services/api.js";
 const checkRuning = async () => {
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 4) {
-    console.log(123);
-    isShowError("Things gonna be happen..", "infinite");
+    isShowError(
+      "The journey will begin soon, wish you good luck ！",
+      "infinite"
+    );
   } else {
     isShowError(
-      "Welcome to Bit party !  Join the BRC20 Group you hold and win BTZ. Good luck !",
+      "Welcome to Bit party !  Join the BRC20 Group you hold and win BTPX. Good luck !",
       5000
     );
   }
@@ -64,13 +66,15 @@ const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address) => {
   await onStart(true);
   const res = await getGroupDetailInfoData(Address);
-  if (res.result === "请求失败") return;
+  if (res.result === "请求失败") {
+    GroupInfo.value = [];
+    return;
+  }
   GroupInfo.value = res.result.GroupInfo;
   timer && cancelAnimationFrame(timer);
   res.result.GroupInfo.length && drawInit(res.result.GroupInfo);
   await onStart(false);
 
-  checkRuning();
   // drawInit(arr);
 };
 // 获取season数据
@@ -81,12 +85,9 @@ const getTotalStakeInfo = async () => {
 };
 watch(
   () => Address.getBTCaddress,
-  async () => {
-    console.log("watch", Address.getBTCaddress);
-    if (Address.getBTCaddress) {
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
       getGroupDetailInfo(Address.getBTCaddress);
-    } else {
-      getGroupDetailInfo(undefined);
     }
   }
 );
@@ -121,12 +122,12 @@ function drawInit(arr) {
   drawGrid();
 }
 const handleWheel = () => {
-  scale.value = 0.31;
+  scale.value = 0.051;
 };
 const minificationMapRef = ref(null);
 function drawGrid() {
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
-  if (scale.value <= 0.3) {
+  if (scale.value <= 0.05) {
     timer = window.requestAnimationFrame(drawGrid);
     return;
   }
@@ -275,6 +276,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   ctx.fillText(t2, text2X, text2Y);
 }
 onMounted(async () => {
+  checkRuning();
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   await Promise.all([
@@ -287,6 +289,7 @@ onMounted(async () => {
     dialogBoxImg = dialogBox;
   });
   getTotalStakeInfo();
+  getGroupDetailInfo(Address.getBTCaddress || undefined);
 });
 </script>
 

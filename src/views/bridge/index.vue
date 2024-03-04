@@ -21,7 +21,10 @@ import { checkRuningStatus } from "@/services/api.js";
 import ErrorInfo from "@/components/error-info.vue";
 const errorInfoRef = ref(null);
 const isShowError = () => {
-  errorInfoRef.value.open("Things gonna be happen..", "infinite");
+  errorInfoRef.value.open(
+    "The journey will begin soon, wish you good luck ！",
+    "infinite"
+  );
 };
 const checkRuning = async () => {
   const res = await checkRuningStatus();

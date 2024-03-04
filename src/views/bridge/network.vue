@@ -78,7 +78,7 @@
         </div>
         <div class="text">
           {{
-            Address.getETHaddress === ""
+            Address.getETHaddress === "" || !Address.getETHaddress
               ? "Connect ETH Wallet"
               : getAddress(Address.getETHaddress)
           }}
