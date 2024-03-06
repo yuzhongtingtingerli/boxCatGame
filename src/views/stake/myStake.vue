@@ -15,7 +15,7 @@
         }}
       </div>
     </div>
-    <div class="nocontent" v-if="Address.ETHaddress === ''">
+    <div class="nocontent" v-if="!Address.ETHaddress">
       Please connect your wallet, check the white paper know the rules
     </div>
     <div class="content" v-else>

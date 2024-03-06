@@ -47,8 +47,9 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://68.178.206.124:8834", //http://20.39.190.226:8834/common/getAuthor
-        // target: "http://20.39.190.226:8834", //http://20.39.190.226:8834/common/getAuthor
+        target: "http://68.178.206.124:8834",
+        // target: "http://20.39.190.226:8834",
+        // target: "http://127.0.0.1:8834",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/"),
       },

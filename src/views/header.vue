@@ -30,9 +30,7 @@
           <router-link :class="getCurrentRoute('/stake')" to="/stake"
             >Stake</router-link
           >
-          <router-link :class="getCurrentRoute('/whitepaper')" to="/whitepaper"
-            >Whitepaper</router-link
-          >
+          <a href="https://docs.bitparty.tech" target="_blank">Whitepaper</a>
           <router-link to="/empty">Safe And Privacy</router-link>
         </div>
       </div>
