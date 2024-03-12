@@ -3,7 +3,7 @@
     <div class="title">
       <img src="@/assets/Union.png" style="margin-right: 12px" width="42" />
       BIT PARTY
-      <span>©The Bit Party, 2024</span>
+      <span>Bitparty.Tech 2024</span>
     </div>
     <div class="right">MAKE BTC FUN AGAIN</div>
   </div>

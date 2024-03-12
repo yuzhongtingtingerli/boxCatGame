@@ -39,10 +39,8 @@
       </div>
     </div>
     <div class="content">
-      If you have exchanged your BRC20 for the corresponding ERC20 token through
-      our bridge, you can continue to join the pledge and exchange for BTPX
-      tokens. To learn about the value and pledge rules of BTPX, please check
-      the Whitepaper
+      You need to be adventurous, but the bigger the waves, the more expensive
+      the fish.
     </div>
   </div>
 </template>

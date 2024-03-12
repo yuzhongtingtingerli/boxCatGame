@@ -6,14 +6,14 @@
       <div class="list header">
         <div class="token">Token</div>
         <div class="amount">Amount</div>
-        <div class="stakeBalance">Stake Balance</div>
-        <div class="availableStatus">Available Status</div>
+        <div class="stakeBalance">Available Balance</div>
+        <div class="availableStatus"></div>
       </div>
 
       <div class="lists">
         <div class="list" v-for="(item, index) in walletStakeInfo" :key="index">
           <div class="token">
-            {{ item.TokenSymbol }}
+            {{ decodeURIComponent(item.TokenSymbol) }}
           </div>
           <div class="amount">{{ getMoney(item.TokenAmount) }}</div>
           <div class="stakeBalance">{{ getMoney(item.TokenStakeBalance) }}</div>

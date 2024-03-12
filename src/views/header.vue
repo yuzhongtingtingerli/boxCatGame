@@ -72,7 +72,7 @@
           </a>
         </div>
         <div
-          class="Wallet"
+          :class="`Wallet ${currentRoute === '/rank' ? 'white' : ''}`"
           @click="connectWallet"
           v-if="currentRoute != '/bridge' && currentRoute != '/stake'"
         >
@@ -84,7 +84,7 @@
             srcset=""
           />
           {{
-            Address.getBTCaddress === ""
+            !Address.getBTCaddress
               ? "Connect BTC Wallet"
               : getAddress(Address.getBTCaddress)
           }}
@@ -197,7 +197,7 @@ onMounted(() => {
     font-family: LilitaOne;
     font-size: 16px;
     text-align: center;
-    background-color: #fff;
+    background-color: #f6cb37;
     color: #000;
     border: 2px solid #000;
     border-radius: 4px;
@@ -209,6 +209,9 @@ onMounted(() => {
       height: 32px;
       margin-bottom: 7px;
     }
+  }
+  .white {
+    background-color: #fff;
   }
 }
 </style>

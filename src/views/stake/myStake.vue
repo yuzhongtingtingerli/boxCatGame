@@ -4,6 +4,7 @@
       <div class="title">MY STAKE</div>
       <div class="wallet" @click="connectETHWallet">
         <img
+          v-if="Address.ETHaddress"
           src="@/assets/matemask.png"
           width="32px"
           style="margin-right: 12px"
@@ -11,12 +12,17 @@
           srcset=""
         />
         {{
-          Address.ETHaddress ? getAddress(Address.ETHaddress) : "Connect Wallet"
+          Address.ETHaddress
+            ? getAddress(Address.ETHaddress)
+            : "Connect ETH Wallet"
         }}
       </div>
     </div>
     <div class="nocontent" v-if="!Address.ETHaddress">
-      Please connect your wallet, check the white paper know the rules
+      <div class="img"><img src="@/assets/empty.png" width="80px" /></div>
+      <div class="text">
+        Please connect your wallet, check the white paper know the rules
+      </div>
     </div>
     <div class="content" v-else>
       <MyTokenList :address="Address.ETHaddress" />
@@ -72,17 +78,18 @@ onMounted(() => {
   .nocontent {
     margin-top: 20px;
     height: 300px;
-    line-height: 300px;
     text-align: center;
     font-family: LilitaOne;
     font-size: 15px;
     font-weight: 400;
     color: #ffffff;
+    opacity: 0.5;
     background: linear-gradient(
       135deg,
       rgba(131, 196, 255, 0.1) 0%,
       rgba(255, 255, 255, 0.1) 100%
     );
+    padding-top: 44px;
   }
   .content {
     margin-top: 20px;

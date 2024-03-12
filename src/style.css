@@ -34,7 +34,10 @@ body {
   color: #fff;
 }
 .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
-  text-align: center;
+  text-align: center !important;
+}
+.ant-pagination-item-ellipsis {
+  color: #fff !important;
 }
 /* ::-webkit-scrollbar {
   width: 3px;

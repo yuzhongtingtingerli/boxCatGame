@@ -5,6 +5,7 @@ export const useAddressStore = defineStore("address", {
     return {
       BTCaddress: null,
       ETHaddress: null,
+      ETHbalance: null,
     };
   },
   // 也可以定义为
@@ -53,12 +54,14 @@ export const useAddressStore = defineStore("address", {
         const res = await web3.eth.getAccounts();
         if (res.length > 0) {
           this.ETHaddress = res[0];
+          this.getBalance(res[0]);
         }
         // 监听地址变化事件
         web3.currentProvider.on("accountsChanged", (accounts) => {
           // 处理地址变化事件
           this.ETHaddress = accounts[0] || "";
           console.log("Address changed:", accounts);
+          this.getBalance(accounts[0]);
         });
 
         this.checkNetId();
@@ -111,13 +114,29 @@ export const useAddressStore = defineStore("address", {
       const res = await web3.eth.getAccounts();
       if (res.length > 0) {
         this.ETHaddress = res[0] || "";
+        this.getBalance(res[0]);
       }
       // 监听地址变化事件
       web3.currentProvider.on("accountsChanged", (accounts) => {
         // 处理地址变化事件
         this.ETHaddress = accounts[0] || "";
+        console.log("1111");
+        this.getBalance(accounts[0]);
       });
       this.checkNetId();
+    },
+    async getBalance(userAdderss) {
+      // const web3 = new Web3(window.ethereum);
+      // const blockNum = await web3.eth.getBlockNumber();
+      // const blockNum16 = "0x" + blockNum.toString(16);
+      // const transactions = await web3.eth.getBlock(blockNum);
+      // const pt = await web3.eth.getPendingTransactions();
+      // console.log(pt, "pt");
+      // console.log(transactions, "transactions");
+      // const res = await web3.eth.getBalance(userAdderss);
+      // const balance = web3.utils.fromWei(res, "ether");
+      // const ary = balance.split(".");
+      // this.ETHbalance = Number(ary[0] + "." + ary[1].slice(0, 6));
     },
     async getBTCWallet() {
       let res = await window?.unisat.getAccounts();

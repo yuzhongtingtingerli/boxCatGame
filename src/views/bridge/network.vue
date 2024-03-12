@@ -7,7 +7,7 @@
         </div>
         <div class="text">
           {{
-            Address.getBTCaddress === ""
+            !Address.getBTCaddress
               ? "Connect BTC Wallet"
               : getAddress(Address.getBTCaddress)
           }}
@@ -119,12 +119,20 @@
     <transferModal ref="transferModalRef" @change="isSuccess" />
     <ErrorInfo ref="errorInfoRef" />
     <SuccessMsg ref="successMsgRef" />
+    <ErrorMsg
+      ref="errorMsgRef"
+      headline="Dear!"
+      title="You should connect your eth wallet first"
+      message="Please remember the association between your current btc 
+and eth addresses and make sure you don’t forget it before
+the game is over
+"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { InfoCircleOutlined } from "@ant-design/icons-vue";
+import { ref, onMounted, watch } from "vue";
 import { getAddress } from "@/utils/Tools";
 import {
   getTVLStatusData,
@@ -139,11 +147,13 @@ import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
+import ErrorMsg from "@/components/error-msg.vue";
 
 const Address = useAddressStore();
 const connectBTCWallet = () => {
   Address.linkWallet();
 };
+const errorMsgRef = ref(null);
 // token 弹框
 const selectTokenRef = ref(null);
 const showModal = () => {
@@ -222,6 +232,10 @@ const isShowError = (title) => {
 };
 const openTransfer = async () => {
   if (!token.value || !amountInfo.value) return;
+  if (!Address.EthAddress) {
+    errorMsgRef.value.open();
+    return;
+  }
   const CheckMappingStatus = await checkAddressMapping();
   if (CheckMappingStatus == 2) {
     const InsertMappingStatus = await insertAddressMapping();
@@ -280,6 +294,24 @@ onMounted(() => {
       "Please remember the association between your current btc and eth addresses and make sure you don’t forget it before the game is over";
   }
 });
+watch(
+  Address,
+  (newVal, oldVal) => {
+    if (!Address.getETHaddress) {
+      errorMsgETH.value = "You should connect your eth wallet first";
+    } else {
+      errorMsgETH.value =
+        "Please remember the association between your current btc and eth addresses and make sure you don’t forget it before the game is over";
+    }
+    if (!Address.getBTCaddress) {
+      errorMsgBTC.value = "You should connect your btc wallet first";
+    } else {
+      errorMsgBTC.value =
+        "To send BRC-20, you have to inscribe a TRANSFER inscription first";
+    }
+  },
+  { immediate: true }
+);
 </script>
 <style>
 .network {

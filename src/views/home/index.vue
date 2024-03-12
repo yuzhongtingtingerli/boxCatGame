@@ -11,7 +11,8 @@
       <div class="left3">
         <div class="title">BIT PARTY</div>
         <div class="description">
-          The First <span class="active">Brc20</span> Stake To Earn Game
+          The First <span class="active">All Brc20</span> Stake To Earn
+          Playground
         </div>
         <div class="list">
           <div class="list-item">
@@ -74,7 +75,7 @@
           <div class="list-item">
             <div class="top" @click="unfolding(3)">
               <div :class="`text ${active === 3 ? 'active' : ''}`">
-                Code Audit By Slowmist
+                Code Audit By -
               </div>
               <div class="right" v-if="active === 3">
                 <img src="@/assets/Vector.png" alt="" srcset="" />
@@ -117,6 +118,8 @@ const isShowError = () => {
   );
 };
 const checkRuning = async () => {
+  isShowError("The journey will begin soon, wish you good luck ！", "infinite");
+  return;
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 1) {
     isShowError();

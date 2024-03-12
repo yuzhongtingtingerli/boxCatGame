@@ -1,6 +1,6 @@
 <template>
   <div class="corps-ranking">
-    <div class="title">Brc20 corps Ranking</div>
+    <div class="title">Groups Ranking</div>
     <div class="search">
       <a-input
         v-model:value="groupName"

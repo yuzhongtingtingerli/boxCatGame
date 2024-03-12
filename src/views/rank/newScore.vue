@@ -1,6 +1,6 @@
 <template>
   <div class="newScore">
-    <div class="title">new score</div>
+    <div class="title">Recent Joins</div>
     <div class="content">
       <div class="list header">
         <div class="Address">Address</div>

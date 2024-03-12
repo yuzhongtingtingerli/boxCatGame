@@ -38,7 +38,7 @@
         <div class="lists">
           <div class="list" v-for="(item, index) in StakeInfo" :key="index">
             <div class="token">
-              {{ item.TokenSymbol }}
+              {{ decodeURIComponent(item.TokenSymbol) }}
             </div>
             <div class="amount">{{ getMoney(item.TokenAmount) }}</div>
             <div class="stakeBalance">

@@ -4,19 +4,37 @@ import { ref, onMounted } from "vue";
 import erc20Abi from "@/abi/erc20.json";
 import stakeAbi from "@/abi/stake.json";
 const emit = defineEmits(["change"]);
-const amountData = ref(null);
 const record = ref();
 const show = ref(false);
-const open = (symbol) => {
+const balance = ref(0);
+const spinning = ref(false);
+const open = async (symbol) => {
   show.value = true;
   record.value = symbol;
+  balance.value = await getBalance();
+  spinning.value = false;
 };
 const close = () => {
   show.value = false;
 };
 const Confirm = () => {
-  if (amountData.value) {
-    goStake();
+  if (balance.value === 0) return;
+  goStake();
+};
+const getBalance = async () => {
+  spinning.value = true;
+  let web3 = new Web3(window.web3.currentProvider);
+  let fromAddresses = await web3.eth.getAccounts();
+  let brc20Contract = new web3.eth.Contract(
+    erc20Abi,
+    record.value.BridgeTokenContractAddress || record.value.TokenContractAddress
+  );
+  const res = await brc20Contract.methods.balanceOf(fromAddresses[0]).call();
+  if (res > 0n) {
+    const b = BigInt(10 ** 18);
+    return Number(res / b);
+  } else {
+    return 0;
   }
 };
 const goStake = async () => {
@@ -25,8 +43,7 @@ const goStake = async () => {
 
   let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
   let fromAddresses = await web3.eth.getAccounts();
-  let amount = amountData.value * 10 ** 18;
-
+  let amount = balance.value * 10 ** 18;
   let brc20Contract = new web3.eth.Contract(
     erc20Abi,
     record.value.BridgeTokenContractAddress || record.value.TokenContractAddress
@@ -48,7 +65,6 @@ const goStake = async () => {
       emit("change", res.transactionHash);
     });
 };
-
 onMounted(() => {});
 defineExpose({ open, close });
 </script>
@@ -63,41 +79,43 @@ defineExpose({ open, close });
     :closable="false"
     width="480px"
   >
-    <div class="modal_style">
-      <img class="head-img" src="@/assets/cat_ava.png" />
-      <div class="close" @click="close">
-        <img src="@/assets/close.png" height="24px" alt="" srcset="" />
-      </div>
-      <div class="title">To bitparty address</div>
-      <div class="desc">it will cost 30 mins</div>
-      <div class="sats">
-        <div class="txt">
-          {{ record.BridgeTokenSymbol || record.TokenSymbol }} account
+    <a-spin :spinning="spinning">
+      <div class="modal_style">
+        <img class="head-img" src="@/assets/cat_ava.png" />
+        <div class="close" @click="close">
+          <img src="@/assets/close.png" height="24px" alt="" srcset="" />
         </div>
-        <div class="txt">to</div>
-        <div class="txt">
-          {{ record.BridgeTokenSymbol || record.TokenSymbol }} group
+        <div class="title">stake To Smart contract</div>
+        <div class="desc">This is the last step</div>
+        <div class="sats">
+          <div class="txt">Your ETH Account</div>
+          <div class="txt">to</div>
+          <div class="txt">
+            {{ record.BridgeTokenSymbol || record.TokenSymbol }} Group
+          </div>
         </div>
-      </div>
-      <div class="sats">
-        <div class="txt input_style">
-          amount
-          <a-input
-            class="amount"
-            v-model:value="amountData"
-            placeholder="0.222"
-            size="small"
-          ></a-input>
+        <div class="sats">
+          <div class="txt input_style">
+            Amount
+            <a-input
+              class="amount"
+              v-model:value="balance"
+              disabled
+              size="small"
+            ></a-input>
+          </div>
+          <div class="txt">
+            {{ record.BridgeTokenSymbol || record.TokenSymbol }}
+            <!-- <span class="max">Maximum</span> -->
+          </div>
         </div>
-        <div class="txt">
-          {{ record.BridgeTokenSymbol || record.TokenSymbol }}
-          <span class="max">maximum</span>
+        <div class="warn">
+          After the game is over, you can get all your assets back.
         </div>
-      </div>
-      <div class="warn">you should do something first</div>
 
-      <div class="btn" @click="Confirm">Confirm</div>
-    </div>
+        <div class="btn" @click="Confirm">Confirm</div>
+      </div>
+    </a-spin>
   </a-modal>
 </template>
 

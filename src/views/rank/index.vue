@@ -47,6 +47,8 @@ const isShowError = () => {
   );
 };
 const checkRuning = async () => {
+  isShowError("The journey will begin soon, wish you good luck ！", "infinite");
+  return;
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 5) {
     isShowError();

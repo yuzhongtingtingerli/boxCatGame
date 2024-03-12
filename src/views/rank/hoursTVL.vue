@@ -1,7 +1,7 @@
 <template>
   <div class="hoursTVL">
     <div class="top">
-      <div class="title">24 hours TVL</div>
+      <div class="title">Top 3 Added TVL Past 24 Hours</div>
       <div class="taps">
         <div
           :class="`group ${type === 'group' ? 'active' : ''}`"

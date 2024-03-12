@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onUnmounted } from "vue";
 const errorShow = ref(false);
 const message = ref("");
 const glass = ref(false);
@@ -31,6 +31,10 @@ const open = (title, time = 3000) => {
     document.body.style.overflow = "hidden";
   }
 };
+
+onUnmounted(() => {
+  document.body.style.overflow = "initial";
+});
 defineExpose({ open });
 </script>
 <style scoped lang="scss">
@@ -77,5 +81,6 @@ defineExpose({ open });
 .glass {
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0);
+  z-index: 9999999;
 }
 </style>

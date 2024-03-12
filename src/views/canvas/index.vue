@@ -2,12 +2,13 @@
   <div class="canvas">
     <!-- {{ offsetX }} -->
     <!-- {{ offsetY }} -->
-    <Loading ref="loadingRef" />
+
     <video muted autoplay controls ref="videoRef" :src="cut1920"></video>
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
     <ErrorInfo ref="errorInfoRef" />
+    <Loading ref="loadingRef" />
     <MinificationMap
       v-if="scale <= 0.05 && seasonData"
       ref="minificationMapRef"
@@ -42,6 +43,8 @@ import FixedDisplay from "./fixedDisplay.vue";
 import { useAddressStore } from "@/store/address";
 import { checkRuningStatus } from "@/services/api.js";
 const checkRuning = async () => {
+  isShowError("The journey will begin soon, wish you good luck ！", "infinite");
+  return;
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 4) {
     isShowError(

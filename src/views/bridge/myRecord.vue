@@ -76,6 +76,7 @@
       :total="total"
       size="small"
       @change="handleChange"
+      :showSizeChanger="false"
     />
   </div>
   <bitpartyAddress ref="bitpartyAddressRef" />
@@ -145,6 +146,12 @@ watch(
 <style>
 .myRecord .ant-pagination.ant-pagination-mini {
   margin-top: 16px;
+}
+.ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
+  text-align: center !important;
+}
+.ant-pagination-item-ellipsis {
+  color: #fff !important;
 }
 </style>
 <style scoped lang="scss">
