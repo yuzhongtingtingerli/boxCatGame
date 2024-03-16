@@ -314,23 +314,6 @@ export async function dummySendInscriptions({
   dump?: boolean;
   enableRBF?: boolean;
 }) {
-  console.log(
-    btcUtxos,
-    assetUtxos,
-    toAddress,
-    feeRate,
-    btcWallet.networkType,
-    btcWallet.address,
-    enableRBF,
-    `btcUtxos,
-    assetUtxos,
-    toAddress,
-    feeRate,
-    networkType: btcWallet.networkType,
-    changeAddress: btcWallet.address,
-    enableRBF,`
-  );
-
   const { psbt, toSignInputs } = await sendInscriptions({
     btcUtxos,
     assetUtxos,

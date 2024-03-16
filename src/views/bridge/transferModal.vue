@@ -6,9 +6,15 @@ import { doBridgeData, getTransferInfoData } from "@/services/index.js";
 import { expect } from "chai";
 import { dummySendInscriptions, genDummyUtxo } from "./utils.ts";
 import { AddressType } from "@unisat/wallet-sdk";
-import { NetworkType } from "@unisat/wallet-sdk/es/network";
+import { NetworkType, toPsbtNetwork } from "@unisat/wallet-sdk/es/network";
 import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
 import { sendInscriptions } from "@unisat/wallet-sdk/es/tx-helpers";
+import { ECPair, bitcoin } from "@unisat/wallet-sdk/es/bitcoin-core";
+import {
+  publicKeyToAddress,
+  publicKeyToScriptPk,
+  scriptPkToAddress,
+} from "@unisat/wallet-sdk/es/address";
 const show = ref(false);
 const BTCAddress = ref("");
 const ETHAddress = ref("");
@@ -58,45 +64,51 @@ const sendBitcoin = async () => {
 };
 
 const Confirm = async () => {
-  // const fromBtcWallet = LocalWallet.fromRandom(
-  //   AddressType.P2TR,
-  //   NetworkType.MAINNET
-  // );
-  // const fromAssetWallet = LocalWallet.fromRandom(
-  //   AddressType.P2TR,
-  //   NetworkType.MAINNET
-  // );
-  // const { psbt, toSignInputs } = await sendInscriptions({
-  //   btcUtxos: [
-  //     genDummyUtxo(
-  //       fromBtcWallet,
-  //       Number((serviceFee.value / 0.00000001).toFixed(0))
-  //     ),
-  //   ],
-  //   assetUtxos: [
-  //     genDummyUtxo(fromAssetWallet, 330, {
-  //       // 我的地址 satoshis
-  //       inscriptions: [
-  //         {
-  //           inscriptionId:
-  //             "773e26907545661840276a59137dd82bc7a7f73f0684fa1457cb2f2b883496b4i0",
-  //           offset: 0,
-  //         },
-  //       ],
-  //     }),
-  //   ],
-  //   toAddress: toAddress.value,
-  //   feeRate: feeData.value,
-  //   networkType: fromBtcWallet.networkType,
-  //   changeAddress: BTCAddress.value,
-  // });
-  // console.log(psbt, toSignInputs, "psbt, toSignInputs");
-  // // return;
-  // // console.log(ret, "ret");
-  // // console.log(ret.psbt.toHex(), "psbt");
-  // let res = await window.unisat.signPsbt(psbt.toHex());
-  // console.log(res, "res");
-  // return;
+  const networkType = NetworkType.MAINNET;
+  const addressType = AddressType.P2TR;
+  let publicKey = await window.unisat.getPublicKey();
+  const network = toPsbtNetwork(networkType);
+  const scriptPk = publicKeyToScriptPk(publicKey, addressType, networkType);
+  const walletA = {
+    address: BTCAddress.value,
+    addressType: 2,
+    network,
+    networkType: 0,
+    pubkey: publicKey,
+    scriptPk,
+  };
+  const walletB = {
+    address: BTCAddress.value,
+    addressType: 2,
+    network,
+    networkType: 0,
+    pubkey: publicKey,
+    scriptPk,
+  };
+  const { psbt, toSignInputs } = await sendInscriptions({
+    btcUtxos: [
+      genDummyUtxo(walletA, Number((serviceFee.value / 0.00000001).toFixed(0))),
+    ],
+    assetUtxos: [
+      genDummyUtxo(walletB, 330, {
+        // 我的地址 satoshis
+        inscriptions: [
+          {
+            inscriptionId: inscriptionId.value,
+            offset: 0,
+          },
+        ],
+      }),
+    ],
+    toAddress: toAddress.value,
+    feeRate: feeData.value,
+    networkType: walletA.networkType,
+    changeAddress: BTCAddress.value,
+  });
+  console.log(psbt, toSignInputs, "psbt, toSignInputs");
+  let res = await window.unisat.signPsbt(psbt.toHex());
+  console.log(res, "res");
+  return;
   const id = await sendBitcoin();
   if (!id) return;
   setTimeout(async () => {

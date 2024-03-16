@@ -36,8 +36,13 @@ const isShowError = () => {
   );
 };
 const checkRuning = async () => {
-  // isShowError("The journey will begin soon, wish you good luck ！", "infinite");
-  // return;
+  if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
+    isShowError(
+      "The journey will begin soon, wish you good luck ！",
+      "infinite"
+    );
+    return;
+  }
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 1) {
     isShowError();

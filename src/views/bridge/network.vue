@@ -232,7 +232,7 @@ const isShowError = (title) => {
 };
 const openTransfer = async () => {
   if (!token.value || !amountInfo.value) return;
-  if (!Address.EthAddress) {
+  if (!Address.getETHaddress) {
     errorMsgRef.value.open();
     return;
   }
