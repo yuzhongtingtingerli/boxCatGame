@@ -56,7 +56,6 @@ export function genDummyUtxos(
     )
   );
 }
-
 /**
  * generate a dummy utxo
  */
@@ -162,7 +161,6 @@ export async function dummySendBTC({
     feeRate,
     enableRBF,
   });
-  console.log(psbt, "psbt----");
 
   await wallet.signPsbt(psbt, { autoFinalized: true, toSignInputs });
   const tx = psbt.extractTransaction(true);
@@ -314,6 +312,9 @@ export async function dummySendInscriptions({
   dump?: boolean;
   enableRBF?: boolean;
 }) {
+  console.log(assetUtxos, "assetUtxos");
+  console.log(btcUtxos, "btcUtxos");
+
   const { psbt, toSignInputs } = await sendInscriptions({
     btcUtxos,
     assetUtxos,
@@ -337,12 +338,12 @@ export async function dummySendInscriptions({
   const assetToSignInputs = toSignInputs.filter(
     (v) => v.publicKey === assetWallet.pubkey
   );
-  if (assetToSignInputs.length > 0) {
-    await assetWallet.signPsbt(psbt, {
-      autoFinalized: false,
-      toSignInputs: assetToSignInputs,
-    });
-  }
+  // if (assetToSignInputs.length > 0) {
+  //   await assetWallet.signPsbt(psbt, {
+  //     autoFinalized: false,
+  //     toSignInputs: assetToSignInputs,
+  //   });
+  // }
 
   psbt.finalizeAllInputs();
 

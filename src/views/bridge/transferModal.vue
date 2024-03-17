@@ -1,44 +1,49 @@
 <script setup>
 import { ref } from "vue";
-import { getRecommendedData } from "@/services/wallet.js";
+import {
+  getRecommendedData,
+  getUtxoData,
+  getInscriptionInfoData,
+} from "@/services/wallet.js";
 import { getAddress } from "@/utils/Tools";
 import { doBridgeData, getTransferInfoData } from "@/services/index.js";
-import { expect } from "chai";
-import { dummySendInscriptions, genDummyUtxo } from "./utils.ts";
+import { genDummyUtxo, dummySendInscriptions } from "./utils.ts";
 import { AddressType } from "@unisat/wallet-sdk";
 import { NetworkType, toPsbtNetwork } from "@unisat/wallet-sdk/es/network";
 import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
-import { sendInscriptions } from "@unisat/wallet-sdk/es/tx-helpers";
 import { ECPair, bitcoin } from "@unisat/wallet-sdk/es/bitcoin-core";
-import {
-  publicKeyToAddress,
-  publicKeyToScriptPk,
-  scriptPkToAddress,
-} from "@unisat/wallet-sdk/es/address";
+import { sendInscriptions, sendBTC } from "@unisat/wallet-sdk/es/tx-helpers";
+
 const show = ref(false);
 const BTCAddress = ref("");
 const ETHAddress = ref("");
 const tickData = ref("");
-const amtData = ref("");
 const satoshiData = ref("");
 let inscriptionId = ref("");
+const btcAmount = ref(null);
 const emit = defineEmits(["change"]);
-const open = (btc, eth, insId, tick, amt, satoshi) => {
+const open = (btc, eth, insId = "", tick, amt, satoshi = "") => {
   getRecommended();
-  getTransferInfo();
+  getTransferInfo(tick, amt);
   show.value = true;
   BTCAddress.value = btc;
   ETHAddress.value = eth;
   inscriptionId.value = insId;
   tickData.value = tick;
   satoshiData.value = satoshi;
+  btcAmount.value = amt;
 };
 const serviceFee = ref("");
 const toAddress = ref("");
-const getTransferInfo = async () => {
-  const res = await getTransferInfoData();
+const serviceAddress = ref("");
+const getTransferInfo = async (tick, amt) => {
+  const res = await getTransferInfoData({
+    TokenSymbol: tick,
+    TokenBalance: amt,
+  });
   serviceFee.value = res.result.ServiceFee;
-  toAddress.value = res.result.ToAddress;
+  toAddress.value = res.result.AssetsAddress;
+  serviceAddress.value = res.result.ServiceAddress;
 };
 const close = () => {
   show.value = false;
@@ -55,74 +60,131 @@ const getRecommended = async () => {
   recommendedData.value = res;
   feeData.value = res.halfHourFee;
 };
-const sendBitcoin = async () => {
-  const txid = await unisat.sendBitcoin(
-    toAddress.value,
-    Number((serviceFee.value / 0.00000001).toFixed(0))
-  );
-  return txid;
-};
 
-const Confirm = async () => {
-  const networkType = NetworkType.MAINNET;
-  const addressType = AddressType.P2TR;
-  let publicKey = await window.unisat.getPublicKey();
-  const network = toPsbtNetwork(networkType);
-  const scriptPk = publicKeyToScriptPk(publicKey, addressType, networkType);
-  const walletA = {
-    address: BTCAddress.value,
-    addressType: 2,
-    network,
-    networkType: 0,
-    pubkey: publicKey,
-    scriptPk,
-  };
-  const walletB = {
-    address: BTCAddress.value,
-    addressType: 2,
-    network,
-    networkType: 0,
-    pubkey: publicKey,
-    scriptPk,
-  };
+const customSendInscription = async () => {
+  const serviceFeeData = serviceFee.value * 10000 * 10000;
+  const pubkey = await window.unisat.getPublicKey();
+  const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
+  console.log(btcUtxos, "btcUtxos");
+  console.log(serviceFeeData, "serviceFeeData");
+  const btcSatoshis = btcUtxos.utxo.filter((v) => v.satoshi > serviceFeeData);
+  const { data: inscriptionInfo } = await getInscriptionInfoData({
+    inscriptionId: inscriptionId.value,
+  });
+  console.log(inscriptionInfo, "inscriptionInfo");
   const { psbt, toSignInputs } = await sendInscriptions({
-    btcUtxos: [
-      genDummyUtxo(walletA, Number((serviceFee.value / 0.00000001).toFixed(0))),
-    ],
+    btcUtxos: btcUtxos.utxo.map((v) => ({
+      txid: v.txid,
+      vout: v.vout,
+      satoshis: v.satoshi,
+      scriptPk: v.scriptPk,
+      pubkey,
+      addressType: 2,
+      inscriptions: v.inscriptions,
+      atomicals: [],
+    })),
     assetUtxos: [
-      genDummyUtxo(walletB, 330, {
-        // 我的地址 satoshis
-        inscriptions: [
-          {
-            inscriptionId: inscriptionId.value,
-            offset: 0,
-          },
-        ],
-      }),
+      {
+        txid: inscriptionInfo.utxo.txid,
+        vout: inscriptionInfo.utxo.vout,
+        satoshis: inscriptionInfo.utxo.satoshi,
+        scriptPk: inscriptionInfo.utxo.scriptPk,
+        pubkey,
+        addressType: 2,
+        inscriptions: inscriptionInfo.utxo.inscriptions,
+        atomicals: [],
+      },
+      {
+        txid: "0000000000000000000000000000000000000000000000000000000000000000",
+        vout: 2,
+        satoshis: serviceFeeData,
+        scriptPk: inscriptionInfo.utxo.scriptPk,
+        pubkey,
+        addressType: 2,
+        inscriptions: "001",
+        atomicals: [],
+      },
     ],
     toAddress: toAddress.value,
     feeRate: feeData.value,
-    networkType: walletA.networkType,
+    networkType: 0,
     changeAddress: BTCAddress.value,
+    enableRBF: true,
   });
   console.log(psbt, toSignInputs, "psbt, toSignInputs");
-  let res = await window.unisat.signPsbt(psbt.toHex());
-  console.log(res, "res");
-  return;
-  const id = await sendBitcoin();
-  if (!id) return;
+  const psbtHex = psbt.toHex();
+  const tixd = await window.unisat.signPsbt(psbtHex);
+  const res = await window.unisat.pushPsbt(tixd);
+  console.log(res, "res---");
+};
+const sendBitcoin = async () => {
+  if (tickData.value === "btc") {
+    return customSendBTC();
+  } else {
+    const btc = 1 * 10000 * 10000;
+    const satoshis = Number((serviceFee.value * btc).toFixed(0));
+    const txid = await unisat.sendBitcoin(serviceAddress.value, satoshis);
+    return txid;
+  }
+};
+const customSendBTC = async () => {
+  const serviceFeeData = serviceFee.value * 10000 * 10000;
+  const btcAmountData = btcAmount.value * 10000 * 10000;
+  const pubkey = await window.unisat.getPublicKey();
+  const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
+  const { psbt, toSignInputs } = await sendBTC({
+    btcUtxos: btcUtxos.utxo.map((v) => ({
+      txid: v.txid,
+      vout: v.vout,
+      satoshis: v.satoshi,
+      scriptPk: v.scriptPk,
+      pubkey,
+      addressType: 2,
+      inscriptions: v.inscriptions,
+      atomicals: [],
+    })),
+    tos: [
+      {
+        address: serviceAddress.value,
+        satoshis: serviceFeeData,
+      },
+      {
+        address: toAddress.value,
+        satoshis: btcAmountData,
+      },
+    ],
+    networkType: 0,
+    changeAddress: BTCAddress.value,
+    feeRate: feeData.value,
+  });
+  const psbtHex = psbt.toHex();
+  const tixd = await window.unisat.signPsbt(psbtHex, {
+    autoFinalized: true,
+    toSignInputs,
+  });
+  const res = await window.unisat.pushPsbt(tixd);
+  console.log(res, "res---");
+  return res;
+};
+const Confirm = async () => {
+  // customSendInscription();
+  // return;
+  const txid = await sendBitcoin();
   setTimeout(async () => {
-    const txid = await sendInscription(
-      toAddress.value,
-      inscriptionId.value,
-      feeData.value
-    );
-    if (!txid) return;
+    if (tickData.value !== "btc") {
+      const txid = await sendInscription(
+        toAddress.value,
+        inscriptionId.value,
+        feeData.value
+      );
+      if (!txid) return;
+    }
+
     doBridge(
       BTCAddress.value,
       "1",
       tickData.value,
-      amtData.value,
+      btcAmount.value,
       txid,
       ETHAddress.value
     );
@@ -190,7 +252,7 @@ defineExpose({ open, close });
       </div>
       <div class="list">
         <div class="left">To BITPARTY Safe Address:</div>
-        <div class="right">
+        <div class="right" v-if="toAddress">
           <span>{{ getAddress(toAddress) }}</span>
           <img src="@/assets/copy.png" alt="" srcset="" />
         </div>

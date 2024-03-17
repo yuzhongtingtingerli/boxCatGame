@@ -134,8 +134,11 @@ export const getETHContractAddress = ({ TokenSymbol }) => {
   );
 };
 
-export const getTransferInfo = () => {
-  return request(`/stake/getTransferInfo`, "get");
+export const getTransferInfo = ({ TokenSymbol, TokenBalance }) => {
+  return request(
+    `/stake/getTransferInfo?TokenSymbol=${TokenSymbol}&TokenBalance=${TokenBalance}`,
+    "get"
+  );
 };
 
 export const checkRuningStatus = () => {

@@ -27,7 +27,17 @@
             <img src="@/assets/Vector.png" />
           </div>
         </div>
-        <div class="amount change" @click="showAmount">
+        <div class="amount change" v-if="token?.ticker === 'btc'">
+          <div class="left">Amount</div>
+          <div class="right">
+            <a-input
+              v-model:value="btcAmount"
+              placeholder="0.00"
+              size="small"
+            ></a-input>
+          </div>
+        </div>
+        <div class="amount change" @click="showAmount" v-else>
           <div class="left">Amount</div>
           <div class="right">
             <span>{{ amountInfo?.data.amt || "0.00" }}</span>
@@ -99,7 +109,9 @@
         </div>
         <div class="amount change">
           <div class="left">Amount</div>
-          <div class="right">{{ amountInfo?.data.amt }}</div>
+          <div class="right">
+            {{ token?.ticker === "btc" ? btcAmount : amountInfo?.data.amt }}
+          </div>
         </div>
         <div
           class="address"
@@ -199,13 +211,15 @@ const isSuccess = (type, txid) => {
 
 const transferModalRef = ref(null);
 const showTransferModal = () => {
+  const amt =
+    token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
   transferModalRef.value.open(
     Address.getBTCaddress,
     Address.getETHaddress,
-    amountInfo.value.inscriptionId,
-    amountInfo.value.data.tick,
-    amountInfo.value.data.amt,
-    amountInfo.value.satoshi
+    amountInfo?.value?.inscriptionId || "",
+    token.value.ticker,
+    amt,
+    amountInfo?.value?.satoshi || ""
   );
 };
 
@@ -230,8 +244,15 @@ const errorInfoRef = ref(null);
 const isShowError = (title) => {
   errorInfoRef.value.open(title);
 };
+const btcAmount = ref(null);
 const openTransfer = async () => {
-  if (!token.value || !amountInfo.value) return;
+  console.log(token.value, "token.value");
+  if (!token.value) return console.log("没选token");
+  if (token.value.ticker === "btc") {
+    if (!btcAmount.value) return console.log("没输入金额");
+  } else {
+    if (!amountInfo.value) return console.log("没选择金额");
+  }
   if (!Address.getETHaddress) {
     errorMsgRef.value.open();
     return;
@@ -251,9 +272,11 @@ const openTransfer = async () => {
     );
     return;
   }
+  const amt =
+    token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
   const TVLStatus = await getTVLStatus({
     StakeTokenSymbol: token.value.ticker,
-    StakeTokenBalance: amountInfo.value.data.amt,
+    StakeTokenBalance: amt,
   });
   // if (TVLStatus == 0) return;
   showTransferModal();
@@ -323,6 +346,7 @@ watch(
     font-weight: 400;
     text-align: right;
     color: #fff;
+    opacity: 0.3;
   }
 }
 </style>

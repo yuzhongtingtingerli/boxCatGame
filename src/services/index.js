@@ -332,9 +332,9 @@ export const getETHContractAddressData = async (params) => {
   }
 };
 
-export const getTransferInfoData = async () => {
+export const getTransferInfoData = async (params) => {
   try {
-    const { code, result, status } = await getTransferInfo();
+    const { code, result, status } = await getTransferInfo(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, result };

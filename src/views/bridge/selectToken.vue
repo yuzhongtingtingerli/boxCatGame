@@ -114,6 +114,10 @@ defineExpose({ open, close });
           <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
           <span>{{ item.ticker }}</span>
         </div>
+        <div class="list-item" @click="getTicker({ ticker: 'btc' })">
+          <img width="20px" src="@/assets/miniB.png" />
+          <span>btc</span>
+        </div>
       </div>
     </div>
   </a-modal>
@@ -172,6 +176,9 @@ defineExpose({ open, close });
         line-height: 18px;
         text-align: center;
         margin-right: 8px;
+      }
+      span {
+        padding-left: 5px;
       }
     }
     .list-item:hover {

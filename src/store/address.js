@@ -70,14 +70,26 @@ export const useAddressStore = defineStore("address", {
     async checkNetId() {
       if (!this.ETHaddress) return;
       try {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [
-            {
-              chainId: "0x13881", // 目标链ID
-            },
-          ],
-        });
+        if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [
+              {
+                chainId: "0x1", // 目标链ID
+              },
+            ],
+          });
+        } else {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [
+              {
+                chainId: "0x13881", // 目标链ID
+              },
+            ],
+          });
+        }
+
         console.log("wallet_switchEthereumChain");
       } catch (e) {
         console.log("(e as any).code", e.code);
