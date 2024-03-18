@@ -19,16 +19,22 @@
 <script setup>
 import { ref, defineProps, defineExpose } from "vue";
 
-const props = defineProps({
-  message: String,
-  title: String,
-  headline: String,
-});
+// const props = defineProps({
+//   message: String,
+//   title: String,
+//   headline: String,
+// });
 const isShow = ref(false);
 const colse = () => {
   isShow.value = false;
 };
-const open = () => {
+const headline = ref("");
+const title = ref("");
+const message = ref("");
+const open = (h, t, m) => {
+  headline.value = h;
+  title.value = t;
+  message.value = m;
   isShow.value = true;
 };
 defineExpose({ open, close });

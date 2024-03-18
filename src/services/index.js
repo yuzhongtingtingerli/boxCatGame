@@ -337,9 +337,9 @@ export const getTransferInfoData = async (params) => {
     const { code, result, status } = await getTransferInfo(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
-      return { status, result };
+      return { status, statusCode, result };
     } else {
-      return { status, result: "请求失败" };
+      return { status, statusCode, result: result.error };
     }
   } catch (error) {
     return { result: error };

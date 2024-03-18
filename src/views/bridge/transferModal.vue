@@ -26,7 +26,6 @@ const emit = defineEmits(["change"]);
 const open = (btc, eth, insId = "", tick, amt, satoshi = "") => {
   getRecommended();
   getTransferInfo(tick, amt);
-  show.value = true;
   BTCAddress.value = btc;
   ETHAddress.value = eth;
   inscriptionId.value = insId;
@@ -42,9 +41,14 @@ const getTransferInfo = async (tick, amt) => {
     TokenSymbol: tick,
     TokenBalance: amt,
   });
-  serviceFee.value = res.result.ServiceFee;
-  toAddress.value = res.result.AssetsAddress;
-  serviceAddress.value = res.result.ServiceAddress;
+  if (res.statusCode === 1) {
+    serviceFee.value = res.result.ServiceFee;
+    toAddress.value = res.result.AssetsAddress;
+    serviceAddress.value = res.result.ServiceAddress;
+    show.value = true;
+  } else {
+    emit("change", "error", res.result);
+  }
 };
 const close = () => {
   show.value = false;

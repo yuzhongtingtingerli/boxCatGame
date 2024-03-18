@@ -131,15 +131,7 @@
     <transferModal ref="transferModalRef" @change="isSuccess" />
     <ErrorInfo ref="errorInfoRef" />
     <SuccessMsg ref="successMsgRef" />
-    <ErrorMsg
-      ref="errorMsgRef"
-      headline="Dear!"
-      title="You should connect your eth wallet first"
-      message="Please remember the association between your current btc 
-and eth addresses and make sure you don’t forget it before
-the game is over
-"
-    />
+    <ErrorMsg ref="errorMsgRef" />
   </div>
 </template>
 
@@ -204,6 +196,11 @@ const isSuccess = (type, txid) => {
     successMsgRef.value.open(txid);
     token.value = null;
     amountInfo.value = null;
+  } else if (type === "error") {
+    const headline = "Dear!";
+    const title = "You should connect your eth wallet first";
+    const message = txid;
+    errorMsgRef.value.open(headline, title, message);
   }
 };
 
@@ -254,7 +251,12 @@ const openTransfer = async () => {
     if (!amountInfo.value) return console.log("没选择金额");
   }
   if (!Address.getETHaddress) {
-    errorMsgRef.value.open();
+    const headline = "Dear!";
+    const title = "You should connect your eth wallet first";
+    const message = `Please remember the association between your current btc 
+and eth addresses and make sure you don’t forget it before
+the game is over`;
+    errorMsgRef.value.open(headline, title, message);
     return;
   }
   const CheckMappingStatus = await checkAddressMapping();
