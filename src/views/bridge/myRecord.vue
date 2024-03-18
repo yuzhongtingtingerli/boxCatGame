@@ -20,7 +20,7 @@
       <div
         class="list-item"
         v-for="item in myRecord"
-        :key="item.BridgeTokenSymbol"
+        :key="item.BridgeTokenTime"
       >
         <div class="left">
           <div :class="`sent active`">
@@ -85,6 +85,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { getMoney, getAddress } from "@/utils/Tools.js";
 import { getBridgeListData } from "@/services/index";
 import StakeSuccess from "@/components/stake-success.vue";
@@ -121,9 +122,10 @@ const refreshBridgeList = () => {
   getBridgeList();
 };
 const bitpartyAddressRef = ref(null);
+const router = useRouter();
 const handleStatus = (item) => {
   if (item.BridgeTokenStatus === "Go Stake") {
-    bitpartyAddressRef.value.open(item);
+    router.push({ path: "/stake" });
   }
 };
 const getStatusColor = (status) => {

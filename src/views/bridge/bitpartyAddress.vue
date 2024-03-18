@@ -11,7 +11,7 @@ const spinning = ref(false);
 const open = async (symbol) => {
   show.value = true;
   record.value = symbol;
-  balance.value = symbol.TokenWaitingBalance || 0;
+  balance.value = symbol.TokenWaitingBalance || symbol.BridgeTokenBalance;
   spinning.value = false;
 };
 const close = () => {
@@ -54,8 +54,8 @@ const goStake = async () => {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
   }
   try {
-    let web3 = new Web3(window.web3.currentProvider);
-
+    const provider = window["ethereum"] || window.web3.currentProvider;
+    let web3 = new Web3(provider);
     let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
     let fromAddresses = await web3.eth.getAccounts();
     let amount = balance.value * 10 ** 18;

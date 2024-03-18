@@ -199,8 +199,8 @@ const isSuccess = (type, txid) => {
     emit("refresh");
   } else if (type === "error") {
     const headline = "Dear!";
-    const title = "You should connect your eth wallet first";
-    const message = txid.error;
+    const title = txid.ErrorTitle;
+    const message = txid.Erroresace;
     errorMsgRef.value.open(headline, title, message);
   }
 };
