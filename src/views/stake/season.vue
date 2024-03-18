@@ -34,7 +34,7 @@
         <div class="meaning">Total Staked Tokens</div>
       </div>
       <div class="stakers">
-        <div class="num">{{ getMoney(seasonData.Staker) }}</div>
+        <div class="num">{{ seasonData.Staker }}</div>
         <div class="meaning">Stakers</div>
       </div>
     </div>
@@ -117,6 +117,7 @@ onMounted(() => {
     }
     .currentStakeTime {
       margin-right: 60px;
+      width: 300px;
     }
   }
   .info {

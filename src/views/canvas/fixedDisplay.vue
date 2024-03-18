@@ -1,9 +1,7 @@
 <template>
   <div class="fixedDisplay" v-if="props.seasonData">
     <div>TVL：{{ getMoney(props.seasonData?.TotalStakeToken) }} BTC</div>
-    <div>
-      Created by：{{ getMoney(props.seasonData?.Staker) }} BRC20 holders
-    </div>
+    <div>Created by：{{ props.seasonData?.Staker }} BRC20 holders</div>
     <div>
       Will release：{{ getMoney(props.seasonData?.WillRelease) }}
       <span>$btpx</span>
