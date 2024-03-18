@@ -4,25 +4,31 @@ import { getTransferableInscriptionsData } from "@/services/wallet.js";
 import { ref } from "vue";
 const emit = defineEmits(["change"]);
 const show = ref(false);
-const open = (address, ticker) => {
+const open = (address, ticker, amountInfo) => {
   getTransferableInscriptions(address, ticker);
+  if (amountInfo) {
+    amount.value = amountInfo;
+  }
   show.value = true;
 };
 const close = () => {
   show.value = false;
+  amount.value = null;
 };
 const inscriptionsData = ref(null);
 const getTransferableInscriptions = async (address, ticker) => {
   const res = await getTransferableInscriptionsData({ address, ticker });
   inscriptionsData.value = res.data.detail;
 };
+
 const amount = ref();
 const getAmount = (item) => {
   if (item) {
-    amount.value = item;
-    console.log(item);
-    // emit("change", item);
-    // close();
+    if (amount.value && amount.value.inscriptionId === item.inscriptionId) {
+      amount.value = null;
+    } else {
+      amount.value = item;
+    }
   }
 };
 const Confirm = () => {
@@ -31,7 +37,11 @@ const Confirm = () => {
     close();
   }
 };
-defineExpose({ open, close });
+const clear = () => {
+  inscriptionsData.value = null;
+  amount.value = null;
+};
+defineExpose({ open, close, clear });
 </script>
 
 <template>

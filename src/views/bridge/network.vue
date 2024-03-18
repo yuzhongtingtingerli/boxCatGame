@@ -166,6 +166,9 @@ const showModal = () => {
 const token = ref(null);
 const changeToken = (data) => {
   token.value = data;
+  selectAmountRef.value.clear();
+  amountInfo.value = null;
+  btcAmount.value = null;
   getETHContractAddress(data.ticker);
 };
 
@@ -184,7 +187,11 @@ const goTokenContractAddress = () => {
 const selectAmountRef = ref(null);
 const showAmount = () => {
   if (!token.value) return;
-  selectAmountRef.value.open(Address.getBTCaddress, token.value?.ticker);
+  selectAmountRef.value.open(
+    Address.getBTCaddress,
+    token.value?.ticker,
+    amountInfo.value
+  );
 };
 const amountInfo = ref(null);
 const changeAmount = (data) => {
@@ -200,7 +207,7 @@ const isSuccess = (type, txid) => {
   } else if (type === "error") {
     const headline = "Dear!";
     const title = txid.ErrorTitle;
-    const message = txid.Erroresace;
+    const message = txid.ErrorMessage;
     errorMsgRef.value.open(headline, title, message);
   }
 };
