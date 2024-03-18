@@ -339,7 +339,7 @@ export const getTransferInfoData = async (params) => {
     if (statusCode === 1) {
       return { status, statusCode, result };
     } else {
-      return { status, statusCode, result: result.error };
+      return { status, statusCode, result: result };
     }
   } catch (error) {
     return { result: error };

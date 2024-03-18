@@ -199,7 +199,7 @@ const isSuccess = (type, txid) => {
   } else if (type === "error") {
     const headline = "Dear!";
     const title = "You should connect your eth wallet first";
-    const message = txid;
+    const message = txid.error;
     errorMsgRef.value.open(headline, title, message);
   }
 };
