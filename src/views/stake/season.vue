@@ -117,7 +117,7 @@ onMounted(() => {
     }
     .currentStakeTime {
       margin-right: 60px;
-      width: 300px;
+      // text-align: left;
     }
   }
   .info {

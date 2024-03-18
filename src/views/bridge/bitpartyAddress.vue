@@ -19,6 +19,7 @@ const close = () => {
 };
 const Confirm = () => {
   if (balance.value === 0) return;
+  spinning.value = true;
   goStake();
 };
 const getBalance = async () => {
@@ -52,32 +53,47 @@ const goStake = async () => {
   } else {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
   }
+  try {
+    let web3 = new Web3(window.web3.currentProvider);
 
-  let web3 = new Web3(window.web3.currentProvider);
-
-  let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
-  let fromAddresses = await web3.eth.getAccounts();
-  let amount = balance.value * 10 ** 18;
-  let brc20Contract = new web3.eth.Contract(
-    erc20Abi,
-    record.value.BridgeTokenContractAddress || record.value.TokenContractAddress
-  );
-  // debugger;
-  brc20Contract.methods
-    .approve(stakeAddress, amount)
-    .send({ from: fromAddresses[0] })
-    .then(async (r) => {
-      console.log("approve res", r);
-      const res = await contract.methods
-        .stake(
-          record.value.BridgeTokenContractAddress ||
-            record.value.TokenContractAddress,
-          amount
-        )
-        .send({ from: fromAddresses[0] });
-      close();
-      emit("change", res.transactionHash);
-    });
+    let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
+    let fromAddresses = await web3.eth.getAccounts();
+    let amount = balance.value * 10 ** 18;
+    let brc20Contract = new web3.eth.Contract(
+      erc20Abi,
+      record.value.BridgeTokenContractAddress ||
+        record.value.TokenContractAddress
+    );
+    // debugger;
+    brc20Contract.methods
+      .approve(stakeAddress, amount)
+      .send({ from: fromAddresses[0] })
+      .then(async (r) => {
+        console.log("approve res", r);
+        try {
+          const res = await contract.methods
+            .stake(
+              record.value.BridgeTokenContractAddress ||
+                record.value.TokenContractAddress,
+              amount
+            )
+            .send({ from: fromAddresses[0] });
+          close();
+          spinning.value = false;
+          emit("change", res.transactionHash);
+        } catch (error) {
+        } finally {
+          spinning.value = false;
+        }
+      })
+      .canch(() => {
+        spinning.value = false;
+      });
+  } catch (error) {
+    console.log(error, "error");
+  } finally {
+    spinning.value = false;
+  }
 };
 onMounted(() => {});
 defineExpose({ open, close });

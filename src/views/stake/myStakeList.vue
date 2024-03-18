@@ -20,7 +20,7 @@
         <div class="score" v-if="treasureData?.ScoreTreasure == 1">
           <div class="stake1"></div>
           <div class="stake2"></div>
-          <div class="text">Score Treasure</div>
+          <div class="text">Address Treasure</div>
         </div>
       </div>
     </div>
@@ -127,8 +127,8 @@ watch(
     .time,
     .score {
       position: relative;
-      width: 80px;
-      height: 80px;
+      width: 85px;
+      height: 85px;
       background: linear-gradient(
         135deg,
         rgba(131, 196, 255, 0.1) 0%,

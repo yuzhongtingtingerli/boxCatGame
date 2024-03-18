@@ -47,6 +47,7 @@ const stakeSuccessRef = ref(null);
 const bitpartyAddressRef = ref(null);
 const isSuccess = (txid) => {
   stakeSuccessRef.value.open(txid, TokenSymbol.value);
+  getWalletStakeInfo();
 };
 const TokenSymbol = ref("");
 const handleStatus = (item) => {
