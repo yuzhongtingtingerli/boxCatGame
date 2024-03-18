@@ -31,7 +31,7 @@
             >Stake</router-link
           >
           <a href="https://docs.bitparty.tech" target="_blank">Whitepaper</a>
-          <router-link to="/empty">Safe And Privacy</router-link>
+          <!-- <router-link to="/empty">Safe And Privacy</router-link> -->
         </div>
       </div>
       <div class="right">

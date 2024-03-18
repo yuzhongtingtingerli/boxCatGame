@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <div class="list-item">
+          <!-- <div class="list-item">
             <div class="top" @click="unfolding(2)">
               <div :class="`text ${active === 2 ? 'active' : ''}`">
                 Stake Pool By Temporary Address Stream
@@ -94,7 +94,7 @@
                 >
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
