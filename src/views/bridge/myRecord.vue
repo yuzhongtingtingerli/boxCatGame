@@ -79,14 +79,15 @@
       :showSizeChanger="false"
     />
   </div>
-  <bitpartyAddress ref="bitpartyAddressRef" />
+  <bitpartyAddress ref="bitpartyAddressRef" @change="isSuccess" />
+  <StakeSuccess ref="stakeSuccessRef" />
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getMoney, getAddress } from "@/utils/Tools.js";
 import { getBridgeListData } from "@/services/index";
-
+import StakeSuccess from "@/components/stake-success.vue";
 import { useAddressStore } from "@/store/address";
 import bitpartyAddress from "./bitpartyAddress.vue";
 const Address = useAddressStore();
@@ -95,6 +96,11 @@ const total = ref(0);
 const myRecord = ref(null);
 const handleChange = (page, pageSize) => {
   current.value = page;
+  getBridgeList();
+};
+const stakeSuccessRef = ref(null);
+const isSuccess = (txid) => {
+  stakeSuccessRef.value.open(txid, TokenSymbol.value);
   getBridgeList();
 };
 const getBridgeList = async () => {
@@ -141,6 +147,12 @@ watch(
   },
   { immediate: true }
 );
+onMounted(() => {
+  // 每15分钟执行一次
+  setInterval(() => {
+    getBridgeList();
+  }, 1000 * 60 * 15);
+});
 </script>
 
 <style>

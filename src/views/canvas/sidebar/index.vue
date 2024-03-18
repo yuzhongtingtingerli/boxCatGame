@@ -22,11 +22,9 @@
       />
 
       <div class="JoinGroup" @click="handleJoinGroup">Join Group</div>
-      <img
-        class="close-drawer"
-        src="@/assets/close-drawer.png"
-        @click="closeDrawer"
-      />
+      <div class="drawer-box" @click="closeDrawer">
+        <img class="close-drawer" src="@/assets/close-drawer2.png" />
+      </div>
     </a-drawer>
     <div class="open-drawer">
       <img src="@/assets/open-drawer.png" @click="open = true" />
@@ -162,11 +160,20 @@ onMounted(() => {
     line-height: 48px;
     cursor: pointer;
   }
+  .drawer-box {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    width: 14px;
+    height: 300px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
   .close-drawer {
     position: absolute;
-    left: 10px;
+    left: 4px;
     top: 50%;
-    width: 4px;
+    width: 9px;
     transform: translateY(-50%);
     cursor: pointer;
   }

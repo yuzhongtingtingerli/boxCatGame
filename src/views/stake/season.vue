@@ -21,7 +21,7 @@
         }px`"
       ></div>
       <div class="currentStakeTime">
-        Will End At BTC Block Height {{ seasonData.CurrentBlockNumber }}
+        Will End At BTC Block Height {{ seasonData.ReleaseBlockHeight }}
       </div>
     </div>
     <div class="info">
