@@ -152,7 +152,7 @@ import transferModal from "./transferModal.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
 import ErrorMsg from "@/components/error-msg.vue";
-
+const emit = defineEmits(["refresh"]);
 const Address = useAddressStore();
 const connectBTCWallet = () => {
   Address.linkWallet();
@@ -196,6 +196,7 @@ const isSuccess = (type, txid) => {
     successMsgRef.value.open(txid);
     token.value = null;
     amountInfo.value = null;
+    emit("refresh");
   } else if (type === "error") {
     const headline = "Dear!";
     const title = "You should connect your eth wallet first";

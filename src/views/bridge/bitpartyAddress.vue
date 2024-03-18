@@ -54,7 +54,8 @@ const goStake = async () => {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
   }
   try {
-    const web3 = new Web3(window.ethereum);
+    let web3 = new Web3(window.web3.currentProvider);
+
     let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
     let fromAddresses = await web3.eth.getAccounts();
     let amount = balance.value * 10 ** 18;
@@ -86,7 +87,6 @@ const goStake = async () => {
         }
       })
       .catch((error) => {
-        console.log(error, "???");
         spinning.value = false;
       });
   } catch (error) {

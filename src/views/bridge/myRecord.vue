@@ -114,7 +114,12 @@ const getBridgeList = async () => {
   myRecord.value = res.result.BridgeInfo;
   total.value = res.result.TotalListNumber;
 };
-
+const refreshBridgeList = () => {
+  myRecord.value = null;
+  current.value = 1;
+  total.value = 0;
+  getBridgeList();
+};
 const bitpartyAddressRef = ref(null);
 const handleStatus = (item) => {
   if (item.BridgeTokenStatus === "Go Stake") {
@@ -147,12 +152,14 @@ watch(
   },
   { immediate: true }
 );
+
 onMounted(() => {
   // 每15分钟执行一次
   setInterval(() => {
     getBridgeList();
   }, 1000 * 60 * 15);
 });
+defineExpose({ refreshBridgeList });
 </script>
 
 <style>

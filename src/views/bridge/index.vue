@@ -3,8 +3,8 @@
     <div class="w1140">
       <Guidelines />
       <div>
-        <Network />
-        <MyRecord />
+        <Network @refresh="isSuccess" />
+        <MyRecord ref="myRecordRef" />
       </div>
     </div>
     <ErrorInfo ref="errorInfoRef" />
@@ -25,6 +25,10 @@ const isShowError = () => {
     "The journey will begin soon, wish you good luck ！",
     "infinite"
   );
+};
+const myRecordRef = ref(null);
+const isSuccess = async () => {
+  myRecordRef.value.refreshBridgeList();
 };
 const checkRuning = async () => {
   // if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
