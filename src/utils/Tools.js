@@ -1,10 +1,12 @@
 export const getAddress = (add) => {
   if (add === "") return "";
+  if (!add) return "";
   return add?.slice(0, 4) + "......" + add?.slice(-4);
 };
 export const getMoney = (money) => {
   if (money === "") return "";
   if (money === 0) return "0";
+  if (money === "null") return "0";
   const num = money.toString().split(".")[0].length > 6 ? 3 : 6;
   const m = Number(money).toFixed(num);
   // 每隔三位小数加一个,

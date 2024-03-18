@@ -12,7 +12,8 @@ import { AddressType } from "@unisat/wallet-sdk";
 import { NetworkType, toPsbtNetwork } from "@unisat/wallet-sdk/es/network";
 import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
 import { ECPair, bitcoin } from "@unisat/wallet-sdk/es/bitcoin-core";
-import { sendInscriptions, sendBTC } from "@unisat/wallet-sdk/es/tx-helpers";
+import { sendBTC } from "@unisat/wallet-sdk/es/tx-helpers";
+import { sendInscriptions } from "./send-inscriptions.ts";
 
 const show = ref(false);
 const BTCAddress = ref("");
@@ -59,6 +60,7 @@ const getRecommended = async () => {
   const res = await getRecommendedData();
   recommendedData.value = res;
   feeData.value = res.halfHourFee;
+  feeType.value = "Normal";
 };
 
 const customSendInscription = async () => {
@@ -66,8 +68,6 @@ const customSendInscription = async () => {
   const pubkey = await window.unisat.getPublicKey();
   const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
   console.log(btcUtxos, "btcUtxos");
-  console.log(serviceFeeData, "serviceFeeData");
-  const btcSatoshis = btcUtxos.utxo.filter((v) => v.satoshi > serviceFeeData);
   const { data: inscriptionInfo } = await getInscriptionInfoData({
     inscriptionId: inscriptionId.value,
   });
@@ -93,16 +93,9 @@ const customSendInscription = async () => {
         addressType: 2,
         inscriptions: inscriptionInfo.utxo.inscriptions,
         atomicals: [],
-      },
-      {
-        txid: "0000000000000000000000000000000000000000000000000000000000000000",
-        vout: 2,
-        satoshis: serviceFeeData,
-        scriptPk: inscriptionInfo.utxo.scriptPk,
-        pubkey,
-        addressType: 2,
-        inscriptions: "001",
-        atomicals: [],
+        enableRBF: true,
+        // sendBtcValue: serviceFeeData,
+        // serviceAddress: serviceAddress.value,
       },
     ],
     toAddress: toAddress.value,
@@ -115,7 +108,7 @@ const customSendInscription = async () => {
   const psbtHex = psbt.toHex();
   const tixd = await window.unisat.signPsbt(psbtHex);
   const res = await window.unisat.pushPsbt(tixd);
-  console.log(res, "res---");
+  return res;
 };
 const sendBitcoin = async () => {
   if (tickData.value === "btc") {
@@ -128,7 +121,7 @@ const sendBitcoin = async () => {
   }
 };
 const customSendBTC = async () => {
-  const serviceFeeData = serviceFee.value * 10000 * 10000;
+  // const serviceFeeData = serviceFee.value * 10000 * 10000;
   const btcAmountData = btcAmount.value * 10000 * 10000;
   const pubkey = await window.unisat.getPublicKey();
   const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
@@ -144,10 +137,10 @@ const customSendBTC = async () => {
       atomicals: [],
     })),
     tos: [
-      {
-        address: serviceAddress.value,
-        satoshis: serviceFeeData,
-      },
+      // {
+      //   address: serviceAddress.value,
+      //   satoshis: serviceFeeData,
+      // },
       {
         address: toAddress.value,
         satoshis: btcAmountData,
@@ -169,28 +162,30 @@ const customSendBTC = async () => {
 const Confirm = async () => {
   // customSendInscription();
   // return;
-  const txid = await sendBitcoin();
-  setTimeout(async () => {
-    if (tickData.value !== "btc") {
-      const txid = await sendInscription(
-        toAddress.value,
-        inscriptionId.value,
-        feeData.value
-      );
-      if (!txid) return;
-    }
+  //
+  let txid;
+  if (tickData.value !== "btc") {
+    txid = await sendInscription(toAddress.value, inscriptionId.value, {
+      feeRate: feeData.value,
+    });
+    if (!txid) return;
+  } else {
+    txid = await sendBitcoin();
+    if (!txid) return;
+  }
+  doBridge(
+    BTCAddress.value,
+    "1",
+    tickData.value,
+    btcAmount.value,
+    txid,
+    ETHAddress.value
+  );
+  // setTimeout(async () => {
 
-    doBridge(
-      BTCAddress.value,
-      "1",
-      tickData.value,
-      btcAmount.value,
-      txid,
-      ETHAddress.value
-    );
-  }, 5000);
+  // }, 10000);
 };
-const sendInscription = async (address, id, { feeRate }) => {
+const sendInscription = async (address, id, feeRate) => {
   try {
     let txid = await window.unisat.sendInscription(address, id, feeRate);
     return txid;

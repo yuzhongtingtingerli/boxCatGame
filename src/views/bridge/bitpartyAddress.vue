@@ -11,7 +11,7 @@ const spinning = ref(false);
 const open = async (symbol) => {
   show.value = true;
   record.value = symbol;
-  balance.value = await getBalance();
+  balance.value = symbol.TokenWaitingBalance || 0;
   spinning.value = false;
 };
 const close = () => {
@@ -23,22 +23,36 @@ const Confirm = () => {
 };
 const getBalance = async () => {
   spinning.value = true;
-  let web3 = new Web3(window.web3.currentProvider);
-  let fromAddresses = await web3.eth.getAccounts();
-  let brc20Contract = new web3.eth.Contract(
-    erc20Abi,
-    record.value.BridgeTokenContractAddress || record.value.TokenContractAddress
-  );
-  const res = await brc20Contract.methods.balanceOf(fromAddresses[0]).call();
-  if (res > 0n) {
-    const b = BigInt(10 ** 18);
-    return Number(res / b);
-  } else {
-    return 0;
+  try {
+    let web3 = new Web3(window.web3.currentProvider);
+    let fromAddresses = await web3.eth.getAccounts();
+    let brc20Contract = new web3.eth.Contract(
+      erc20Abi,
+      record.value.BridgeTokenContractAddress ||
+        record.value.TokenContractAddress
+    );
+    const res = await brc20Contract.methods.balanceOf(fromAddresses[0]).call();
+    console.log(res, "res");
+    if (res > 0n) {
+      const b = BigInt(10 ** 18);
+      return Number(res / b);
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.log(error, "e");
+  } finally {
+    spinning.value = false;
   }
 };
 const goStake = async () => {
-  var stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
+  let stakeAddress;
+  if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
+    stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
+  } else {
+    stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
+  }
+
   let web3 = new Web3(window.web3.currentProvider);
 
   let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
