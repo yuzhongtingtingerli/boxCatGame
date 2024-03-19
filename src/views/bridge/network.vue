@@ -34,6 +34,7 @@
               v-model:value="btcAmount"
               placeholder="0.00"
               size="small"
+              @input="onInput"
             ></a-input>
           </div>
         </div>
@@ -171,6 +172,27 @@ const changeToken = (data) => {
   btcAmount.value = null;
   getETHContractAddress(data.ticker);
 };
+const onInput = () => {
+  const str = btcAmount.value.toString();
+  const len = str.length;
+  const point = str.indexOf(".");
+  if (point > -1 && len - point > 3 && Number(btcAmount.value) === 0) {
+    btcAmount.value = btcAmount.value.slice(0, -1);
+    return;
+  }
+  if (point > -1 && len - point > 4) {
+    // 如果不匹配，则删除最后一个字符
+    btcAmount.value = btcAmount.value.slice(0, -1);
+    return;
+  }
+
+  // 将字符串转换为数字并检查是否大于等于0.001
+  // const number = parseFloat(btcAmount.value);
+  // if (isNaN(number) || number < 0.001) {
+  //   // 如果不是数字或小于0.001，则重置为0.001
+  //   btcAmount.value = "0.001";
+  // }
+};
 
 const TokenContractAddress = ref("");
 const getETHContractAddress = async (TokenSymbol) => {
@@ -251,17 +273,24 @@ const isShowError = (title) => {
 };
 const btcAmount = ref(null);
 const openTransfer = async () => {
-  console.log(token.value, "token.value");
   if (!token.value) return console.log("没选token");
   if (token.value.ticker === "btc") {
     if (!btcAmount.value) return console.log("没输入金额");
+    let balance = await window.unisat.getBalance();
+    if (btcAmount.value * 10000 * 10000 > balance.total) {
+      const headline = "Dear!";
+      const title = "stake value error";
+      const message = `stake balance greater than your wallet balance`;
+      errorMsgRef.value.open(headline, title, message);
+      return;
+    }
   } else {
     if (!amountInfo.value) return console.log("没选择金额");
   }
   if (!Address.getETHaddress) {
     const headline = "Dear!";
     const title = "You should connect your eth wallet first";
-    const message = `Please remember the association between your current btc 
+    const message = `Please remember the association between your current btc
 and eth addresses and make sure you don’t forget it before
 the game is over`;
     errorMsgRef.value.open(headline, title, message);
@@ -282,13 +311,14 @@ the game is over`;
     );
     return;
   }
-  const amt =
-    token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
-  const TVLStatus = await getTVLStatus({
-    StakeTokenSymbol: token.value.ticker,
-    StakeTokenBalance: amt,
-  });
+  // const amt =
+  //   token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
+  // const TVLStatus = await getTVLStatus({
+  //   StakeTokenSymbol: token.value.ticker,
+  //   StakeTokenBalance: amt,
+  // });
   // if (TVLStatus == 0) return;
+
   showTransferModal();
 };
 
@@ -343,6 +373,7 @@ watch(
         "To send BRC-20, you have to inscribe a TRANSFER inscription first";
     }
   },
+
   { immediate: true }
 );
 </script>
