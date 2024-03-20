@@ -80,17 +80,24 @@ const goStake = async () => {
             .send({ from: fromAddresses[0] });
           close();
           spinning.value = false;
-          emit("change", res.transactionHash);
+          emit("change", "success", res.transactionHash);
         } catch (error) {
-          console.log(error, "e");
+          console.log(error, "stakeerror");
+          emit("change", "error", error);
+          close();
           spinning.value = false;
         }
       })
       .catch((error) => {
+        console.log(error, "approveerror");
+        emit("change", "error", error);
+        close();
         spinning.value = false;
       });
   } catch (error) {
-    console.log(error, "error");
+    console.log(error, "Contracterror");
+    emit("change", "error", error);
+    close();
     spinning.value = false;
   }
 };

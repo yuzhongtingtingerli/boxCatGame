@@ -132,7 +132,6 @@ export const useAddressStore = defineStore("address", {
       web3.currentProvider.on("accountsChanged", (accounts) => {
         // 处理地址变化事件
         this.ETHaddress = accounts[0] || "";
-        console.log("1111");
         this.getBalance(accounts[0]);
       });
       this.checkNetId();

@@ -31,6 +31,7 @@
     </div>
     <bitpartyAddress ref="bitpartyAddressRef" @change="isSuccess" />
     <StakeSuccess ref="stakeSuccessRef" />
+    <ErrorMsg ref="errorMsgRef" />
   </div>
 </template>
 
@@ -40,14 +41,23 @@ import { getMoney } from "@/utils/Tools.js";
 import { getWalletStakeInfoData } from "@/services/index";
 import bitpartyAddress from "../bridge/bitpartyAddress.vue";
 import StakeSuccess from "@/components/stake-success.vue";
+import ErrorMsg from "@/components/error-msg.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
 const stakeSuccessRef = ref(null);
 const bitpartyAddressRef = ref(null);
-const isSuccess = (txid) => {
-  stakeSuccessRef.value.open(txid, TokenSymbol.value);
-  getWalletStakeInfo();
+const errorMsgRef = ref(null);
+const isSuccess = (type, txid) => {
+  if (type === "success") {
+    stakeSuccessRef.value.open(txid, TokenSymbol.value);
+    getWalletStakeInfo();
+  } else if (type === "error") {
+    const headline = "Dear!";
+    const title = "stake token error";
+    const message = txid;
+    errorMsgRef.value.open(headline, title, message);
+  }
 };
 const TokenSymbol = ref("");
 const handleStatus = (item) => {
