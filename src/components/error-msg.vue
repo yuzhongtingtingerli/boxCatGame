@@ -10,7 +10,13 @@
         </div>
         <div class="title1">{{ headline }}</div>
         <div class="title2">{{ title }}</div>
-        <div class="msg">{{ message }}</div>
+        <div :class="`msg ${href ? ' h190' : ''}`">
+          <div>{{ message }}</div>
+          <div v-if="href" class="click">
+            <div>Check on etherscan:</div>
+            <div class="href" @click="goHref(href)">{{ href }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -31,11 +37,18 @@ const colse = () => {
 const headline = ref("");
 const title = ref("");
 const message = ref("");
-const open = (h, t, m) => {
+const href = ref("");
+const open = (h, t, m, c = null) => {
   headline.value = h;
   title.value = t;
   message.value = m;
+  if (c) {
+    href.value = `https://etherscan.io/advanced-filter?fadd=${c.fadd}&tadd=${c.fadd}&tkn=${c.tkn}`;
+  }
   isShow.value = true;
+};
+const goHref = (url) => {
+  window.open(url, "_blank");
 };
 defineExpose({ open, close });
 </script>
@@ -85,6 +98,7 @@ defineExpose({ open, close });
       letter-spacing: 0em;
       text-align: center;
       margin-top: 20px;
+      text-transform: capitalize;
     }
     .msg {
       width: 420px;
@@ -99,6 +113,19 @@ defineExpose({ open, close });
       letter-spacing: 0em;
       text-align: left;
       padding: 15px 26px;
+      .click {
+        margin-top: 20px;
+      }
+      .href {
+        // 超出换行
+        word-wrap: break-word;
+        word-break: break-all;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    .h190 {
+      height: 190px;
     }
   }
   .logo {

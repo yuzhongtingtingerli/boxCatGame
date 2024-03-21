@@ -8,11 +8,20 @@ const record = ref();
 const show = ref(false);
 const balance = ref(0);
 const spinning = ref(false);
-const open = async (symbol) => {
-  show.value = true;
+const open = async (symbol, ETHaddress) => {
   record.value = symbol;
-  balance.value = symbol.TokenWaitingBalance || symbol.BridgeTokenBalance;
-  spinning.value = false;
+  balance.value = symbol.TokenWaitingBalance;
+  const newBalance = await getBalance();
+  if (newBalance > BigInt(symbol.TokenWaitingBalance * 10 ** 18)) {
+    const errorBalance = {
+      tkn: symbol.TokenContractAddress,
+      fadd: ETHaddress,
+    };
+    emit("change", "errorBalance", errorBalance);
+  } else {
+    show.value = true;
+    spinning.value = false;
+  }
 };
 const close = () => {
   show.value = false;
@@ -23,7 +32,6 @@ const Confirm = () => {
   goStake();
 };
 const getBalance = async () => {
-  spinning.value = true;
   try {
     let web3 = new Web3(window.web3.currentProvider);
     let fromAddresses = await web3.eth.getAccounts();
@@ -33,17 +41,9 @@ const getBalance = async () => {
         record.value.TokenContractAddress
     );
     const res = await brc20Contract.methods.balanceOf(fromAddresses[0]).call();
-    console.log(res, "res");
-    if (res > 0n) {
-      const b = BigInt(10 ** 18);
-      return Number(res / b);
-    } else {
-      return 0;
-    }
+    return res;
   } catch (error) {
     console.log(error, "e");
-  } finally {
-    spinning.value = false;
   }
 };
 const goStake = async () => {
@@ -53,6 +53,7 @@ const goStake = async () => {
   } else {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
   }
+  // let stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
   try {
     const provider = window["ethereum"] || window.web3.currentProvider;
     let web3 = new Web3(provider);

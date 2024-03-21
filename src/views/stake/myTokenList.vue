@@ -57,12 +57,18 @@ const isSuccess = (type, txid) => {
     const title = "stake token error";
     const message = txid;
     errorMsgRef.value.open(headline, title, message);
+  } else if (type === "errorBalance") {
+    const headline = "Dear!";
+    const title = "something wrong !";
+    const message = `Your available balance does not match the on-chain 
+information, please check it or contact us through the official community`;
+    errorMsgRef.value.open(headline, title, message, txid);
   }
 };
 const TokenSymbol = ref("");
 const handleStatus = (item) => {
   TokenSymbol.value = item.TokenSymbol;
-  bitpartyAddressRef.value.open(item);
+  bitpartyAddressRef.value.open(item, Address.ETHaddress);
 };
 const walletStakeInfo = ref(null);
 const getWalletStakeInfo = async () => {

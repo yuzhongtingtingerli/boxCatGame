@@ -69,6 +69,15 @@ export const useAddressStore = defineStore("address", {
     },
     async checkNetId() {
       if (!this.ETHaddress) return;
+      // await window.ethereum.request({
+      //   method: "wallet_switchEthereumChain",
+      //   params: [
+      //     {
+      //       chainId: "0x1", // 目标链ID
+      //     },
+      //   ],
+      // });
+      // return;
       try {
         if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
           await window.ethereum.request({
