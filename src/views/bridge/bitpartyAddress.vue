@@ -12,15 +12,15 @@ const open = async (symbol, ETHaddress) => {
   record.value = symbol;
   balance.value = symbol.TokenWaitingBalance;
   const newBalance = await getBalance();
-  if (newBalance > BigInt(symbol.TokenWaitingBalance * 10 ** 18)) {
+  if (newBalance >= BigInt(symbol.TokenWaitingBalance * 10 ** 18)) {
+    show.value = true;
+    spinning.value = false;
+  } else {
     const errorBalance = {
       tkn: symbol.TokenContractAddress,
       fadd: ETHaddress,
     };
     emit("change", "errorBalance", errorBalance);
-  } else {
-    show.value = true;
-    spinning.value = false;
   }
 };
 const close = () => {

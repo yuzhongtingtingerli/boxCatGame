@@ -6,7 +6,21 @@
       <div class="list header">
         <div class="token">Token</div>
         <div class="amount">Amount</div>
-        <div class="stakeBalance">Available Balance</div>
+        <div class="stakeBalance">
+          Available Balance
+          <span>
+            <img src="@/assets/i.png" width="2px" />
+            <div class="hover">
+              <img width="240px" src="@/assets/hover-balance.png" alt="" />
+              <p>
+                We will create an available balance based on your bridge
+                address, which is synchronized with on-chain information with a
+                delay. Please do not transfer your token to other accounts to
+                avoid asset risks.
+              </p>
+            </div>
+          </span>
+        </div>
         <div class="availableStatus"></div>
       </div>
 
@@ -136,6 +150,44 @@ watch(
       }
       .stakeBalance {
         min-width: 140px;
+        span {
+          display: inline-flex;
+          margin-left: 11px;
+          align-items: center;
+          justify-content: center;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          border: 1px solid #f6cb37;
+          position: relative;
+          cursor: pointer;
+          &:hover .hover {
+            display: block;
+          }
+          .hover {
+            display: none;
+            position: absolute;
+            top: 18px;
+            left: -182px;
+            width: 240px;
+            height: 76px;
+            img {
+              position: absolute;
+              left: 0px;
+            }
+            p {
+              position: absolute;
+              font-family: Inter;
+              font-size: 10px;
+              font-weight: 600;
+              line-height: 12px;
+              letter-spacing: 0em;
+              text-align: left;
+              padding: 28px 10px 0;
+              margin: 0;
+            }
+          }
+        }
       }
       .availableStatus {
         width: 140px;

@@ -3,7 +3,7 @@
     <!-- {{ offsetX }} -->
     <!-- {{ offsetY }} -->
 
-    <video muted autoplay controls ref="videoRef" :src="cut1920"></video>
+    <!-- <video muted autoplay controls ref="videoRef" :src="cut1920"></video> -->
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
