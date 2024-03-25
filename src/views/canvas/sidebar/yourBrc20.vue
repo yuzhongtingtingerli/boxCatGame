@@ -31,7 +31,8 @@
         </div>
       </div>
     </div>
-    <CheckBook ref="checkBookRef" />
+    <CheckBook ref="checkBookRef" @change="changeGroup" />
+    <SelectGroup ref="selectGroupRef" />
   </div>
 </template>
 
@@ -42,6 +43,7 @@ import { getMoney } from "@/utils/Tools.js";
 import { getTokenLogoData } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
 import CheckBook from "./checkBook.vue";
+import SelectGroup from "./selectGroup.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
@@ -70,6 +72,10 @@ const getFirstLetter = (ticker) => {
 const checkBookRef = ref(null);
 const getRedBook = () => {
   checkBookRef.value.open();
+};
+const selectGroupRef = ref(null);
+const changeGroup = () => {
+  selectGroupRef.value.open();
 };
 watch(
   Address,

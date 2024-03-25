@@ -75,7 +75,7 @@
 <script setup>
 import { ref, defineExpose } from "vue";
 import { checkNftStatusData } from "@/services/index.js";
-
+const emit = defineEmits(["change"]);
 const isShow = ref(false);
 const close = () => {
   isShow.value = false;
@@ -103,6 +103,7 @@ const clearStatus = () => {
 const useIt = () => {
   if (status.value === "pass") {
     close();
+    emit("change");
   }
 };
 defineExpose({ open, close });

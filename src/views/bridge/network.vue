@@ -23,7 +23,7 @@
         <div class="brc20 change" @click="showModal">
           <div class="left">Select Token</div>
           <div class="right">
-            <span>{{ token?.ticker || "Brc20" }}</span>
+            <span>{{ decodeURIComponent(token?.ticker) || "Brc20" }}</span>
             <img src="@/assets/Vector.png" />
           </div>
         </div>
@@ -105,7 +105,7 @@
         <div class="brc20 change">
           <div class="left">Will Get</div>
           <div class="right">
-            {{ token?.ticker }}
+            {{ decodeURIComponent(token?.ticker) }}
           </div>
         </div>
         <div class="amount change">

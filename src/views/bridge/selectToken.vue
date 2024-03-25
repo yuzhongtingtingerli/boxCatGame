@@ -112,7 +112,7 @@ defineExpose({ open, close });
             srcset=""
           />
           <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
-          <span>{{ item.ticker }}</span>
+          <span>{{ decodeURIComponent(item.ticker) }}</span>
         </div>
         <div class="list-item" @click="getTicker({ ticker: 'btc' })">
           <img width="20px" src="@/assets/miniB.png" />
