@@ -22,6 +22,8 @@ import {
   insertAddressMapping,
   getETHContractAddress,
   getTransferInfo,
+  checkNftStatus,
+  getNftGroupList,
 } from "./api";
 
 export const getGroupDetailInfoData = async (params) => {
@@ -335,6 +337,34 @@ export const getETHContractAddressData = async (params) => {
 export const getTransferInfoData = async (params) => {
   try {
     const { code, result, status } = await getTransferInfo(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const checkNftStatusData = async (params) => {
+  try {
+    const { code, result, status } = await checkNftStatus(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getNftGroupListData = async () => {
+  try {
+    const { code, result, status } = await getNftGroupList();
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, statusCode, result };

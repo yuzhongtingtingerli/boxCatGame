@@ -144,3 +144,11 @@ export const getTransferInfo = ({ TokenSymbol, TokenBalance }) => {
 export const checkRuningStatus = () => {
   return request(`/common/checkRuningStatus`, "get");
 };
+
+export const checkNftStatus = ({ InscriptionID }) => {
+  return request(`/nft/checkNftStatus?InscriptionID=${InscriptionID}`, "get");
+};
+
+export const getNftGroupList = () => {
+  return request(`/nft/getGroupList`, "get");
+};

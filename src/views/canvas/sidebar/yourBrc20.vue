@@ -1,29 +1,37 @@
 <template>
-  <div class="YourBrc20">
-    <div class="top">
-      <Title title="Your Assets" />
-      <div class="books" @click="getRedBook">
-        <img src="@/assets/available-books.png" width="28px" alt="" srcset="" />
-      </div>
-    </div>
-    <div class="list">
-      <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
-        <div class="left">
-          <div class="img">
-            <img
-              v-if="TokenLogo && getLogo(item.ticker)"
-              width="20px"
-              :src="getLogo(item.ticker)"
-              alt=""
-              srcset=""
-            />
-            <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
-          </div>
-          <div class="name">{{ decodeURIComponent(item.ticker) }}</div>
+  <div>
+    <div class="YourBrc20">
+      <div class="top">
+        <Title title="Your Assets" />
+        <div class="books" @click="getRedBook">
+          <img
+            src="@/assets/available-books.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
         </div>
-        <div class="score">{{ getMoney(item.overallBalance) }}</div>
+      </div>
+      <div class="list">
+        <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
+          <div class="left">
+            <div class="img">
+              <img
+                v-if="TokenLogo && getLogo(item.ticker)"
+                width="20px"
+                :src="getLogo(item.ticker)"
+                alt=""
+                srcset=""
+              />
+              <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
+            </div>
+            <div class="name">{{ decodeURIComponent(item.ticker) }}</div>
+          </div>
+          <div class="score">{{ getMoney(item.overallBalance) }}</div>
+        </div>
       </div>
     </div>
+    <CheckBook ref="checkBookRef" />
   </div>
 </template>
 
@@ -33,7 +41,7 @@ import Title from "@cps/title";
 import { getMoney } from "@/utils/Tools.js";
 import { getTokenLogoData } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
-
+import CheckBook from "./checkBook.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
@@ -59,7 +67,10 @@ const getLogo = (ticker) => {
 const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
-const getRedBook = () => {};
+const checkBookRef = ref(null);
+const getRedBook = () => {
+  checkBookRef.value.open();
+};
 watch(
   Address,
   () => {
