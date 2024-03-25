@@ -43,14 +43,14 @@ const props = defineProps({
   padding-right: 7px;
   overflow-y: auto;
   margin-bottom: 10px;
-  width: 232px;
+  width: 312px;
   .list-item {
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 20px;
-    width: 210px;
+    width: 290px;
     .left {
       display: flex;
       justify-self: start;

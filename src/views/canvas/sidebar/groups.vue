@@ -161,7 +161,7 @@ const getGroupSearch = async (groupName) => {
   overflow-y: auto;
   height: 240px;
   overflow-x: hidden;
-  width: 232px;
+  width: 312px;
   box-sizing: border-box;
 }
 .search-group {
@@ -172,7 +172,7 @@ const getGroupSearch = async (groupName) => {
 
 .list-item {
   position: relative;
-  width: 220px;
+  width: 300px;
   height: 48px;
   box-sizing: border-box;
   border-radius: 2px;

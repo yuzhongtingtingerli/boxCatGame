@@ -1,9 +1,40 @@
 <template>
   <div class="YourScore">
-    <Title title="Your Score" />
-    <div class="PersonalTotalScore">{{ ScoreData?.PersonalTotalScore }}</div>
-    <div class="PersonalTotalTVL">
-      TVL(BTC)：{{ ScoreData?.PersonalTotalTVL }}
+    <div class="left">
+      <Title title="Your Score" />
+      <div class="PersonalTotalScore">{{ ScoreData?.PersonalTotalScore }}</div>
+      <div class="PersonalTotalTVL">
+        TVL(BTC)：{{ ScoreData?.PersonalTotalTVL }}
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="books">
+        <div class="red">
+          <div class="top">
+            <img
+              src="@/assets/available-books.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <div class="num">29</div>
+          </div>
+          <div class="bottom">+50000</div>
+        </div>
+        <div class="yellow">
+          <div class="top">
+            <img
+              src="@/assets/available-books.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <div class="num">29</div>
+          </div>
+          <div class="bottom">+300</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -17,8 +48,52 @@ const props = defineProps({
 <style scoped lang="scss">
 .YourScore {
   height: 102px;
+  display: flex;
+  justify-content: space-between;
+  .books {
+    display: flex;
+    justify-content: space-between;
+    width: 112px;
+    .top {
+      width: 44px;
+      height: 34px;
+      padding: 3px 3px 2px 0px;
+      gap: 2px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .red .top {
+      border: 2px solid #ff783f;
+    }
+    .yellow .top {
+      border: 2px solid #ffc500;
+    }
+    .num {
+      height: 28px;
+      display: flex;
+      flex-direction: column; /* 设置主轴为垂直方向 */
+      justify-content: flex-end; /* 子元素向下对齐 */
+      font-family: LilitaOne;
+      font-size: 8px;
+      font-weight: 400;
+      line-height: 8px;
+      text-align: right;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+      color: #fff;
+    }
+    .bottom {
+      font-family: Poppins;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 18px;
+      text-align: center;
+      color: #ffc500;
+      text-shadow: 0 1px #000, 1px 0 #000, -1px 0 #000, 0 -1px #000;
+    }
+  }
   .PersonalTotalScore {
-    text-align: center;
+    text-align: left;
     font-family: Poppins;
     font-size: 24px;
     font-weight: 700;
@@ -34,7 +109,7 @@ const props = defineProps({
     font-weight: 700;
     line-height: 12px;
     letter-spacing: 0em;
-    text-align: center;
+    text-align: left;
     margin-top: 6px;
   }
 }

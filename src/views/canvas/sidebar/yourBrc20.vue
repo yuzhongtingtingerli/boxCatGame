@@ -2,7 +2,7 @@
   <div class="YourBrc20">
     <div class="top">
       <Title title="Your Assets" />
-      <div class="books">
+      <div class="books" @click="getRedBook">
         <img src="@/assets/available-books.png" width="28px" alt="" srcset="" />
       </div>
     </div>
@@ -59,6 +59,7 @@ const getLogo = (ticker) => {
 const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
+const getRedBook = () => {};
 watch(
   Address,
   () => {

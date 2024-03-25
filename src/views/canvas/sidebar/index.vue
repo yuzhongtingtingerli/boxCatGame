@@ -125,7 +125,7 @@ onMounted(() => {
     position: absolute;
     left: 0;
     top: 0;
-    width: 260px;
+    width: 340px;
     height: 735px;
   }
 }
@@ -135,7 +135,7 @@ onMounted(() => {
   position: fixed;
   top: 65px;
   right: 0;
-  width: 260px;
+  width: 340px;
   height: 735px;
   border-radius: 7px 0px 0px 7px;
   // box-shadow: 4px 4px 0px 0px #000000;
