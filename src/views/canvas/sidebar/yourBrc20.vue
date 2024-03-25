@@ -1,6 +1,11 @@
 <template>
   <div class="YourBrc20">
-    <Title title="Your Assets" />
+    <div class="top">
+      <Title title="Your Assets" />
+      <div class="books">
+        <img src="@/assets/available-books.png" width="28px" alt="" srcset="" />
+      </div>
+    </div>
     <div class="list">
       <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
         <div class="left">
@@ -68,6 +73,21 @@ onMounted(() => {
 });
 </script>
 <style scoped lang="scss">
+.top {
+  display: flex;
+  justify-content: space-between;
+  .books {
+    width: 44px;
+    height: 34px;
+    padding: 3px 8px 3px 8px;
+    gap: 2px;
+    border-radius: 2px 0px 0px 0px;
+    opacity: 0px;
+    border: 1px solid #000000;
+    box-shadow: 2px 2px 0px 0px #000000;
+    cursor: pointer;
+  }
+}
 .list {
   height: 106px;
   padding-top: 16px;
