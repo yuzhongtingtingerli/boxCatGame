@@ -110,6 +110,7 @@ onMounted(() => {
       background: #c5712e;
       box-shadow: 0px 4px 0px 0px #824308;
       border-radius: 11px;
+      z-index: 9;
     }
     .box {
       position: absolute;
@@ -117,11 +118,13 @@ onMounted(() => {
       height: 54.33px;
       top: -18px;
       background-image: url("@/assets/season.png");
+      z-index: 10;
     }
     .currentStakeTime {
       position: absolute;
       right: 60px;
       top: 0;
+      z-index: 8;
       // text-align: left;
     }
   }
