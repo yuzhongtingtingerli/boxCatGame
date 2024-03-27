@@ -128,7 +128,7 @@ defineExpose({ open, close });
           <div class="txt">Your ETH Account</div>
           <div class="txt">to</div>
           <div class="txt">
-            {{ record.BridgeTokenSymbol || record.TokenSymbol }} Group
+            {{ decodeURIComponent(record.TokenSymbol) }} Group
           </div>
         </div>
         <div class="sats">
@@ -142,7 +142,7 @@ defineExpose({ open, close });
             ></a-input>
           </div>
           <div class="txt">
-            {{ record.BridgeTokenSymbol || record.TokenSymbol }}
+            {{ decodeURIComponent(record.TokenSymbol) }}
             <!-- <span class="max">Maximum</span> -->
           </div>
         </div>
