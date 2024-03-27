@@ -48,7 +48,7 @@ const getBalance = async () => {
 };
 const goStake = async () => {
   let stakeAddress;
-  if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
+  if (window.location.origin.indexOf("bitparty.tech") !== -1) {
     stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
   } else {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";

@@ -17,9 +17,9 @@
           <div class="left">
             <div class="img">
               <img
-                v-if="TokenLogo && getLogo(item.ticker)"
+                v-if="TokenLogo && getLogo(encodeURIComponent(item.ticker))"
                 width="20px"
-                :src="getLogo(item.ticker)"
+                :src="getLogo(encodeURIComponent(item.ticker))"
                 alt=""
                 srcset=""
               />

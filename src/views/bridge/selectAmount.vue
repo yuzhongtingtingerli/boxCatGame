@@ -61,7 +61,7 @@ defineExpose({ open, close, clear });
       </div>
       <div class="title">Select Amount</div>
       <div class="active-title" v-if="amount?.data">
-        {{ amount.data.amt }} {{ amount.data.tick }}
+        {{ amount.data.amt }} {{ decodeURIComponent(amount.data.tick) }}
       </div>
       <div class="list" style="margin-top: 20px">
         <div
@@ -71,7 +71,7 @@ defineExpose({ open, close, clear });
           :key="item.inscriptionId"
           @click="getAmount(item)"
         >
-          <span class="tick">{{ item.data.tick }}</span>
+          <span class="tick">{{ decodeURIComponent(item.data.tick) }}</span>
           <span class="amt">{{ item.data.amt }}</span>
           <span class="inscript">
             <span>#{{ item.inscriptionNumber }}</span>

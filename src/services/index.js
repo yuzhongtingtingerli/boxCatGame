@@ -13,6 +13,7 @@ import {
   getBridgeList,
   doBridge,
   getTotalStakeInfo,
+  getBRCList,
   getWalletStakeInfo,
   getSakeList,
   getTreasure,
@@ -221,6 +222,20 @@ export const getTotalStakeInfoData = async (params) => {
     return { result: error };
   }
 };
+export const getBRCListData = async () => {
+  try {
+    const { code, result, status } = await getBRCList();
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, result };
+    } else {
+      return { status, result: "请求失败" };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+// getBRCListData
 
 export const getWalletStakeInfoData = async (params) => {
   try {

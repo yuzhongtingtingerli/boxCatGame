@@ -47,6 +47,7 @@ const getTransferInfo = async (tick, amt) => {
     serviceAddress.value = res.result.ServiceAddress;
     show.value = true;
   } else {
+    close();
     emit("change", "error", res.result);
   }
 };
@@ -125,43 +126,53 @@ const sendBitcoin = async () => {
   }
 };
 const customSendBTC = async () => {
-  // const serviceFeeData = serviceFee.value * 10000 * 10000;
-  const btcAmountData = btcAmount.value * 10000 * 10000;
-  const pubkey = await window.unisat.getPublicKey();
-  const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
-  const { psbt, toSignInputs } = await sendBTC({
-    btcUtxos: btcUtxos.utxo.map((v) => ({
-      txid: v.txid,
-      vout: v.vout,
-      satoshis: v.satoshi,
-      scriptPk: v.scriptPk,
-      pubkey,
-      addressType: 2,
-      inscriptions: v.inscriptions,
-      atomicals: [],
-    })),
-    tos: [
-      // {
-      //   address: serviceAddress.value,
-      //   satoshis: serviceFeeData,
-      // },
-      {
-        address: toAddress.value,
-        satoshis: btcAmountData,
-      },
-    ],
-    networkType: 0,
-    changeAddress: BTCAddress.value,
-    feeRate: feeData.value,
-  });
-  const psbtHex = psbt.toHex();
-  const tixd = await window.unisat.signPsbt(psbtHex, {
-    autoFinalized: true,
-    toSignInputs,
-  });
-  const res = await window.unisat.pushPsbt(tixd);
-  console.log(res, "res---");
-  return res;
+  try {
+    // const serviceFeeData = serviceFee.value * 10000 * 10000;
+    const btcAmountData = btcAmount.value * 10000 * 10000;
+    const pubkey = await window.unisat.getPublicKey();
+    const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
+    const { psbt, toSignInputs } = await sendBTC({
+      btcUtxos: btcUtxos.utxo.map((v) => ({
+        txid: v.txid,
+        vout: v.vout,
+        satoshis: v.satoshi,
+        scriptPk: v.scriptPk,
+        pubkey,
+        addressType: 2,
+        inscriptions: v.inscriptions,
+        atomicals: [],
+      })),
+      tos: [
+        // {
+        //   address: serviceAddress.value,
+        //   satoshis: serviceFeeData,
+        // },
+        {
+          address: toAddress.value,
+          satoshis: btcAmountData,
+        },
+      ],
+      networkType: 0,
+      changeAddress: BTCAddress.value,
+      feeRate: feeData.value,
+    });
+    const psbtHex = psbt.toHex();
+    const tixd = await window.unisat.signPsbt(psbtHex, {
+      autoFinalized: true,
+      toSignInputs,
+    });
+    const res = await window.unisat.pushPsbt(tixd);
+    console.log(res, "res---");
+    return res;
+  } catch (error) {
+    const errorMsg = {
+      ErrorTitle: "External Service Error",
+      ErrorMessage: error,
+    };
+    emit("change", "error", errorMsg);
+    close();
+    return false;
+  }
 };
 const Confirm = async () => {
   // customSendInscription();
@@ -218,6 +229,7 @@ const doBridge = async (
     close();
     emit("change", "success", BridgeTxHash);
   } else {
+    close();
     emit("change", "error");
   }
 };

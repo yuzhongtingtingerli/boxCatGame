@@ -79,7 +79,7 @@ export const useAddressStore = defineStore("address", {
       // });
       // return;
       try {
-        if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
+        if (window.location.origin.indexOf("bitparty.tech") !== -1) {
           await window.ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [
