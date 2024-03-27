@@ -17,6 +17,7 @@
       @wheel="handleWheel"
     />
     <FixedDisplay :seasonData="seasonData" v-if="scale > 0.05 && seasonData" />
+    <RedBook ref="redBookRef" />
   </div>
 </template>
 
@@ -40,16 +41,12 @@ import ErrorInfo from "@/components/error-info.vue";
 import Loading from "./loading.vue";
 import MinificationMap from "./minificationMap/index.vue";
 import FixedDisplay from "./fixedDisplay.vue";
+import RedBook from "./redBook.vue";
 import { useAddressStore } from "@/store/address";
 import { checkRuningStatus } from "@/services/api.js";
+const redBookRef = ref(null);
 const checkRuning = async () => {
-  // if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {
-  //   isShowError(
-  //     "The journey will begin soon, wish you good luck ！",
-  //     "infinite"
-  //   );
-  //   return;
-  // }
+  // redBookRef.value.open();
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 4) {
     isShowError(

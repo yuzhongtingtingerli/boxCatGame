@@ -10,7 +10,9 @@
         </div>
         <div class="title">
           {{
-            isSuccess ? groupName + " group salute yous" : "Something wrong bro"
+            isSuccess
+              ? decodeURIComponent(groupName) + " group salute yous"
+              : "Something wrong bro"
           }}
         </div>
         <div class="img">
