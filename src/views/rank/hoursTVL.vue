@@ -28,7 +28,9 @@
             <div class="img">
               <img width="22px" src="@/assets/cat_ava.png" alt="" srcset="" />
             </div>
-            <div class="name">{{ item.GroupName }} Group</div>
+            <div class="name">
+              {{ decodeURIComponent(item.GroupName) }} Group
+            </div>
           </div>
           <div class="svl">+ {{ getMoney(item.GroupTVL) }} BTC</div>
         </div>
