@@ -103,6 +103,9 @@ onMounted(() => {
     font-weight: 400;
 
     .currentStake {
+      position: absolute;
+      left: 0;
+      top: 0;
       height: 22px;
       background: #c5712e;
       box-shadow: 0px 4px 0px 0px #824308;
