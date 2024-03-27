@@ -119,7 +119,9 @@ onMounted(() => {
       background-image: url("@/assets/season.png");
     }
     .currentStakeTime {
-      margin-right: 60px;
+      position: absolute;
+      right: 60px;
+      top: 0;
       // text-align: left;
     }
   }
