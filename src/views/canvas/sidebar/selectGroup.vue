@@ -8,8 +8,11 @@ const emit = defineEmits(["change"]);
  */
 const groupName = ref("");
 const isShow = ref(false);
-const open = (address) => {
-  console.log(address, "add");
+const inscriptionID = ref("");
+const BTCaddress = ref("");
+const open = (id, address) => {
+  BTCaddress.value = address;
+  inscriptionID.value = id;
   getNftGroupList();
   isShow.value = true;
 };
@@ -42,14 +45,30 @@ const ticker = ref("");
 const getTicker = (item) => {
   if (item) {
     ticker.value = item;
-    // emit("change", item);
-    // close();
   }
 };
-const doUseNft = async () => {
-  const res = await doUseNftData({ UserAddress, UsedGroup, InscriptionID });
+const doUseNft = async (id, address) => {
+  try {
+    const { statusCode } = await doUseNftData({
+      UserAddress: address,
+      UsedGroup: ticker.value,
+      InscriptionID: id,
+    });
+    if (statusCode === 1) {
+      emit("change", true, ticker.value);
+      close();
+    } else {
+      emit("change", false);
+      close();
+    }
+  } catch (error) {
+    emit("change", false);
+    close();
+  }
 };
-const confirm = () => {};
+const confirm = () => {
+  doUseNft(BTCaddress.value, inscriptionID.value);
+};
 
 onMounted(() => {});
 defineExpose({ open, close });

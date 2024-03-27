@@ -32,7 +32,8 @@
       </div>
     </div>
     <CheckBook ref="checkBookRef" @change="changeGroup" />
-    <SelectGroup ref="selectGroupRef" />
+    <SelectGroup ref="selectGroupRef" @change="isSuccess" />
+    <IsNftSuccess ref="isNftSuccessRef" />
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import { getTokenLogoData } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
 import CheckBook from "./checkBook.vue";
 import SelectGroup from "./selectGroup.vue";
+import IsNftSuccess from "./isNftSuccess.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
@@ -69,14 +71,20 @@ const getLogo = (ticker) => {
 const getFirstLetter = (ticker) => {
   return ticker.split("")[0];
 };
+
 const checkBookRef = ref(null);
 const getRedBook = () => {
   checkBookRef.value.open();
 };
 const selectGroupRef = ref(null);
-const changeGroup = () => {
-  selectGroupRef.value.open();
+const changeGroup = (inscriptionID) => {
+  selectGroupRef.value.open(inscriptionID, Address.getBTCaddress);
 };
+const isNftSuccessRef = ref(null);
+const isSuccess = (flag, tiker) => {
+  isNftSuccessRef.value.open(flag, tiker);
+};
+
 watch(
   Address,
   () => {

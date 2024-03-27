@@ -103,7 +103,7 @@ const clearStatus = () => {
 const useIt = () => {
   if (status.value === "pass") {
     close();
-    emit("change");
+    emit("change", inscriptionID.value);
   }
 };
 defineExpose({ open, close });
