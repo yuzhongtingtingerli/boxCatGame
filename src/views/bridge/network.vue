@@ -172,6 +172,12 @@ const changeToken = (data) => {
   btcAmount.value = null;
   getETHContractAddress(data.ticker);
 };
+const clearNetwork = () => {
+  token.value = null;
+  selectAmountRef.value.clear();
+  amountInfo.value = null;
+  btcAmount.value = null;
+};
 const onInput = () => {
   const str = btcAmount.value.toString();
   const len = str.length;
@@ -371,6 +377,9 @@ watch(
     } else {
       errorMsgBTC.value =
         "To send BRC-20, you have to inscribe a TRANSFER inscription first";
+    }
+    if (newVal && oldVal && newVal.getBTCaddress && oldVal.getBTCaddress) {
+      clearNetwork();
     }
   },
 

@@ -1,7 +1,7 @@
 <script setup>
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { ref, onMounted } from "vue";
-import { getTokenLogoData } from "@/services/index.js";
+import { getTokenLogoData, getBRCListData } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
 const emit = defineEmits(["change"]);
 /**
@@ -28,6 +28,11 @@ const getTokenLogo = async () => {
   const data = await getTokenLogoData();
   TokenLogo.value = data.result;
 };
+
+const getBRCList = async () => {
+  const res = await getBRCListData();
+  return res.result.TokenInfo;
+};
 const getLogo = (ticker) => {
   if (!TokenLogo.value) return false;
   if (ticker in TokenLogo.value && TokenLogo.value[ticker] !== "null")
@@ -50,9 +55,15 @@ const getBrcSummary = async (address) => {
   // loading.value = true;
   try {
     // 使用封装的 request 方法发起请求
+    const brcList = await getBRCList();
     const res = await getBrc20SummaryData(address);
-    summaryData.value = res.data.detail;
-    summaryDataList = res.data.detail;
+    const common = res.data.detail.filter((item) =>
+      brcList
+        .map((item) => decodeURIComponent(item.TokenSymbol))
+        .includes(decodeURIComponent(item.ticker))
+    );
+    summaryData.value = common;
+    summaryDataList = common;
   } catch (err) {
     // error.value = "请求失败";
     console.log(err);
@@ -105,14 +116,14 @@ defineExpose({ open, close });
           @click="getTicker(item)"
         >
           <img
-            v-if="TokenLogo && getLogo(item.ticker)"
+            v-if="TokenLogo && getLogo(encodeURIComponent(item.ticker))"
             width="20px"
-            :src="getLogo(item.ticker)"
+            :src="getLogo(encodeURIComponent(item.ticker))"
             alt=""
             srcset=""
           />
           <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
-          <span>{{ item.ticker }}</span>
+          <span>{{ decodeURIComponent(item.ticker) }}</span>
         </div>
         <div class="list-item" @click="getTicker({ ticker: 'btc' })">
           <img width="20px" src="@/assets/miniB.png" />

@@ -82,6 +82,10 @@ export const getTotalStakeInfo = () => {
   return request(`/stake/getTotalStakeInfo`, "get");
 };
 
+export const getBRCList = () => {
+  return request(`/stake/getBRCList`, "get");
+};
+
 export const getWalletStakeInfo = ({ UserAddress }) => {
   return request(`/stake/getWalletStakeInfo?UserAddress=${UserAddress}`, "get");
 };
