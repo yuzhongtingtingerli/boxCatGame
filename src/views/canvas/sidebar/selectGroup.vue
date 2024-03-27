@@ -1,68 +1,57 @@
 <script setup>
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { ref, onMounted } from "vue";
-import { getTokenLogoData } from "@/services/index.js";
-import { getBrc20SummaryData } from "@/services/wallet.js";
+import { getNftGroupListData, doUseNftData } from "@/services/index.js";
 const emit = defineEmits(["change"]);
 /**
  * 数据部分
  */
 const groupName = ref("");
 const isShow = ref(false);
-let summaryDataList = [];
 const open = (address) => {
-  getBrcSummary(address);
+  console.log(address, "add");
+  getNftGroupList();
   isShow.value = true;
 };
 const close = () => {
   isShow.value = false;
 };
 const getGroupName = () => {
-  groupName.value;
-  summaryData.value = summaryDataList.filter((item) =>
+  nftList.value = nftAllList.value.filter((item) =>
     item.ticker.includes(groupName.value)
   );
 };
-const TokenLogo = ref(null);
-const getTokenLogo = async () => {
-  const data = await getTokenLogoData();
-  TokenLogo.value = data.result;
+const nftList = ref(null);
+const nftAllList = ref(null);
+const getNftGroupList = async () => {
+  const res = await getNftGroupListData();
+  const nftAry = [];
+  for (const key in res.result) {
+    if (Object.hasOwnProperty.call(res.result, key)) {
+      const element = res.result[key];
+      nftAry.push({
+        ticker: key,
+        logo: element,
+      });
+    }
+  }
+  nftList.value = nftAry;
+  nftAllList.value = nftAry;
 };
-const getLogo = (ticker) => {
-  if (!TokenLogo.value) return false;
-  if (ticker in TokenLogo.value && TokenLogo.value[ticker] !== "null")
-    return TokenLogo.value[ticker];
-  return false;
-};
-
+const ticker = ref("");
 const getTicker = (item) => {
   if (item) {
-    emit("change", item);
-    close();
+    ticker.value = item;
+    // emit("change", item);
+    // close();
   }
 };
-const getFirstLetter = (ticker) => {
-  return ticker.split("")[0];
+const doUseNft = async () => {
+  const res = await doUseNftData({ UserAddress, UsedGroup, InscriptionID });
 };
+const confirm = () => {};
 
-const summaryData = ref(null);
-const getBrcSummary = async (address) => {
-  // loading.value = true;
-  try {
-    // 使用封装的 request 方法发起请求
-    const res = await getBrc20SummaryData(address);
-    summaryData.value = res.data.detail;
-    summaryDataList = res.data.detail;
-  } catch (err) {
-    // error.value = "请求失败";
-    console.log(err);
-  } finally {
-    // loading.value = false;
-  }
-};
-onMounted(() => {
-  getTokenLogo();
-});
+onMounted(() => {});
 defineExpose({ open, close });
 </script>
 
@@ -94,26 +83,16 @@ defineExpose({ open, close });
         </div>
         <div class="list">
           <div
-            class="list-item"
-            v-for="item in summaryData"
+            v-for="item in nftList"
             :key="item.ticker"
-            @click="getTicker(item)"
+            @click="getTicker(item.ticker)"
+            :class="`list-item ${ticker === item.ticker ? 'active' : ''}`"
           >
-            <img
-              v-if="TokenLogo && getLogo(item.ticker)"
-              width="20px"
-              :src="getLogo(item.ticker)"
-              alt=""
-              srcset=""
-            />
-            <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
-            <span>{{ item.ticker }}</span>
-          </div>
-          <div class="list-item" @click="getTicker({ ticker: 'btc' })">
-            <img width="20px" src="@/assets/miniB.png" />
-            <span>btc</span>
+            <img width="20px" :src="item.logo" />
+            <span>{{ decodeURIComponent(item.ticker) }}</span>
           </div>
         </div>
+        <div class="confirm" @click="confirm">Confirm</div>
       </div>
     </div>
   </div>
@@ -176,10 +155,11 @@ defineExpose({ open, close });
       margin: 16px 30px 13px;
     }
     .list {
-      height: 320px;
+      height: 280px;
       overflow-y: scroll;
       .list-item {
-        padding: 0 30px;
+        margin: 0 30px;
+        padding: 0 10px;
         height: 40px;
         line-height: 40px;
         cursor: pointer;
@@ -205,6 +185,27 @@ defineExpose({ open, close });
       .list-item:hover {
         background-color: rgba(242, 151, 0, 0.1);
       }
+      .active {
+        background-color: rgba(242, 151, 0, 0.1);
+      }
+    }
+    .confirm {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 48px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      font-family: LilitaOne;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 42px;
+      text-align: center;
+      box-shadow: 4px 4px 0px 0px #000000;
+      background: #f6cb37;
+      cursor: pointer;
     }
   }
 }

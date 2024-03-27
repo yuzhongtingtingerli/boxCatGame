@@ -156,3 +156,10 @@ export const checkNftStatus = ({ InscriptionID }) => {
 export const getNftGroupList = () => {
   return request(`/nft/getGroupList`, "get");
 };
+
+export const doUseNft = ({ UserAddress, UsedGroup, InscriptionID }) => {
+  return request(
+    `/nft/doUseNft?UserAddress=${UserAddress}&UsedGroup=${UsedGroup}&InscriptionID=${InscriptionID}`,
+    "get"
+  );
+};
