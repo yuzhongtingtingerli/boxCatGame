@@ -30,6 +30,7 @@ export const useAddressStore = defineStore("address", {
         let unisat = window.unisat;
         const accounts = await unisat?.requestAccounts();
         this.BTCaddress = accounts[0];
+        window.localStorage.setItem("BTClinkWallet", true);
         this.subscribeProvider();
       } catch (error) {
         console.log(error, "error");
@@ -129,8 +130,6 @@ export const useAddressStore = defineStore("address", {
     },
     async getETHWallet() {
       if (!window.ethereum) return;
-      console.log(788888, "networkId");
-
       const web3 = new Web3(window.ethereum);
       const res = await web3.eth.getAccounts();
       if (res.length > 0) {
@@ -159,9 +158,24 @@ export const useAddressStore = defineStore("address", {
       // this.ETHbalance = Number(ary[0] + "." + ary[1].slice(0, 6));
     },
     async getBTCWallet() {
+      const isLink = window.localStorage.getItem("BTClinkWallet");
+      if (isLink === "false") return;
       let res = await window?.unisat.getAccounts();
       this.BTCaddress = res[0] || "";
+      this.BTCaddress && window.localStorage.setItem("BTClinkWallet", true);
+
       this.subscribeProvider();
+    },
+    async clearBTCWallet() {
+      this.BTCaddress = "";
+      window.localStorage.setItem("BTClinkWallet", false);
+    },
+    async clearETHWallet() {
+      this.ETHaddress = "";
+    },
+    async linkOkxwallet() {
+      const result = await okxwallet.bitcoin.connect();
+      console.log(result, "result");
     },
   },
 });

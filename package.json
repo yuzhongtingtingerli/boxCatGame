@@ -10,15 +10,22 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@metamask/detect-provider": "^2.0.0",
+    "@metamask/sdk": "^0.18.1",
     "@unisat/wallet-sdk": "^1.2.1",
+    "@wagmi/connectors": "^4.1.19",
+    "@wagmi/core": "^2.6.10",
+    "@web3modal/wagmi": "^4.1.1",
     "ant-design-vue": "4.x",
     "axios": "^1.6.2",
+    "ethers": "5",
     "install": "^0.13.0",
     "pinia": "^2.1.7",
     "sass": "^1.70.0",
     "vue": "^3.3.11",
     "vue-router": "^4.0.13",
     "vuex": "^4.0.2",
+    "wagmi": "^2.5.13",
     "web3": "4"
   },
   "devDependencies": {

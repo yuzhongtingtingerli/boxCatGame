@@ -1,9 +1,5 @@
 <template>
   <div class="canvas">
-    <!-- {{ offsetX }} -->
-    <!-- {{ offsetY }} -->
-
-    <!-- <video muted autoplay controls ref="videoRef" :src="cut1920"></video> -->
     <canvas ref="canvasRef"></canvas>
 
     <Sidebar />
@@ -26,6 +22,7 @@ import { onMounted, ref, watch } from "vue";
 import { arr } from "../../utils/data";
 import cut1920 from "../../assets/cut/1920.mp4";
 import blackfloor from "../../assets/blackfloor.png";
+import book from "../../assets/available-books.png";
 import floor from "../../assets/new_floor.png";
 import dialogBox from "../../assets/dialog_box.png";
 import { computeSize, getLocation, loadImage, drawRect } from "./canvas";
@@ -44,9 +41,8 @@ import FixedDisplay from "./fixedDisplay.vue";
 import RedBook from "./redBook.vue";
 import { useAddressStore } from "@/store/address";
 import { checkRuningStatus } from "@/services/api.js";
-const redBookRef = ref(null);
+
 const checkRuning = async () => {
-  // redBookRef.value.open();
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 4) {
     isShowError(
@@ -112,6 +108,7 @@ let wSize = null;
 let hSize = null;
 let groups = null;
 let bgImg = null;
+let bookImg = null;
 let floorImg = null;
 let dialogBoxImg = null;
 let count = 0;
@@ -279,22 +276,63 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const text2X = imgX + (imgw - text2Width) / 2;
   const text2Y = imgY + imgh / 1.4;
   ctx.fillText(t2, text2X, text2Y);
+
+  const _scale = Math.min(scale.value, 1);
+  const bookImgw = (bookImg.width / 3) * _scale;
+  const bookImgh = (bookImg.height / 3) * _scale;
+  const bookImgX = imgX + imgw / 2 - bookImgw / 1.4;
+  const bookImgY = imgY - bookImgh * 1.2;
+  ctx.drawImage(bookImg, bookImgX, bookImgY, bookImgw, bookImgh);
+  group.book = {
+    bookImgX,
+    bookImgY,
+    bookImgw,
+    bookImgh,
+  };
+  ctx.font = `${28 * _scale}px LilitaOne`; // 设置字体大小和类型
+  ctx.fillStyle = "#ffffff"; // 设置文字颜色
+  const t3 = `+29`;
+  const text3X = bookImgX + bookImgw;
+  const text3Y = bookImgY + bookImgh / 2 + 28 * _scale;
+  ctx.fillText(t3, text3X, text3Y);
 }
+const redBookRef = ref(null);
 onMounted(async () => {
   checkRuning();
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   await Promise.all([
     loadImage(blackfloor),
+    loadImage(book),
     loadImage(floor),
     loadImage(dialogBox),
-  ]).then(([blackfloor, floor, dialogBox]) => {
+  ]).then(([blackfloor, book, floor, dialogBox]) => {
     bgImg = blackfloor;
+    bookImg = book;
     floorImg = floor;
     dialogBoxImg = dialogBox;
   });
-  getTotalStakeInfo();
-  getGroupDetailInfo(Address.getBTCaddress || undefined);
+  await getTotalStakeInfo();
+  await getGroupDetailInfo(Address.getBTCaddress || undefined);
+  const arrs = [];
+  groups.forEach((item, index) => {
+    arrs.push(...item.CurrentGroupInfo);
+  });
+  canvasRef.value.addEventListener("click", (e) => {
+    const { offsetX, offsetY } = e;
+    const found = arrs.find((item) => {
+      return (
+        offsetX >= item.book.bookImgX &&
+        offsetX <= item.book.bookImgX + item.book.bookImgw &&
+        offsetY >= item.book.bookImgY &&
+        offsetY <= item.book.bookImgY + item.book.bookImgh
+      );
+    });
+    if (found) {
+      redBookRef.value.open();
+    }
+    // console.log(333, found);
+  });
 });
 </script>
 

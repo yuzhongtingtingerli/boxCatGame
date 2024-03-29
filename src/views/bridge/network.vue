@@ -1,17 +1,18 @@
 <template>
   <div class="network">
     <div class="BTCWallet">
-      <div class="btn" @click="connectBTCWallet">
+      <div class="btn">
         <div class="img" v-if="Address.getBTCaddress">
           <img src="@/assets/uniset-logo.png" width="32px" alt="" srcset="" />
         </div>
-        <div class="text">
+        <div class="text" @click="connectBTCWallet">
           {{
             !Address.getBTCaddress
               ? "Connect BTC Wallet"
               : getAddress(Address.getBTCaddress)
           }}
         </div>
+        <div class="isQuit" v-if="isQuit" @click="btcQuit">log out</div>
       </div>
       <div class="title">BRC20 NETWORK</div>
       <div class="tips" v-if="errorMsgBTC">
@@ -133,6 +134,7 @@
     <ErrorInfo ref="errorInfoRef" />
     <SuccessMsg ref="successMsgRef" />
     <ErrorMsg ref="errorMsgRef" />
+    <ChooseBTCWallet ref="chooseBTCWalletRef" @change="chooseBTC" />
   </div>
 </template>
 
@@ -150,13 +152,63 @@ import { useAddressStore } from "@/store/address";
 import selectToken from "./selectToken.vue";
 import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
+import ChooseBTCWallet from "./chooseBTCWallet.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
 import ErrorMsg from "@/components/error-msg.vue";
+import { MetaMaskSDK } from "@metamask/sdk";
 const emit = defineEmits(["refresh"]);
 const Address = useAddressStore();
+const isQuit = ref(false);
+const chooseBTCWalletRef = ref(null);
 const connectBTCWallet = () => {
-  Address.linkWallet();
+  if (Address.getBTCaddress) {
+    isQuit.value = !isQuit.value;
+    console.log(Address.getBTCaddress, "Address.getBTCaddress");
+  } else {
+    chooseBTCWalletRef.value.open();
+    // Address.linkWallet();
+  }
+};
+
+const connectETHWallet = async () => {
+  Address.linkETHWallet();
+  // console.log(ethers, "ethers");
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // console.log(provider, "provider");
+  // const signer = provider.getSigner();
+  // console.log(signer, "signer");
+  // const address = await provider.send("eth_requestAccounts", []);
+  // console.log(address, "address");
+  // const MMSDK = new MetaMaskSDK({
+  //   dappMetadata: {
+  //     name: "JavaScript example dapp",
+  //     url: window.location.href,
+  //   },
+  //   infuraAPIKey: process.env.INFURA_API_KEY,
+  //   // Other options
+  // });
+
+  // // You can also access via window.ethereum
+  // const ethereum = MMSDK.getProvider();
+  // console.log(ethereum, "ethereum");
+  // ethereum.request({ method: "eth_requestAccounts", params: [] });
+};
+const chooseBTC = async (type) => {
+  if (type === "okx") {
+    console.log("-----");
+    Address.linkOkxwallet();
+  } else {
+    Address.linkWallet();
+    return;
+    console.log("????");
+    const r = await okxwallet.request({ method: "eth_requestAccounts" });
+    console.log(r, "r");
+  }
+};
+const btcQuit = () => {
+  Address.clearBTCWallet();
+  isQuit.value = false;
 };
 const errorMsgRef = ref(null);
 // token 弹框
@@ -344,9 +396,6 @@ const insertAddressMapping = async () => {
   return res.result.InsertMappingStatus;
 };
 
-const connectETHWallet = async () => {
-  Address.linkETHWallet();
-};
 onMounted(() => {
   Address.getETHWallet();
   Address.getBTCWallet();
@@ -408,6 +457,7 @@ watch(
   position: relative;
 
   .btn {
+    position: relative;
     width: 270px;
     height: 44px;
     display: flex;
@@ -429,6 +479,21 @@ watch(
       width: 214px;
       text-align: center;
     }
+  }
+  .isQuit {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    width: 270px;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    font-family: LilitaOne;
+    font-size: 15px;
+    color: #fff;
+    text-transform: capitalize;
+    background-image: url("@/assets/logOut.png");
+    background-size: 270px 44px;
   }
   .title {
     margin-top: 16px;
@@ -547,6 +612,7 @@ watch(
     border: 1px solid #777e90;
     border-radius: 4px;
     .btn {
+      position: relative;
       background-color: #ffaa08;
     }
   }
