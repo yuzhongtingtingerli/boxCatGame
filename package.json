@@ -21,6 +21,7 @@
     "ethers": "5",
     "install": "^0.13.0",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.70.0",
     "vue": "^3.3.11",
     "vue-router": "^4.0.13",

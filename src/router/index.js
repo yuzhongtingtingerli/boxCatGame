@@ -1,10 +1,16 @@
-// router/index.js
+const partyType = sessionStorage.getItem("partyType");
+const isMerlin = partyType === "merlin";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/home/index.vue";
+import merlinHome from "../viewsMerlin/home/index.vue";
 import Canvas from "../views/canvas/index.vue";
+import merlinCanvas from "../viewsMerlin/canvas/index.vue";
 import Rank from "../views/rank/index.vue";
+import merlinRank from "../viewsMerlin/rank/index.vue";
 import Bridge from "../views/bridge/index.vue";
 import Stake from "../views/stake/index.vue";
+import merlinStake from "../viewsMerlin/stake/index.vue";
+
 import Empty from "../views/empty.vue";
 import Whitepaper from "../views/whitepaper.vue";
 const routes = [
@@ -16,17 +22,17 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: isMerlin ? merlinHome : Home,
   },
   {
     path: "/map",
     name: "Canvas",
-    component: Canvas,
+    component: isMerlin ? merlinCanvas : Canvas,
   },
   {
     path: "/rank",
     name: "Rank",
-    component: Rank,
+    component: isMerlin ? merlinRank : Rank,
   },
   {
     path: "/bridge",
@@ -36,7 +42,7 @@ const routes = [
   {
     path: "/stake",
     name: "Stake",
-    component: Stake,
+    component: isMerlin ? merlinStake : Stake,
   },
   {
     path: "/whitepaper",

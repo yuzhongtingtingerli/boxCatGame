@@ -16,9 +16,7 @@
             width="42"
           />
           <router-link to="/">BIT PARTY</router-link>
-          <span class="handover" @click="handoverMain">{{
-            partyStore.getPartyType === "merlin" ? "on Merlin" : "BTC-ETH"
-          }}</span>
+          <span class="handover" @click="handoverMain">on merlin</span>
           <div class="isShowHandover" v-if="isShowHandover">
             <div class="btc-eth" @click="setPartyType('btc-eth')">
               party on BTC-ETH
@@ -36,15 +34,13 @@
           <router-link :class="getCurrentRoute('/rank')" to="/rank"
             >Rank</router-link
           >
-          <router-link
-            v-if="partyStore.getPartyType !== 'merlin'"
-            :class="getCurrentRoute('/bridge')"
-            to="/bridge"
+          <router-link :class="getCurrentRoute('/bridge')" to="/bridge"
             >Bridge</router-link
           >
           <router-link :class="getCurrentRoute('/stake')" to="/stake"
             >Stake</router-link
           >
+          {{ partyStore.getPartyType }}
           <a href="https://docs.bitparty.tech" target="_blank">Whitepaper</a>
           <!-- <router-link to="/empty">Safe And Privacy</router-link> -->
         </div>
@@ -121,15 +117,6 @@ const partyStore = usePartyStore();
 const setPartyType = (type) => {
   partyStore.setPartyType(type);
 };
-const bgColor = computed(() => {
-  return partyStore.getPartyType == "merlin" ? "#D4B0F1" : "#fccd37";
-});
-const btnBgColor = computed(() => {
-  return partyStore.getPartyType == "merlin" ? "#ffffff" : "#fccd37";
-});
-const fnColor = computed(() => {
-  return partyStore.getPartyType == "merlin" ? "#B06CE5" : "#fccd37";
-});
 
 let currentRoute = computed(() => router.currentRoute.value.path);
 const getCurrentRoute = (path) => {
@@ -150,7 +137,7 @@ onMounted(() => {
 </script>
 <style scoped lang="scss">
 .yellow {
-  background-color: v-bind(bgColor);
+  background-color: #fccd37;
   color: #000;
   .menu {
     a {
@@ -181,7 +168,7 @@ onMounted(() => {
       color: #fff;
     }
     .active {
-      color: v-bind(fnColor);
+      color: #fccd37;
     }
   }
   .title {
@@ -212,19 +199,18 @@ onMounted(() => {
       color: #000;
     }
     .handover {
-      display: inline-block;
-      height: 16px;
-      line-height: 16px;
+      width: 50px;
+      height: 21px;
       font-family: Urbanist;
       font-size: 10px;
       font-weight: 900;
+      line-height: 21px;
       text-align: left;
-      border: 1px solid v-bind(fnColor);
-      color: v-bind(fnColor);
+      border: 1px solid #b06ce5;
+      color: #b06ce5;
       margin-left: 10px;
       margin-bottom: 10px;
       cursor: pointer;
-      padding: 0 4px;
     }
     .isShowHandover {
       z-index: 1;
@@ -274,7 +260,7 @@ onMounted(() => {
     font-family: LilitaOne;
     font-size: 16px;
     text-align: center;
-    background-color: v-bind(btnBgColor);
+    background-color: #f6cb37;
     color: #000;
     border: 2px solid #000;
     border-radius: 4px;
