@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="right">
+    <!-- <div class="right">
       <div class="books">
         <div class="red">
           <div class="top">
@@ -35,7 +35,7 @@
           <div class="bottom">+300</div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

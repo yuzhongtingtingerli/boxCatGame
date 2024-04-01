@@ -26,7 +26,6 @@ export default new Vuex.Store({
       try {
         let unisat = window.unisat;
         const accounts = await unisat?.requestAccounts();
-        console.log("connect success", accounts);
         this.setAccount(accounts[0]);
         this.subscribeProvider();
       } catch (error) {

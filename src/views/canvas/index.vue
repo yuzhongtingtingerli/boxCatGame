@@ -64,7 +64,7 @@ const onStart = async (flag) => {
   loadingRef.value?.startOrStop(flag);
 };
 const GroupInfo = ref(null);
-const getGroupDetailInfo = async (Address) => {
+const getGroupDetailInfo = async (Address = undefined) => {
   await onStart(true);
   const res = await getGroupDetailInfoData(Address);
   if (res.result === "请求失败") {
@@ -88,7 +88,7 @@ watch(
   () => Address.getBTCaddress,
   async (newVal, oldVal) => {
     if (newVal !== oldVal) {
-      getGroupDetailInfo(Address.getBTCaddress);
+      getGroupDetailInfo(Address.getBTCaddress || undefined);
     }
   }
 );
@@ -277,24 +277,24 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const text2Y = imgY + imgh / 1.4;
   ctx.fillText(t2, text2X, text2Y);
 
-  const _scale = Math.min(scale.value, 1);
-  const bookImgw = (bookImg.width / 3) * _scale;
-  const bookImgh = (bookImg.height / 3) * _scale;
-  const bookImgX = imgX + imgw / 2 - bookImgw / 1.4;
-  const bookImgY = imgY - bookImgh * 1.2;
-  ctx.drawImage(bookImg, bookImgX, bookImgY, bookImgw, bookImgh);
-  group.book = {
-    bookImgX,
-    bookImgY,
-    bookImgw,
-    bookImgh,
-  };
-  ctx.font = `${28 * _scale}px LilitaOne`; // 设置字体大小和类型
-  ctx.fillStyle = "#ffffff"; // 设置文字颜色
-  const t3 = `+29`;
-  const text3X = bookImgX + bookImgw;
-  const text3Y = bookImgY + bookImgh / 2 + 28 * _scale;
-  ctx.fillText(t3, text3X, text3Y);
+  // const _scale = Math.min(scale.value, 1);
+  // const bookImgw = (bookImg.width / 3) * _scale;
+  // const bookImgh = (bookImg.height / 3) * _scale;
+  // const bookImgX = imgX + imgw / 2 - bookImgw / 1.4;
+  // const bookImgY = imgY - bookImgh * 1.2;
+  // ctx.drawImage(bookImg, bookImgX, bookImgY, bookImgw, bookImgh);
+  // group.book = {
+  //   bookImgX,
+  //   bookImgY,
+  //   bookImgw,
+  //   bookImgh,
+  // };
+  // ctx.font = `${28 * _scale}px LilitaOne`; // 设置字体大小和类型
+  // ctx.fillStyle = "#ffffff"; // 设置文字颜色
+  // const t3 = `+29`;
+  // const text3X = bookImgX + bookImgw;
+  // const text3Y = bookImgY + bookImgh / 2 + 28 * _scale;
+  // ctx.fillText(t3, text3X, text3Y);
 }
 const redBookRef = ref(null);
 onMounted(async () => {

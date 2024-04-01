@@ -3,14 +3,14 @@
     <div class="YourBrc20">
       <div class="top">
         <Title title="Your Assets" />
-        <div class="books" @click="getRedBook">
+        <!-- <div class="books" @click="getRedBook">
           <img
             src="@/assets/available-books.png"
             width="28px"
             alt=""
             srcset=""
           />
-        </div>
+        </div> -->
       </div>
       <div class="list">
         <div class="list-item" v-for="item in YourBrc" :key="item.ticker">
