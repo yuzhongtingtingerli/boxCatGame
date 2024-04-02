@@ -47,10 +47,10 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://68.178.206.124:8834",
+        // target: "http://68.178.206.124:8834",
         // target: "http://20.39.190.226:8834",
         // target: "http://18.136.19.168:8834",
-        // target: "https://www.bitparty.tech:3000",
+        target: "https://www.bitparty.tech:3000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/"),
       },

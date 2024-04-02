@@ -234,7 +234,13 @@ const chooseWallet = async (type) => {
   if (type === "okx") {
     // Address.linkOkxwallet();
     window.localStorage.setItem("BTCWalletType", "okx");
-    Address.selectBTC();
+    const flag = await Address.selectBTC();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   } else if (type === "unisat") {
     // Address.linkWallet();
     window.localStorage.setItem("BTCWalletType", "unisat");
@@ -246,7 +252,13 @@ const chooseWallet = async (type) => {
   } else if (type === "ip") {
     // Address.linkIPwallet();
     window.localStorage.setItem("ETHWalletType", "ip");
-    Address.selectETH();
+    const flag = await Address.selectETH();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   }
 };
 const btcQuit = () => {

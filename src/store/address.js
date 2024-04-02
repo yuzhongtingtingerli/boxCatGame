@@ -94,7 +94,10 @@ export const useAddressStore = defineStore("address", {
       // });
       // return;
       try {
-        if (window.location.origin.indexOf("bitparty.tech") !== -1) {
+        if (
+          window.location.origin.indexOf("bitparty.tech") !== -1 ||
+          window.location.origin.indexOf("18.136.19.168") !== -1
+        ) {
           await window.ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [
@@ -146,6 +149,7 @@ export const useAddressStore = defineStore("address", {
       if (!window.ethereum) return;
       const isLink = window.localStorage.getItem("ETHlinkWallet");
       if (isLink === "false") return;
+      console.log(isLink, "isLink-----");
       const ETHWalletType = window.localStorage.getItem("ETHWalletType");
       if (ETHWalletType) {
         if (ETHWalletType === "eth") {
@@ -170,6 +174,7 @@ export const useAddressStore = defineStore("address", {
     async getBTCWallet() {
       const isLink = window.localStorage.getItem("BTClinkWallet");
       if (isLink === "false") return;
+      console.log(isLink, "isLink-----");
       this.selectBTC();
     },
     async clearBTCWallet() {
@@ -185,28 +190,53 @@ export const useAddressStore = defineStore("address", {
       this.ETHWalletType = null;
     },
     async linkOkxwallet() {
-      if (window.okxwallet === "undefined") return;
-      const result = await okxwallet.bitcoin.connect();
-      let res = await okxwallet.bitcoin.getAccounts();
-      if (res.length === 0) return;
-      this.BTCaddress = res[0];
-      window.localStorage.setItem("BTClinkWallet", true);
-      this.subscribeOkxProvider();
+      if (typeof window.okxwallet !== "undefined") {
+        const result = await okxwallet.bitcoin.connect();
+        console.log(result, "result");
+        let res = await okxwallet.bitcoin.getAccounts();
+        if (res.length === 0) return false;
+        this.BTCaddress = res[0];
+        window.localStorage.setItem("BTClinkWallet", true);
+        this.subscribeOkxProvider();
+        return true;
+      }
     },
     async subscribeOkxProvider() {
       // 监听切账号
-      okxwallet?.on("accountsChanged", (accounts) => {
-        this.BTCaddress = accounts[0] || "";
+      window.okxwallet.bitcoin.on("accountChanged", (addressInfo) => {
+        if (addressInfo) {
+          console.log(addressInfo, "addressInfo");
+          this.BTCaddress = addressInfo.address;
+        } else {
+          this.BTCaddress = "";
+          this.clearBTCWallet();
+        }
       });
     },
     async linkIPwallet() {
-      if (window.okxwallet === "undefined") return;
-      const r = await okxwallet.request({ method: "eth_requestAccounts" });
-      console.log(r, "r");
-      if (r.length > 0) {
-        this.ETHaddress = r[0];
-        this.ETHaddress && window.localStorage.setItem("ETHlinkWallet", true);
+      if (typeof window.okxwallet !== "undefined") {
+        const r = await okxwallet.request({ method: "eth_requestAccounts" });
+        if (r.length > 0) {
+          this.ETHaddress = r[0];
+          this.ETHaddress && window.localStorage.setItem("ETHlinkWallet", true);
+        } else {
+          return false;
+        }
+        this.getOkxEthProvider();
+        return true;
       }
+    },
+    async getOkxEthProvider() {
+      // 监听切账号
+      okxwallet?.on("accountsChanged", (accounts) => {
+        const ETHWalletType = window.localStorage.getItem("ETHWalletType");
+        if (ETHWalletType === "ip") {
+          this.ETHaddress = accounts[0] || "";
+          if (accounts.length === 0) {
+            this.clearETHWallet();
+          }
+        }
+      });
     },
     async selectBTC() {
       const BTCWalletType = window.localStorage.getItem("BTCWalletType");
@@ -214,8 +244,9 @@ export const useAddressStore = defineStore("address", {
         this.linkWallet();
         this.BTCWalletType = "unisat";
       } else if (BTCWalletType === "okx") {
-        this.linkOkxwallet();
+        const flag = await this.linkOkxwallet();
         this.BTCWalletType = "okx";
+        return flag;
       }
     },
     async selectETH() {
@@ -224,8 +255,9 @@ export const useAddressStore = defineStore("address", {
         this.linkETHWallet();
         this.ETHWalletType = "eth";
       } else if (ETHWalletType === "ip") {
-        this.linkIPwallet();
+        const flag = await this.linkIPwallet();
         this.ETHWalletType = "ip";
+        return flag;
       }
     },
   },

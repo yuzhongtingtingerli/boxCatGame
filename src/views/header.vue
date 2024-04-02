@@ -103,12 +103,14 @@
       </div>
     </div>
     <ChooseWallet ref="chooseWalletRef" @change="chooseWallet" />
+    <ErrorMsg ref="errorMsgRef" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import ChooseWallet from "@/components/chooseWallet.vue";
+import ErrorMsg from "@/components/error-msg.vue";
 import { useAddressStore } from "@/store/address";
 import { useRouter } from "vue-router";
 import { getAddress } from "@/utils/Tools";
@@ -130,7 +132,6 @@ const btcQuit = (e) => {
 };
 const chooseWalletRef = ref(null);
 const connectWallet = async () => {
-  console.log("触发了～");
   if (Address.getBTCaddress) {
     isBTCQuit.value = !isBTCQuit.value;
   }
@@ -140,11 +141,18 @@ const connectWallet = async () => {
     // Address.linkWallet();
   }
 };
+const errorMsgRef = ref(null);
 const chooseWallet = async (type) => {
   if (type === "okx") {
     // Address.linkOkxwallet();
     window.localStorage.setItem("BTCWalletType", "okx");
-    Address.selectBTC();
+    const flag = await Address.selectBTC();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   } else if (type === "unisat") {
     // Address.linkWallet();
     window.localStorage.setItem("BTCWalletType", "unisat");

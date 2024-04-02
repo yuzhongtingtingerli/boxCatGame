@@ -41,6 +41,7 @@
       <MyStakeList :address="Address.ETHaddress" />
     </div>
     <ChooseWallet ref="chooseWalletRef" @change="chooseWallet" />
+    <ErrorMsg ref="errorMsgRef" />
   </div>
 </template>
 
@@ -49,6 +50,7 @@ import { ref, onMounted } from "vue";
 import MyTokenList from "./myTokenList.vue";
 import MyStakeList from "./myStakeList.vue";
 import ChooseWallet from "@/components/chooseWallet.vue";
+import ErrorMsg from "@/components/error-msg.vue";
 import { getAddress } from "@/utils/Tools";
 import { useAddressStore } from "@/store/address";
 
@@ -69,7 +71,7 @@ const ethQuit = () => {
   Address.clearETHWallet();
   isETHQuit.value = false;
 };
-
+const errorMsgRef = ref(null);
 const chooseWallet = async (type) => {
   if (type === "eth") {
     // Address.linkETHWallet();
@@ -78,7 +80,13 @@ const chooseWallet = async (type) => {
   } else if (type === "ip") {
     // Address.linkIPwallet();
     window.localStorage.setItem("ETHWalletType", "ip");
-    Address.selectETH();
+    const flag = await Address.selectETH();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   }
 };
 onMounted(() => {
