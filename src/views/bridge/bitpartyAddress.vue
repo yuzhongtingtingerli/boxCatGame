@@ -33,8 +33,17 @@ const Confirm = () => {
 };
 const getBalance = async () => {
   try {
-    let web3 = new Web3(window.web3.currentProvider);
-    let fromAddresses = await web3.eth.getAccounts();
+    let fromAddresses = [];
+    const ETHWalletType = window.localStorage.getItem("ETHWalletType");
+    if (ETHWalletType === "eth") {
+      let web3 = new Web3(window.web3.currentProvider);
+      fromAddresses = await web3.eth.getAccounts();
+    } else if (ETHWalletType === "ip") {
+      fromAddresses = await okxwallet.request({
+        method: "eth_requestAccounts",
+      });
+    }
+
     let brc20Contract = new web3.eth.Contract(
       erc20Abi,
       record.value.BridgeTokenContractAddress ||
@@ -48,7 +57,10 @@ const getBalance = async () => {
 };
 const goStake = async () => {
   let stakeAddress;
-  if (window.location.origin.indexOf("bitparty.tech") !== -1) {
+  if (
+    window.location.origin.indexOf("bitparty.tech") !== -1 ||
+    window.location.origin.indexOf("18.136.19.168") !== -1
+  ) {
     stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
   } else {
     stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
@@ -58,7 +70,15 @@ const goStake = async () => {
     const provider = window["ethereum"] || window.web3.currentProvider;
     let web3 = new Web3(provider);
     let contract = new web3.eth.Contract(stakeAbi, stakeAddress);
-    let fromAddresses = await web3.eth.getAccounts();
+    let fromAddresses = [];
+    const ETHWalletType = window.localStorage.getItem("ETHWalletType");
+    if (ETHWalletType === "eth") {
+      fromAddresses = await web3.eth.getAccounts();
+    } else if (ETHWalletType === "ip") {
+      fromAddresses = await okxwallet.request({
+        method: "eth_requestAccounts",
+      });
+    }
     let amount = balance.value * 10 ** 18;
     let brc20Contract = new web3.eth.Contract(
       erc20Abi,

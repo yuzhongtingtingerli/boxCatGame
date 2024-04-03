@@ -125,45 +125,60 @@ const sendBitcoin = async () => {
     return txid;
   }
 };
+const getPsbtHex = async (pubkey) => {
+  const btcAmountData = btcAmount.value * 10000 * 10000;
+  const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
+  const { psbt, toSignInputs } = await sendBTC({
+    btcUtxos: btcUtxos.utxo.map((v) => ({
+      txid: v.txid,
+      vout: v.vout,
+      satoshis: v.satoshi,
+      scriptPk: v.scriptPk,
+      pubkey,
+      addressType: 2,
+      inscriptions: v.inscriptions,
+      atomicals: [],
+    })),
+    tos: [
+      // {
+      //   address: serviceAddress.value,
+      //   satoshis: serviceFeeData,
+      // },
+      {
+        address: toAddress.value,
+        satoshis: btcAmountData,
+      },
+    ],
+    networkType: 0,
+    changeAddress: BTCAddress.value,
+    feeRate: feeData.value,
+  });
+  const psbtHex = psbt.toHex();
+  return { psbtHex, toSignInputs };
+};
 const customSendBTC = async () => {
   try {
     // const serviceFeeData = serviceFee.value * 10000 * 10000;
-    const btcAmountData = btcAmount.value * 10000 * 10000;
-    const pubkey = await window.unisat.getPublicKey();
-    const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
-    const { psbt, toSignInputs } = await sendBTC({
-      btcUtxos: btcUtxos.utxo.map((v) => ({
-        txid: v.txid,
-        vout: v.vout,
-        satoshis: v.satoshi,
-        scriptPk: v.scriptPk,
-        pubkey,
-        addressType: 2,
-        inscriptions: v.inscriptions,
-        atomicals: [],
-      })),
-      tos: [
-        // {
-        //   address: serviceAddress.value,
-        //   satoshis: serviceFeeData,
-        // },
-        {
-          address: toAddress.value,
-          satoshis: btcAmountData,
-        },
-      ],
-      networkType: 0,
-      changeAddress: BTCAddress.value,
-      feeRate: feeData.value,
-    });
-    const psbtHex = psbt.toHex();
-    const tixd = await window.unisat.signPsbt(psbtHex, {
-      autoFinalized: true,
-      toSignInputs,
-    });
-    const res = await window.unisat.pushPsbt(tixd);
-    console.log(res, "res---");
-    return res;
+    const BTCWalletType = window.localStorage.getItem("BTCWalletType");
+    if (BTCWalletType === "unisat") {
+      const pubkey = await window.unisat.getPublicKey();
+      const { psbtHex, toSignInputs } = await getPsbtHex(pubkey);
+      const tixd = await window.unisat.signPsbt(psbtHex, {
+        autoFinalized: true,
+        toSignInputs,
+      });
+      const res = await window.unisat.pushPsbt(tixd);
+      return res;
+    } else if (BTCWalletType === "okx") {
+      const pubkey = await okxwallet.bitcoin.getPublicKey();
+      const { psbtHex, toSignInputs } = await getPsbtHex(pubkey);
+      const tixd = await okxwallet.bitcoin.signPsbt(psbtHex, {
+        autoFinalized: true,
+        toSignInputs,
+      });
+      const res = await okxwallet.bitcoin.pushPsbt(tixd);
+      return res;
+    }
   } catch (error) {
     const errorMsg = {
       ErrorTitle: "External Service Error",
@@ -202,8 +217,15 @@ const Confirm = async () => {
 };
 const sendInscription = async (address, id, feeRate) => {
   try {
-    let txid = await window.unisat.sendInscription(address, id, feeRate);
-    return txid;
+    const BTCWalletType = window.localStorage.getItem("BTCWalletType");
+    if (BTCWalletType === "unisat") {
+      let txid = await window.unisat.sendInscription(address, id, feeRate);
+      return txid;
+    } else if (BTCWalletType === "okx") {
+      console.log("okx");
+      let txid = await okxwallet.bitcoin.sendInscription(address, id, feeRate);
+      return txid;
+    }
   } catch (e) {
     console.log(e, "error");
   }
@@ -230,7 +252,11 @@ const doBridge = async (
     emit("change", "success", BridgeTxHash);
   } else {
     close();
-    emit("change", "error");
+    const errorMsg = {
+      ErrorTitle: "External Service Error",
+      ErrorMessage: res.result.error,
+    };
+    emit("change", "error", errorMsg);
   }
 };
 defineExpose({ open, close });

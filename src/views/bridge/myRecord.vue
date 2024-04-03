@@ -166,10 +166,12 @@ defineExpose({ refreshBridgeList });
 
 <style>
 .myRecord .ant-pagination.ant-pagination-mini {
-  margin-top: 16px;
+  margin-top: 16px auto;
+}
+.ant-pagination {
+  text-align: center !important;
 }
 .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
-  text-align: center !important;
 }
 .ant-pagination-item-ellipsis {
   color: #fff !important;

@@ -3,7 +3,20 @@
     <div class="BTCWallet">
       <div class="btn">
         <div class="img" v-if="Address.getBTCaddress">
-          <img src="@/assets/uniset-logo.png" width="32px" alt="" srcset="" />
+          <img
+            v-if="Address.getBTCWalletType === 'unisat'"
+            src="@/assets/uniset-logo.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          <img
+            v-if="Address.getBTCWalletType === 'okx'"
+            src="@/assets/okx-wallet.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
         </div>
         <div class="text" @click="connectBTCWallet">
           {{
@@ -12,7 +25,7 @@
               : getAddress(Address.getBTCaddress)
           }}
         </div>
-        <div class="isQuit" v-if="isQuit" @click="btcQuit">log out</div>
+        <div class="isQuit" v-if="isBTCQuit" @click="btcQuit">log out</div>
       </div>
       <div class="title">BRC20 NETWORK</div>
       <div class="tips" v-if="errorMsgBTC">
@@ -84,17 +97,31 @@
       </div>
     </div>
     <div class="ETHWallet">
-      <div class="btn" @click="connectETHWallet">
+      <div class="btn">
         <div class="img" v-if="Address.getETHaddress">
-          <img src="@/assets/matemask.png" width="32px" alt="" srcset="" />
+          <img
+            v-if="Address.getETHWalletType === 'eth'"
+            src="@/assets/matemask.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          <img
+            v-if="Address.getETHWalletType === 'ip'"
+            src="@/assets/okx-wallet.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
         </div>
-        <div class="text">
+        <div class="text" @click="connectETHWallet">
           {{
             Address.getETHaddress === "" || !Address.getETHaddress
               ? "Connect ETH Wallet"
               : getAddress(Address.getETHaddress)
           }}
         </div>
+        <div class="isQuit" v-if="isETHQuit" @click="ethQuit">log out</div>
       </div>
       <div class="title">ERC20 NETWORK</div>
       <div class="tips" v-if="errorMsgETH">
@@ -134,7 +161,7 @@
     <ErrorInfo ref="errorInfoRef" />
     <SuccessMsg ref="successMsgRef" />
     <ErrorMsg ref="errorMsgRef" />
-    <ChooseBTCWallet ref="chooseBTCWalletRef" @change="chooseBTC" />
+    <ChooseWallet ref="chooseWalletRef" @change="chooseWallet" />
   </div>
 </template>
 
@@ -152,27 +179,36 @@ import { useAddressStore } from "@/store/address";
 import selectToken from "./selectToken.vue";
 import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
-import ChooseBTCWallet from "./chooseBTCWallet.vue";
+import ChooseWallet from "@/components/chooseWallet.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
 import ErrorMsg from "@/components/error-msg.vue";
 import { MetaMaskSDK } from "@metamask/sdk";
 const emit = defineEmits(["refresh"]);
 const Address = useAddressStore();
-const isQuit = ref(false);
-const chooseBTCWalletRef = ref(null);
+const isBTCQuit = ref(false);
+const chooseWalletRef = ref(null);
 const connectBTCWallet = () => {
   if (Address.getBTCaddress) {
-    isQuit.value = !isQuit.value;
-    console.log(Address.getBTCaddress, "Address.getBTCaddress");
-  } else {
-    chooseBTCWalletRef.value.open();
+    isBTCQuit.value = !isBTCQuit.value;
+  }
+  if (!isBTCQuit.value && !Address.BTCaddress) {
+    console.log(isBTCQuit.value, Address.getBTCaddress, "isBTCQuit.value");
+    chooseWalletRef.value.open("btc");
     // Address.linkWallet();
   }
 };
-
+const isETHQuit = ref(false);
 const connectETHWallet = async () => {
-  Address.linkETHWallet();
+  if (Address.getETHaddress) {
+    isETHQuit.value = !isETHQuit.value;
+  }
+  if (!isETHQuit.value && !Address.ETHaddress) {
+    console.log(isETHQuit.value, Address.getBTCaddress, "isETHQuit.value");
+    chooseWalletRef.value.open("eth");
+    // Address.linkWallet();
+  }
+  // Address.linkETHWallet();
   // console.log(ethers, "ethers");
   // const provider = new ethers.providers.Web3Provider(window.ethereum);
   // console.log(provider, "provider");
@@ -194,21 +230,44 @@ const connectETHWallet = async () => {
   // console.log(ethereum, "ethereum");
   // ethereum.request({ method: "eth_requestAccounts", params: [] });
 };
-const chooseBTC = async (type) => {
+const chooseWallet = async (type) => {
   if (type === "okx") {
-    console.log("-----");
-    Address.linkOkxwallet();
-  } else {
-    Address.linkWallet();
-    return;
-    console.log("????");
-    const r = await okxwallet.request({ method: "eth_requestAccounts" });
-    console.log(r, "r");
+    // Address.linkOkxwallet();
+    window.localStorage.setItem("BTCWalletType", "okx");
+    const flag = await Address.selectBTC();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
+  } else if (type === "unisat") {
+    // Address.linkWallet();
+    window.localStorage.setItem("BTCWalletType", "unisat");
+    Address.selectBTC();
+  } else if (type === "eth") {
+    // Address.linkETHWallet();
+    window.localStorage.setItem("ETHWalletType", "eth");
+    Address.selectETH();
+  } else if (type === "ip") {
+    // Address.linkIPwallet();
+    window.localStorage.setItem("ETHWalletType", "ip");
+    const flag = await Address.selectETH();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   }
 };
 const btcQuit = () => {
   Address.clearBTCWallet();
-  isQuit.value = false;
+  isBTCQuit.value = false;
+};
+const ethQuit = () => {
+  Address.clearETHWallet();
+  isETHQuit.value = false;
 };
 const errorMsgRef = ref(null);
 // token 弹框
@@ -476,7 +535,7 @@ watch(
       border-right: 1px solid rgba(138, 91, 2, 0.5);
     }
     .text {
-      width: 214px;
+      flex: 1;
       text-align: center;
     }
   }

@@ -175,6 +175,12 @@ onMounted(() => {
 });
 </script>
 <style>
+.ant-pagination.ant-pagination-mini {
+  margin-top: 0 auto;
+}
+.ant-pagination {
+  text-align: center !important;
+}
 .ant-pagination.ant-pagination-mini.css-dev-only-do-not-override-19yxfbp {
   text-align: center !important;
 }

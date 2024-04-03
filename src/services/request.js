@@ -59,8 +59,25 @@ export const request = async (url, method = "get", data = null) => {
   }
 };
 
+export const requestPost = async (url, method = "post", data = null) => {
+  try {
+    const response = await apiInstance.request({
+      url: BASEURL + url,
+      method,
+      data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    // 处理请求错误
+    throw error;
+  }
+};
+
 const apikey = import.meta.env.VITE_OPEN_API;
-console.log(apikey, "apikey");
 
 export const requestWallet = async (url, method = "get", data = null) => {
   try {
