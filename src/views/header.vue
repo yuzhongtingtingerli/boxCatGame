@@ -22,9 +22,17 @@
           <div class="isShowHandover" v-if="isShowHandover">
             <div class="btc-eth" @click="setPartyType('btc-eth')">
               party on BTC-ETH
+              <div
+                class="point"
+                v-if="partyStore.getPartyType === 'btc-eth'"
+              ></div>
             </div>
             <div class="merlin" @click="setPartyType('merlin')">
               party on Merlin
+              <div
+                class="point"
+                v-if="partyStore.getPartyType === 'merlin'"
+              ></div>
             </div>
           </div>
         </div>
@@ -300,6 +308,26 @@ onMounted(() => {
       }
       .btc-eth {
         border-bottom: 2px solid #000;
+        position: relative;
+        .point {
+          background-color: #ffaa08;
+        }
+      }
+      .merlin {
+        position: relative;
+        .point {
+          background-color: #b06ce5;
+        }
+      }
+      .point {
+        position: absolute;
+        right: -26px;
+        top: 16px;
+        width: 5px;
+        height: 5px;
+        border-radius: 5px;
+
+        margin-left: 20px;
       }
     }
   }
