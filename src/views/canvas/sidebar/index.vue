@@ -12,7 +12,7 @@
     >
       <template v-if="Address.getBTCaddress">
         <YourBrc20 />
-        <YourScore :ScoreData="ScoreData" />
+        <YourScore :ScoreData="ScoreData" :nftScoreData="nftScoreData" />
         <Joined :JoinGroupData="JoinGroupData" />
       </template>
       <Groups
@@ -46,6 +46,7 @@ import {
   getScoreData,
   getJoinGroupData,
   getGroupListData,
+  getNftScoreData,
 } from "@/services/index";
 import { useAddressStore } from "@/store/address";
 
@@ -60,6 +61,22 @@ const ScoreData = ref(null);
 const getScore = async () => {
   const data = await getScoreData(Address.getBTCaddress);
   ScoreData.value = data.result;
+};
+const nftScoreData = ref(null);
+const getNftScore = async () => {
+  const data = await getNftScoreData({ UserAddress: Address.getBTCaddress });
+  let nftScore = {
+    TotalListNumber: Number(data.result.TotalListNumber),
+  };
+  if (Number(data.result.TotalListNumber) > 0) {
+    data.result.NftInfo.forEach((item) => {
+      nftScore[item.NftScoreType] = {
+        ...item,
+      };
+    });
+  }
+
+  nftScoreData.value = nftScore;
 };
 const router = useRouter();
 const handleJoinGroup = () => {
@@ -110,6 +127,7 @@ watch(
   () => {
     if (Address.getBTCaddress) {
       getScore();
+      getNftScore();
       getJoinGroup();
     }
   },

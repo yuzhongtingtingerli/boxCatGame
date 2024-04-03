@@ -26,6 +26,9 @@ import {
   checkNftStatus,
   getNftGroupList,
   doUseNft,
+  doUseNftPost,
+  getNftGroupDetailInfo,
+  getNftScore,
 } from "./api";
 
 export const getGroupDetailInfoData = async (params) => {
@@ -395,6 +398,48 @@ export const getNftGroupListData = async () => {
 export const doUseNftData = async (params) => {
   try {
     const { code, result, status } = await doUseNft(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const doUseNftPostData = async (params) => {
+  try {
+    const { code, result, status } = await doUseNftPost(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getNftGroupDetailInfoData = async (params) => {
+  try {
+    const { code, result, status } = await getNftGroupDetailInfo(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getNftScoreData = async (params) => {
+  try {
+    const { code, result, status } = await getNftScore(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, statusCode, result };

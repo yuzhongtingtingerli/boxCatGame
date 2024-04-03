@@ -1,4 +1,4 @@
-import { request } from "./request.js";
+import { request, requestPost } from "./request.js";
 
 export const getGroupDetailInfo = (params) => {
   return request(`/blockchain/getGroupDetailInfo?UserAddress=${params}`, "get");
@@ -162,4 +162,23 @@ export const doUseNft = ({ UserAddress, UsedGroup, InscriptionID }) => {
     `/nft/doUseNft?UserAddress=${UserAddress}&UsedGroup=${UsedGroup}&InscriptionID=${InscriptionID}`,
     "get"
   );
+};
+
+export const doUseNftPost = ({ UserAddress, UsedGroup, InscriptionID }) => {
+  return requestPost(`/nft/doUseNftPost`, "post", {
+    UserAddress,
+    UsedGroup,
+    InscriptionID,
+  });
+};
+
+export const getNftGroupDetailInfo = ({ UserAddress }) => {
+  return request(
+    `/nft/getNftGroupDetailInfo?UserAddress=${UserAddress}`,
+    "get"
+  );
+};
+
+export const getNftScore = ({ UserAddress }) => {
+  return request(`/nft/getNftScore?UserAddress=${UserAddress}`, "get");
 };
