@@ -31,7 +31,7 @@ import { useCut } from "./cut";
 import { useCat } from "./cat";
 import Sidebar from "./sidebar/index.vue";
 import {
-  getGroupDetailInfoData,
+  getNftGroupDetailInfoData,
   getTotalStakeInfoData,
 } from "@/services/index";
 import ErrorInfo from "@/components/error-info.vue";
@@ -66,7 +66,7 @@ const onStart = async (flag) => {
 const GroupInfo = ref(null);
 const getGroupDetailInfo = async (Address = undefined) => {
   await onStart(true);
-  const res = await getGroupDetailInfoData({ UserAddress: Address });
+  const res = await getNftGroupDetailInfoData({ UserAddress: Address });
   if (res.result === "请求失败") {
     GroupInfo.value = [];
     return;
@@ -277,26 +277,26 @@ function drawGroupInfo(x, y, w, h, group, catH) {
   const text2Y = imgY + imgh / 1.4;
   ctx.fillText(t2, text2X, text2Y);
 
-  // if (Number(group.RedBookNumber) > 0) {
-  //   const _scale = Math.min(scale.value, 1);
-  //   const bookImgw = (bookImg.width / 3) * _scale;
-  //   const bookImgh = (bookImg.height / 3) * _scale;
-  //   const bookImgX = imgX + imgw / 2 - bookImgw / 1.4;
-  //   const bookImgY = imgY - bookImgh * 1.2;
-  //   ctx.drawImage(bookImg, bookImgX, bookImgY, bookImgw, bookImgh);
-  //   group.book = {
-  //     bookImgX,
-  //     bookImgY,
-  //     bookImgw,
-  //     bookImgh,
-  //   };
-  //   ctx.font = `${28 * _scale}px LilitaOne`; // 设置字体大小和类型
-  //   ctx.fillStyle = "#ffffff"; // 设置文字颜色
-  //   const t3 = `+${group.RedBookNumber}`;
-  //   const text3X = bookImgX + bookImgw;
-  //   const text3Y = bookImgY + bookImgh / 2 + 28 * _scale;
-  //   ctx.fillText(t3, text3X, text3Y);
-  // }
+  if (Number(group.RedBookNumber) > 0) {
+    const _scale = Math.min(scale.value, 1);
+    const bookImgw = (bookImg.width / 3) * _scale;
+    const bookImgh = (bookImg.height / 3) * _scale;
+    const bookImgX = imgX + imgw / 2 - bookImgw / 1.4;
+    const bookImgY = imgY - bookImgh * 1.2;
+    ctx.drawImage(bookImg, bookImgX, bookImgY, bookImgw, bookImgh);
+    group.book = {
+      bookImgX,
+      bookImgY,
+      bookImgw,
+      bookImgh,
+    };
+    ctx.font = `${28 * _scale}px LilitaOne`; // 设置字体大小和类型
+    ctx.fillStyle = "#ffffff"; // 设置文字颜色
+    const t3 = `+${group.RedBookNumber}`;
+    const text3X = bookImgX + bookImgw;
+    const text3Y = bookImgY + bookImgh / 2 + 28 * _scale;
+    ctx.fillText(t3, text3X, text3Y);
+  }
 }
 const redBookRef = ref(null);
 onMounted(async () => {
@@ -324,10 +324,10 @@ onMounted(async () => {
     const { offsetX, offsetY } = e;
     const found = arrs.find((item) => {
       return (
-        offsetX >= item.book.bookImgX &&
-        offsetX <= item.book.bookImgX + item.book.bookImgw &&
-        offsetY >= item.book.bookImgY &&
-        offsetY <= item.book.bookImgY + item.book.bookImgh
+        offsetX >= item.book?.bookImgX &&
+        offsetX <= item.book?.bookImgX + item.book?.bookImgw &&
+        offsetY >= item.book?.bookImgY &&
+        offsetY <= item.book?.bookImgY + item.book?.bookImgh
       );
     });
     if (found) {

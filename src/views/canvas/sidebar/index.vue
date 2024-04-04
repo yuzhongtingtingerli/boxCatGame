@@ -127,7 +127,7 @@ watch(
   () => {
     if (Address.getBTCaddress) {
       getScore();
-      // getNftScore();
+      getNftScore();
       getJoinGroup();
     }
   },

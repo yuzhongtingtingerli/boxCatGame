@@ -7,7 +7,7 @@
         TVL(BTC)：{{ ScoreData?.PersonalTotalTVL }}
       </div>
     </div>
-    <!-- <div class="right" v-if="nftScoreData?.TotalListNumber > 0">
+    <div class="right" v-if="nftScoreData?.TotalListNumber > 0">
       <div class="books">
         <div class="red" v-if="nftScoreData.Initiative">
           <div class="top">
@@ -34,7 +34,7 @@
           <div class="bottom">+{{ nftScoreData.Passive.NftScore }}</div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
