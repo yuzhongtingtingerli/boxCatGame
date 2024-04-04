@@ -324,10 +324,10 @@ onMounted(async () => {
     const { offsetX, offsetY } = e;
     const found = arrs.find((item) => {
       return (
-        offsetX >= item.book.bookImgX &&
-        offsetX <= item.book.bookImgX + item.book.bookImgw &&
-        offsetY >= item.book.bookImgY &&
-        offsetY <= item.book.bookImgY + item.book.bookImgh
+        offsetX >= item.book?.bookImgX &&
+        offsetX <= item.book?.bookImgX + item.book?.bookImgw &&
+        offsetY >= item.book?.bookImgY &&
+        offsetY <= item.book?.bookImgY + item.book?.bookImgh
       );
     });
     if (found) {

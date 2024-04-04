@@ -12,6 +12,12 @@ const open = async (symbol, ETHaddress) => {
   record.value = symbol;
   balance.value = symbol.TokenWaitingBalance;
   const newBalance = await getBalance();
+  console.log(
+    newBalance,
+    "newBalance",
+    BigInt(symbol.TokenWaitingBalance * 10 ** 18),
+    "TokenWaitingBalance"
+  );
   if (newBalance >= BigInt(symbol.TokenWaitingBalance * 10 ** 18)) {
     show.value = true;
     spinning.value = false;
@@ -35,22 +41,28 @@ const getBalance = async () => {
   try {
     let fromAddresses = [];
     const ETHWalletType = window.localStorage.getItem("ETHWalletType");
+    let web3 = new Web3(window.web3.currentProvider);
     if (ETHWalletType === "eth") {
-      let web3 = new Web3(window.web3.currentProvider);
       fromAddresses = await web3.eth.getAccounts();
     } else if (ETHWalletType === "ip") {
       fromAddresses = await okxwallet.request({
         method: "eth_requestAccounts",
       });
     }
-
     let brc20Contract = new web3.eth.Contract(
       erc20Abi,
       record.value.BridgeTokenContractAddress ||
         record.value.TokenContractAddress
     );
-    const res = await brc20Contract.methods.balanceOf(fromAddresses[0]).call();
-    return res;
+    try {
+      const res = await brc20Contract.methods
+        .balanceOf(fromAddresses[0])
+        .call();
+      console.log(res, "res");
+      return res;
+    } catch (error) {
+      console.log(error, "balance fail");
+    }
   } catch (error) {
     console.log(error, "e");
   }
@@ -78,6 +90,7 @@ const goStake = async () => {
       fromAddresses = await okxwallet.request({
         method: "eth_requestAccounts",
       });
+      web3.setProvider(okxwallet);
     }
     let amount = balance.value * 10 ** 18;
     let brc20Contract = new web3.eth.Contract(
