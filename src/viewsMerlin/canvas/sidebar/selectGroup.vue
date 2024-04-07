@@ -1,7 +1,7 @@
 <script setup>
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { ref, onMounted } from "vue";
-import { getNftGroupListData, doUseNftData } from "@/services/index.js";
+import { getNftGroupListData, doUseNftPostData } from "@/services/index.js";
 const emit = defineEmits(["change"]);
 /**
  * 数据部分
@@ -49,7 +49,7 @@ const getTicker = (item) => {
 };
 const doUseNft = async (id, address) => {
   try {
-    const { statusCode } = await doUseNftData({
+    const { statusCode } = await doUseNftPostData({
       UserAddress: address,
       UsedGroup: ticker.value,
       InscriptionID: id,

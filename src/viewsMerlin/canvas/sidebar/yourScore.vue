@@ -8,9 +8,9 @@
       </div>
     </div>
 
-    <div class="right">
+    <div class="right" v-if="nftScoreData?.TotalListNumber > 0">
       <div class="books">
-        <div class="red">
+        <div class="red" v-if="nftScoreData.Initiative">
           <div class="top">
             <img
               src="@/assets/available-books.png"
@@ -18,11 +18,11 @@
               alt=""
               srcset=""
             />
-            <div class="num">29</div>
+            <div class="num">{{ nftScoreData.Initiative.NftNumber }}</div>
           </div>
-          <div class="bottom">+50000</div>
+          <div class="bottom">+{{ nftScoreData.Initiative.NftScore }}</div>
         </div>
-        <div class="yellow">
+        <div class="yellow" v-if="nftScoreData.Passive">
           <div class="top">
             <img
               src="@/assets/available-books.png"
@@ -30,9 +30,9 @@
               alt=""
               srcset=""
             />
-            <div class="num">29</div>
+            <div class="num">{{ nftScoreData.Passive.NftNumber }}</div>
           </div>
-          <div class="bottom">+300</div>
+          <div class="bottom">+{{ nftScoreData.Passive.NftScore }}</div>
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@
 import Title from "@cps/title";
 const props = defineProps({
   ScoreData: Object,
+  nftScoreData: Object,
 });
 </script>
 <style scoped lang="scss">
@@ -53,7 +54,7 @@ const props = defineProps({
   .books {
     display: flex;
     justify-content: space-between;
-    width: 112px;
+    // width: 112px;
     .top {
       width: 44px;
       height: 34px;
@@ -68,6 +69,7 @@ const props = defineProps({
     }
     .yellow .top {
       border: 2px solid #ffc500;
+      margin-left: 20px;
     }
     .num {
       height: 28px;

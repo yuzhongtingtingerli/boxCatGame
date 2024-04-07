@@ -13,6 +13,33 @@
           Please check the inscription ID of the Little red book you own in your
           wallet and paste it in the box below to see if it is available
         </div>
+        <div :class="`Wallet`">
+          <div @click="connectWallet">
+            <img
+              v-if="
+                Address.getBTCaddress && Address.getBTCWalletType === 'unisat'
+              "
+              src="@/assets/uniset-logo.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <img
+              v-if="Address.getBTCaddress && Address.getBTCWalletType === 'okx'"
+              src="@/assets/okx-wallet.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            {{
+              !Address.getBTCaddress
+                ? "Connect BTC Wallet"
+                : getAddress(Address.getBTCaddress)
+            }}
+          </div>
+          <div class="isQuit" v-if="isBTCQuit" @click="btcQuit">log out</div>
+        </div>
+
         <div class="img">
           <img
             v-if="status === 'pass'"
@@ -69,12 +96,17 @@
         </div>
       </div>
     </div>
+    <ChooseWallet ref="chooseWalletRef" @change="chooseWallet" />
   </div>
 </template>
 
 <script setup>
 import { ref, defineExpose } from "vue";
+import ChooseWallet from "@/components/chooseWallet.vue";
 import { checkNftStatusData } from "@/services/index.js";
+import { getAddress } from "@/utils/Tools";
+import { useAddressStore } from "@/store/address";
+const Address = useAddressStore();
 const emit = defineEmits(["change"]);
 const isShow = ref(false);
 const close = () => {
@@ -84,6 +116,40 @@ const open = () => {
   inscriptionID.value = "";
   status.value = "";
   isShow.value = true;
+};
+const isBTCQuit = ref(false);
+const btcQuit = (e) => {
+  Address.clearBTCWallet();
+  isBTCQuit.value = false;
+  e.preventDefault();
+};
+const chooseWalletRef = ref(null);
+const connectWallet = async () => {
+  if (Address.getBTCaddress) {
+    isBTCQuit.value = !isBTCQuit.value;
+  }
+  if (!isBTCQuit.value && !Address.BTCaddress) {
+    console.log(isBTCQuit.value, Address.getBTCaddress, "isBTCQuit.value");
+    chooseWalletRef.value.open("btc");
+    // Address.linkWallet();
+  }
+};
+const chooseWallet = async (type) => {
+  if (type === "okx") {
+    // Address.linkOkxwallet();
+    window.localStorage.setItem("BTCWalletType", "okx");
+    const flag = await Address.selectBTC();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
+  } else if (type === "unisat") {
+    // Address.linkWallet();
+    window.localStorage.setItem("BTCWalletType", "unisat");
+    Address.selectBTC();
+  }
 };
 const inscriptionID = ref("");
 const status = ref("");
@@ -137,7 +203,7 @@ defineExpose({ open, close });
     left: 50%;
     transform: translate(-50%, -50%);
     width: 480px;
-    height: 400px;
+    height: 450px;
     z-index: 2;
   }
   .info-content {
@@ -146,7 +212,7 @@ defineExpose({ open, close });
     left: 0;
     z-index: 9;
     width: 480px;
-    height: 400px;
+    height: 450px;
     background-color: #fff;
     border: 3px solid #000000;
     box-shadow: 4px 4px 0px 0px #000000;
@@ -169,6 +235,44 @@ defineExpose({ open, close });
       text-transform: capitalize;
       width: 400px;
       margin: 16px auto 0px;
+    }
+    .Wallet {
+      position: relative;
+      width: 180px;
+      height: 40px;
+      line-height: 40px;
+      font-family: LilitaOne;
+      font-size: 16px;
+      text-align: center;
+      background-color: #f6cb37;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px auto 0;
+      cursor: pointer;
+
+      img {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 7px;
+      }
+      .isQuit {
+        position: absolute;
+        top: 38px;
+        left: 0;
+        width: 176px;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        font-family: LilitaOne;
+        font-size: 15px;
+        color: #fff;
+        text-transform: capitalize;
+        background-image: url("@/assets/logOut.png");
+        background-size: 176px 44px;
+        z-index: 1;
+      }
     }
     .img {
       text-align: center;
@@ -195,7 +299,7 @@ defineExpose({ open, close });
         .check {
           margin-right: 8px;
           margin-left: 18px;
-          color: #b06ce5;
+          color: #ffaa08;
           cursor: pointer;
           img {
             width: 24px;

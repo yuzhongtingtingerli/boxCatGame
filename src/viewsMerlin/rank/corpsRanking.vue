@@ -150,7 +150,7 @@ const handleScroll = () => {
     height: 588px;
     overflow-y: scroll;
     .list_item.active {
-      border: 2px solid #fccd37;
+      border: 2px solid #b06ce5;
       border-radius: 4px;
     }
     .search-group {

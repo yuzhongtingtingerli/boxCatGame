@@ -98,7 +98,31 @@
           :class="`Wallet ${currentRoute === '/rank' ? 'white' : ''}`"
           v-if="currentRoute != '/bridge' && currentRoute != '/stake'"
         >
-          <div @click="connectWallet">
+          <div
+            @click="connectWallet"
+            v-if="partyStore.getPartyType === 'merlin'"
+          >
+            <img
+              v-if="Address.getETHaddress && Address.getETHWalletType === 'eth'"
+              src="@/assets/matemask.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <img
+              v-if="Address.getETHaddress && Address.getETHWalletType === 'ip'"
+              src="@/assets/okx-wallet.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            {{
+              !Address.getETHaddress
+                ? "Connect Wallet"
+                : getAddress(Address.getETHaddress)
+            }}
+          </div>
+          <div @click="connectWallet" v-else>
             <img
               v-if="
                 Address.getBTCaddress && Address.getBTCWalletType === 'unisat'
@@ -121,7 +145,7 @@
                 : getAddress(Address.getBTCaddress)
             }}
           </div>
-          <div class="isQuit" v-if="isBTCQuit" @click="btcQuit">log out</div>
+          <div class="isQuit" v-if="isQuit" @click="btcQuit">log out</div>
         </div>
       </div>
     </div>
@@ -159,23 +183,30 @@ const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
   return "";
 };
-const isBTCQuit = ref(false);
+const isQuit = ref(false);
 const btcQuit = (e) => {
   console.log(e);
   Address.clearBTCWallet();
-  isBTCQuit.value = false;
-  console.log("这里触发了吗");
+  isQuit.value = false;
   e.preventDefault();
 };
 const chooseWalletRef = ref(null);
 const connectWallet = async () => {
-  if (Address.getBTCaddress) {
-    isBTCQuit.value = !isBTCQuit.value;
-  }
-  if (!isBTCQuit.value && !Address.BTCaddress) {
-    console.log(isBTCQuit.value, Address.getBTCaddress, "isBTCQuit.value");
-    chooseWalletRef.value.open("btc");
-    // Address.linkWallet();
+  if (partyStore.getPartyType === "merlin") {
+    if (Address.getETHaddress) {
+      isQuit.value = !isQuit.value;
+    }
+    if (!isQuit.value && !Address.ETHaddress) {
+      chooseWalletRef.value.open("eth");
+    }
+  } else {
+    if (Address.getBTCaddress) {
+      isQuit.value = !isQuit.value;
+    }
+    if (!isQuit.value && !Address.BTCaddress) {
+      chooseWalletRef.value.open("btc");
+      // Address.linkWallet();
+    }
   }
 };
 const errorMsgRef = ref(null);
@@ -194,6 +225,20 @@ const chooseWallet = async (type) => {
     // Address.linkWallet();
     window.localStorage.setItem("BTCWalletType", "unisat");
     Address.selectBTC();
+  } else if (type === "eth") {
+    // Address.linkETHWallet();
+    window.localStorage.setItem("ETHWalletType", "eth");
+    Address.selectETH();
+  } else if (type === "ip") {
+    // Address.linkIPwallet();
+    window.localStorage.setItem("ETHWalletType", "ip");
+    const flag = await Address.selectETH();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
   }
 };
 const isShowHandover = ref(false);
@@ -202,6 +247,7 @@ const handoverMain = async () => {
 };
 onMounted(() => {
   Address.getBTCWallet();
+  Address.getETHWallet();
 });
 </script>
 <style scoped lang="scss">

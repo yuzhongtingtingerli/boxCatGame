@@ -84,29 +84,44 @@
         </div>
         <div
           :class="`Wallet ${currentRoute === '/rank' ? 'white' : ''}`"
-          @click="connectWallet"
           v-if="currentRoute != '/bridge' && currentRoute != '/stake'"
         >
-          <img
-            v-if="Address.getBTCaddress"
-            src="@/assets/uniset-logo.png"
-            width="32px"
-            alt=""
-            srcset=""
-          />
-          {{
-            !Address.getBTCaddress
-              ? "Connect BTC Wallet"
-              : getAddress(Address.getBTCaddress)
-          }}
+          <div @click="connectWallet">
+            <img
+              v-if="
+                Address.getBTCaddress && Address.getBTCWalletType === 'unisat'
+              "
+              src="@/assets/uniset-logo.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <img
+              v-if="Address.getBTCaddress && Address.getBTCWalletType === 'okx'"
+              src="@/assets/okx-wallet.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            {{
+              !Address.getBTCaddress
+                ? "Connect BTC Wallet"
+                : getAddress(Address.getBTCaddress)
+            }}
+          </div>
+          <div class="isQuit" v-if="isBTCQuit" @click="btcQuit">log out</div>
         </div>
       </div>
     </div>
+    <ChooseWallet ref="chooseWalletRef" @change="chooseWallet" />
+    <ErrorMsg ref="errorMsgRef" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import ChooseWallet from "@/components/chooseWallet.vue";
+import ErrorMsg from "@/components/error-msg.vue";
 import { useAddressStore } from "@/store/address";
 import { usePartyStore } from "@/store/partyStore";
 import { useRouter } from "vue-router";
@@ -123,13 +138,46 @@ const getCurrentRoute = (path) => {
   if (currentRoute.value === path) return "active";
   return "";
 };
-const connectWallet = async () => {
-  // 没有钱包就跳转
-  Address.linkWallet();
-};
 const isShowHandover = ref(false);
 const handoverMain = async () => {
   isShowHandover.value = !isShowHandover.value;
+};
+const isBTCQuit = ref(false);
+const btcQuit = (e) => {
+  console.log(e);
+  Address.clearBTCWallet();
+  isBTCQuit.value = false;
+  console.log("这里触发了吗");
+  e.preventDefault();
+};
+const chooseWalletRef = ref(null);
+const connectWallet = async () => {
+  if (Address.getBTCaddress) {
+    isBTCQuit.value = !isBTCQuit.value;
+  }
+  if (!isBTCQuit.value && !Address.BTCaddress) {
+    console.log(isBTCQuit.value, Address.getBTCaddress, "isBTCQuit.value");
+    chooseWalletRef.value.open("btc");
+    // Address.linkWallet();
+  }
+};
+const errorMsgRef = ref(null);
+const chooseWallet = async (type) => {
+  if (type === "okx") {
+    // Address.linkOkxwallet();
+    window.localStorage.setItem("BTCWalletType", "okx");
+    const flag = await Address.selectBTC();
+    if (!flag) {
+      const headline = "Dear!";
+      const title = "Connection Wallet Error";
+      const message = `Please check your OKX wallet type,make sure it have a correct EVM/BTC address`;
+      errorMsgRef.value.open(headline, title, message);
+    }
+  } else if (type === "unisat") {
+    // Address.linkWallet();
+    window.localStorage.setItem("BTCWalletType", "unisat");
+    Address.selectBTC();
+  }
 };
 onMounted(() => {
   Address.getBTCWallet();

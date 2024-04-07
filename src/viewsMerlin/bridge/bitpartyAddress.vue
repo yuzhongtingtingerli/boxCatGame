@@ -11,6 +11,10 @@ const spinning = ref(false);
 const open = async (symbol, ETHaddress) => {
   record.value = symbol;
   balance.value = symbol.TokenWaitingBalance;
+  show.value = true;
+  return;
+  record.value = symbol;
+  balance.value = symbol.TokenWaitingBalance;
   const newBalance = await getBalance();
   if (newBalance >= BigInt(symbol.TokenWaitingBalance * 10 ** 18)) {
     show.value = true;
@@ -125,7 +129,7 @@ defineExpose({ open, close });
         <div class="title">stake To Smart contract</div>
         <div class="desc">This is the last step</div>
         <div class="sats">
-          <div class="txt">Your ETH Account</div>
+          <div class="txt">From</div>
           <div class="txt">to</div>
           <div class="txt">
             {{ decodeURIComponent(record.TokenSymbol) }} Group
@@ -220,7 +224,7 @@ defineExpose({ open, close });
     line-height: 48px;
     text-align: center;
     margin: 0 auto;
-    background: #f6cb37;
+    background: #b06ce5;
     border: 2px solid rgba(0, 0, 0, 1);
     box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
     font-family: LilitaOne;

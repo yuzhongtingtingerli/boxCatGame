@@ -10,9 +10,9 @@
       :contentWrapperStyle="{ maxWidth: '100%' }"
       @after-open-change="afterOpenChange"
     >
-      <template v-if="Address.getBTCaddress">
+      <template v-if="Address.getETHaddress">
         <YourBrc20 />
-        <YourScore :ScoreData="ScoreData" />
+        <YourScore :ScoreData="ScoreData" :nftScoreData="nftScoreData" />
         <Joined :JoinGroupData="JoinGroupData" />
       </template>
       <Groups
@@ -46,6 +46,7 @@ import {
   getScoreData,
   getJoinGroupData,
   getGroupListData,
+  getNftScoreData,
 } from "@/services/index";
 import { useAddressStore } from "@/store/address";
 
@@ -58,12 +59,28 @@ const closeDrawer = () => {
 const SidebarRef = ref(null);
 const ScoreData = ref(null);
 const getScore = async () => {
-  const data = await getScoreData(Address.getBTCaddress);
+  const data = await getScoreData(Address.getETHaddress);
   ScoreData.value = data.result;
+};
+const nftScoreData = ref(null);
+const getNftScore = async () => {
+  const data = await getNftScoreData({ UserAddress: Address.getETHaddress });
+  let nftScore = {
+    TotalListNumber: Number(data.result.TotalListNumber),
+  };
+  if (Number(data.result.TotalListNumber) > 0) {
+    data.result.NftInfo.forEach((item) => {
+      nftScore[item.NftScoreType] = {
+        ...item,
+      };
+    });
+  }
+
+  nftScoreData.value = nftScore;
 };
 const router = useRouter();
 const handleJoinGroup = () => {
-  if (Address.getBTCaddress) {
+  if (Address.getETHaddress) {
     router.push({ path: "/stake", query: { from: "JoinGroup" } });
   } else {
     isShowError("You should connect your BTC wallet first, Explorer!");
@@ -77,7 +94,7 @@ const isShowError = (title) => {
 // 加入军团列表
 const JoinGroupData = ref(null);
 const getJoinGroup = async () => {
-  const data = await getJoinGroupData(Address.getBTCaddress);
+  const data = await getJoinGroupData(Address.getETHaddress);
   JoinGroupData.value = data.result.GroupInfo;
 };
 
@@ -108,8 +125,9 @@ const handleScroll = () => {
 watch(
   Address,
   () => {
-    if (Address.getBTCaddress) {
+    if (Address.getETHaddress) {
       getScore();
+      getNftScore();
       getJoinGroup();
     }
   },

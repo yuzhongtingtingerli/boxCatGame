@@ -1,5 +1,5 @@
 const partyType = sessionStorage.getItem("partyType");
-const isMerlin = partyType === "merlin";
+export const isMerlin = partyType === "merlin";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/home/index.vue";
 import merlinHome from "../viewsMerlin/home/index.vue";

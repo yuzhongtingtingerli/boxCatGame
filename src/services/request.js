@@ -1,6 +1,8 @@
 // api.js
 
 import axios from "axios";
+import { isMerlin } from "@/router";
+
 function getBaseUrl() {
   try {
     let protocol = window.location.protocol;
@@ -47,7 +49,7 @@ apiInstance.interceptors.response.use(
 export const request = async (url, method = "get", data = null) => {
   try {
     const response = await apiInstance.request({
-      url: BASEURL + url,
+      url: BASEURL + (isMerlin ? "/merlin" : "") + url,
       method,
       data,
     });

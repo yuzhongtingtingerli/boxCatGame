@@ -43,6 +43,11 @@ import { useAddressStore } from "@/store/address";
 import { checkRuningStatus } from "@/services/api.js";
 
 const checkRuning = async () => {
+  isShowError(
+    "Welcome to Bit party !  Join the BRC20 Group you hold and win BTPX. Good luck !",
+    5000
+  );
+  return;
   const res = await checkRuningStatus();
   if (res.result.RunningStatus <= 4) {
     isShowError(
@@ -300,7 +305,7 @@ function drawGroupInfo(x, y, w, h, group, catH) {
 }
 const redBookRef = ref(null);
 onMounted(async () => {
-  checkRuning();
+  // checkRuning();
   ctx = canvasRef.value.getContext("2d");
   //   await drawCut(ctx, canvasRef.value.width, canvasRef.value.height);
   await Promise.all([
