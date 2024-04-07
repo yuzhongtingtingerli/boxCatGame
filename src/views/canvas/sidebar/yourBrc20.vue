@@ -49,6 +49,7 @@ import IsNftSuccess from "./isNftSuccess.vue";
 import { useAddressStore } from "@/store/address";
 
 const Address = useAddressStore();
+const emit = defineEmits(["change"]);
 
 const YourBrc = ref(null);
 
@@ -83,6 +84,7 @@ const changeGroup = (inscriptionID) => {
 const isNftSuccessRef = ref(null);
 const isSuccess = (flag, tiker) => {
   isNftSuccessRef.value.open(flag, tiker);
+  emit("change");
 };
 
 watch(

@@ -13,7 +13,7 @@ function getBaseUrl() {
 const BASEURL =
   process.env.NODE_ENV === "development"
     ? getBaseUrl()
-    : "https://www.bitparty.tech:3000";
+    : "http://68.178.206.124:8834";
 // 创建一个 axios 实例
 const apiInstance = axios.create({});
 

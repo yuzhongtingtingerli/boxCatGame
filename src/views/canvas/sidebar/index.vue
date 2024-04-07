@@ -11,7 +11,7 @@
       @after-open-change="afterOpenChange"
     >
       <template v-if="Address.getBTCaddress">
-        <YourBrc20 />
+        <YourBrc20 @change="refreshLish" />
         <YourScore :ScoreData="ScoreData" :nftScoreData="nftScoreData" />
         <Joined :JoinGroupData="JoinGroupData" />
       </template>
@@ -77,6 +77,10 @@ const getNftScore = async () => {
   }
 
   nftScoreData.value = nftScore;
+};
+const refreshLish = () => {
+  console.log("???");
+  getNftScore();
 };
 const router = useRouter();
 const handleJoinGroup = () => {
