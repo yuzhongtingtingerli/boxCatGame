@@ -34,7 +34,7 @@ const open = () => {
   isShow.value = true;
 };
 const getIt = () => {
-  const url = `https://etherscan.io/tx/`;
+  const url = `https://brc420.io/market?tick=d75e6543df05c32425bbc985431ea2b2582079ec2e40a93b29077a28d90d6ac9i0`;
   window.open(url, "_blank");
   close();
 };
