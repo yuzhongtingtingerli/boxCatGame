@@ -56,10 +56,7 @@
           </div>
         </div>
         <div class="failText">
-          <span v-if="status === 'fail'"
-            >It’s used or input the wrong inscription id. Plz check it
-            again.</span
-          >
+          <span v-if="status === 'fail'">{{ errorMsg }}</span>
         </div>
         <div
           :class="`useIt ${status === 'pass' ? 'pass' : 'fail'}`"
@@ -87,14 +84,16 @@ const open = () => {
 };
 const inscriptionID = ref("");
 const status = ref("");
+const errorMsg = ref("");
 const checkInscriptionID = async () => {
-  const { statusCode } = await checkNftStatusData({
+  const { statusCode, result } = await checkNftStatusData({
     InscriptionID: inscriptionID.value,
   });
   if (statusCode === 1) {
     status.value = "pass";
   } else {
     status.value = "fail";
+    errorMsg.value = result.message;
   }
 };
 const clearStatus = () => {
