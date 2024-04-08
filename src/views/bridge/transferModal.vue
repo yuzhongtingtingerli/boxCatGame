@@ -125,8 +125,7 @@ const sendBitcoin = async () => {
     return txid;
   }
 };
-const getPsbtHex = async (pubkey) => {
-  const btcAmountData = btcAmount.value * 10000 * 10000;
+const getPsbtHex = async (pubkey, btcAmountData) => {
   const { data: btcUtxos } = await getUtxoData({ address: BTCAddress.value });
   const { psbt, toSignInputs } = await sendBTC({
     btcUtxos: btcUtxos.utxo.map((v) => ({
@@ -160,9 +159,10 @@ const customSendBTC = async () => {
   try {
     // const serviceFeeData = serviceFee.value * 10000 * 10000;
     const BTCWalletType = window.localStorage.getItem("BTCWalletType");
+    const btcAmountData = btcAmount.value * 10000 * 10000;
     if (BTCWalletType === "unisat") {
       const pubkey = await window.unisat.getPublicKey();
-      const { psbtHex, toSignInputs } = await getPsbtHex(pubkey);
+      const { psbtHex, toSignInputs } = await getPsbtHex(pubkey, btcAmountData);
       const tixd = await window.unisat.signPsbt(psbtHex, {
         autoFinalized: true,
         toSignInputs,
@@ -170,14 +170,14 @@ const customSendBTC = async () => {
       const res = await window.unisat.pushPsbt(tixd);
       return res;
     } else if (BTCWalletType === "okx") {
-      const pubkey = await okxwallet.bitcoin.getPublicKey();
-      const { psbtHex, toSignInputs } = await getPsbtHex(pubkey);
-      const tixd = await okxwallet.bitcoin.signPsbt(psbtHex, {
-        autoFinalized: true,
-        toSignInputs,
-      });
-      const res = await okxwallet.bitcoin.pushPsbt(tixd);
-      return res;
+      let txid = await okxwallet.bitcoin.sendBitcoin(
+        toAddress.value,
+        btcAmountData,
+        {
+          feeRate: feeData.value,
+        }
+      );
+      return txid;
     }
   } catch (error) {
     const errorMsg = {
@@ -222,7 +222,6 @@ const sendInscription = async (address, id, feeRate) => {
       let txid = await window.unisat.sendInscription(address, id, feeRate);
       return txid;
     } else if (BTCWalletType === "okx") {
-      console.log("okx");
       let txid = await okxwallet.bitcoin.sendInscription(address, id, feeRate);
       return txid;
     }
