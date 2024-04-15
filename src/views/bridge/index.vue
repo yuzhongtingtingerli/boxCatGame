@@ -3,7 +3,7 @@
     <div class="w1140">
       <Guidelines />
       <div>
-        <Network @refresh="isSuccess" />
+        <Network @refresh="isSuccess" @change="changeWallet" />
         <MyRecord ref="myRecordRef" />
       </div>
     </div>
@@ -29,6 +29,9 @@ const isShowError = () => {
 const myRecordRef = ref(null);
 const isSuccess = async () => {
   myRecordRef.value.refreshBridgeList();
+};
+const changeWallet = (type) => {
+  myRecordRef.value.getWalletType(type);
 };
 const checkRuning = async () => {
   // if (window.location.origin.indexOf("www.bitparty.tech") !== -1) {

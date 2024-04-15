@@ -2,15 +2,41 @@
   <div class="myRecord">
     <div class="title">
       <div class="left">My Record</div>
-      <div class="right" v-if="Address.getBTCaddress">
-        <img
-          src="@/assets/uniset-logo.png"
-          width="32px"
-          style="margin-right: 16px"
-          alt=""
-          srcset=""
-        />
-        {{ getAddress(Address.getBTCaddress) }}
+      <div class="right">
+        <template v-if="Address.getBTCaddress && walletType === 'BTC'">
+          <img
+            v-if="Address.getBTCWalletType === 'unisat'"
+            src="@/assets/uniset-logo.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          <img
+            v-if="Address.getBTCWalletType === 'okx'"
+            src="@/assets/okx-wallet.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          {{ getAddress(Address.getBTCaddress) }}
+        </template>
+        <template v-if="Address.getETHaddress && walletType === 'ETH'">
+          <img
+            v-if="Address.getETHWalletType === 'eth'"
+            src="@/assets/matemask.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          <img
+            v-if="Address.getETHWalletType === 'ip'"
+            src="@/assets/okx-wallet.png"
+            width="28px"
+            alt=""
+            srcset=""
+          />
+          {{ getAddress(Address.getETHaddress) }}
+        </template>
       </div>
     </div>
     <div
@@ -121,6 +147,11 @@ const refreshBridgeList = () => {
   total.value = 0;
   getBridgeList();
 };
+const walletType = ref("BTC");
+const getWalletType = (type) => {
+  walletType.value = type;
+  getBridgeList();
+};
 const bitpartyAddressRef = ref(null);
 const router = useRouter();
 const handleStatus = (item) => {
@@ -149,7 +180,6 @@ const getStatusColor = (status) => {
 watch(
   Address,
   (newVal, oldVal) => {
-    console.log(newVal, oldVal, Address.getBTCaddress, "Address.getBTCaddress");
     getBridgeList();
   },
   { immediate: true }
@@ -161,7 +191,7 @@ onMounted(() => {
     getBridgeList();
   }, 1000 * 60 * 15);
 });
-defineExpose({ refreshBridgeList });
+defineExpose({ refreshBridgeList, getWalletType });
 </script>
 
 <style>

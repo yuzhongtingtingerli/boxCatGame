@@ -1,6 +1,6 @@
 <template>
   <div class="network">
-    <div class="BTCWallet">
+    <div :class="`BTCWallet ${handover === 'BTC' ? ' walletBorder' : ''}`">
       <div class="btn">
         <div class="img" v-if="Address.getBTCaddress">
           <img
@@ -33,7 +33,7 @@
         <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
         <div class="tip">You Should Do Something First</div> -->
       </div>
-      <div class="content">
+      <div class="content" v-if="handover === 'BTC'">
         <div class="brc20 change" @click="showModal">
           <div class="left">Select Token</div>
           <div class="right">
@@ -60,6 +60,29 @@
           </div>
         </div>
       </div>
+      <div class="content" v-else>
+        <div class="brc20 change">
+          <div class="left">Will Get</div>
+          <div class="right">
+            {{ token?.ticker }}
+          </div>
+        </div>
+        <div class="amount change">
+          <div class="left">Amount</div>
+          <div class="right">
+            {{ token?.ticker === "btc" ? btcAmount : amountInfo?.data.amt }}
+          </div>
+        </div>
+        <div
+          class="address"
+          v-if="TokenContractAddress"
+          @click="goTokenContractAddress"
+        >
+          {{ token?.ticker }} eth contract address:
+          {{ getAddress(TokenContractAddress) }}
+          <img src="@/assets/Magnifying.png" alt="" />
+        </div>
+      </div>
       <div class="transfer" v-if="handover === 'BTC'" @click="openTransfer">
         Transfer
       </div>
@@ -70,33 +93,29 @@
           v-show="handover === 'ETH'"
           @click="changeWallet('BTC')"
           src="@/assets/bridge_l_g.png"
-          alt=""
-          srcset=""
+          height="12.25"
         />
         <img
           v-show="handover === 'BTC'"
           src="@/assets/bridge_l.png"
-          alt=""
-          srcset=""
+          height="12.25"
         />
       </div>
       <div class="right">
         <img
           v-show="handover === 'ETH'"
           src="@/assets/bridge_r.png"
-          alt=""
-          srcset=""
+          height="12.25"
         />
-        <!-- @click="changeWallet('ETH')" -->
         <img
           v-show="handover === 'BTC'"
+          @click="changeWallet('ETH')"
           src="@/assets/bridge_r_g.png"
-          alt=""
-          srcset=""
+          height="12.25"
         />
       </div>
     </div>
-    <div class="ETHWallet">
+    <div :class="`ETHWallet  ${handover === 'ETH' ? ' walletBorder' : ''}`">
       <div class="btn">
         <div class="img" v-if="Address.getETHaddress">
           <img
@@ -129,7 +148,34 @@
         <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
         <div class="tip">You Should Do Something First</div> -->
       </div>
-      <div class="content">
+      <div class="content" v-if="handover === 'ETH'">
+        <div class="brc20 change" @click="showModal">
+          <div class="left">Select Token</div>
+          <div class="right">
+            <span>{{ token?.ticker || "Brc20" }}</span>
+            <img src="@/assets/Vector.png" />
+          </div>
+        </div>
+        <div class="amount change" v-if="token?.ticker === 'btc'">
+          <div class="left">Amount</div>
+          <div class="right">
+            <a-input
+              v-model:value="btcAmount"
+              placeholder="0.00"
+              size="small"
+              @input="onInput"
+            ></a-input>
+          </div>
+        </div>
+        <div class="amount change" @click="showAmount" v-else>
+          <div class="left">Amount</div>
+          <div class="right">
+            <span>{{ amountInfo?.data.amt || "0.00" }}</span>
+            <img src="@/assets/Vector.png" />
+          </div>
+        </div>
+      </div>
+      <div class="content" v-else>
         <div class="brc20 change">
           <div class="left">Will Get</div>
           <div class="right">
@@ -183,8 +229,7 @@ import ChooseWallet from "@/components/chooseWallet.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
 import ErrorMsg from "@/components/error-msg.vue";
-import { MetaMaskSDK } from "@metamask/sdk";
-const emit = defineEmits(["refresh"]);
+const emit = defineEmits(["refresh", "change"]);
 const Address = useAddressStore();
 const isBTCQuit = ref(false);
 const chooseWalletRef = ref(null);
@@ -206,29 +251,7 @@ const connectETHWallet = async () => {
   if (!isETHQuit.value && !Address.ETHaddress) {
     console.log(isETHQuit.value, Address.getBTCaddress, "isETHQuit.value");
     chooseWalletRef.value.open("eth");
-    // Address.linkWallet();
   }
-  // Address.linkETHWallet();
-  // console.log(ethers, "ethers");
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // console.log(provider, "provider");
-  // const signer = provider.getSigner();
-  // console.log(signer, "signer");
-  // const address = await provider.send("eth_requestAccounts", []);
-  // console.log(address, "address");
-  // const MMSDK = new MetaMaskSDK({
-  //   dappMetadata: {
-  //     name: "JavaScript example dapp",
-  //     url: window.location.href,
-  //   },
-  //   infuraAPIKey: process.env.INFURA_API_KEY,
-  //   // Other options
-  // });
-
-  // // You can also access via window.ethereum
-  // const ethereum = MMSDK.getProvider();
-  // console.log(ethereum, "ethereum");
-  // ethereum.request({ method: "eth_requestAccounts", params: [] });
 };
 const chooseWallet = async (type) => {
   if (type === "okx") {
@@ -370,6 +393,7 @@ const showTransferModal = () => {
 const handover = ref("BTC");
 const changeWallet = (val) => {
   handover.value = val;
+  emit("change", val);
 };
 
 const amount = ref(null);
@@ -668,12 +692,15 @@ watch(
       rgba(131, 196, 255, 0.1) 0%,
       rgba(255, 255, 255, 0.1) 100%
     );
-    border: 1px solid #777e90;
+
     border-radius: 4px;
     .btn {
       position: relative;
       background-color: #ffaa08;
     }
+  }
+  .walletBorder {
+    border: 1px solid #777e90;
   }
 
   .handover {
