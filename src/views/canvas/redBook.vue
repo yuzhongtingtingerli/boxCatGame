@@ -15,7 +15,7 @@
           </div>
           <div class="text">
             It allows the used Group to gain 10 points per address, while the
-            person using it can gain 1,000 points themselves.
+            person using it can gain 100 points themselves.
           </div>
         </div>
         <div class="getIt" @click="getIt">get it</div>
