@@ -1,7 +1,12 @@
 <script setup>
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { ref, onMounted } from "vue";
-import { getTokenLogoData, getBRCListData } from "@/services/index.js";
+import { Alchemy, Network } from "alchemy-sdk";
+import {
+  getTokenLogoData,
+  getBRCListData,
+  getPartyTokenListData,
+} from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
 const emit = defineEmits(["change"]);
 /**
@@ -10,12 +15,72 @@ const emit = defineEmits(["change"]);
 const groupName = ref("");
 const show = ref(false);
 let summaryDataList = [];
-const open = (address) => {
-  getBrcSummary(address);
+const walletType = ref("");
+const open = (type, address) => {
+  walletType.value = type;
+  summaryData.value = null;
+  summaryDataList = null;
+  if (type === "BTC") {
+    getBrcSummary(address);
+  } else {
+    getPartyTokenList(address);
+  }
   show.value = true;
 };
 const close = () => {
   show.value = false;
+};
+const getPartyTokenList = async (address) => {
+  const res = await getPartyTokenListData();
+  console.log(res, "res");
+  const addressList = res.result.TokenInfo.map(
+    (item) => item.TokenContractAddress
+  );
+  const balancesData = await balancesList(address, addressList);
+  res.result.TokenInfo.push({
+    TokenContractAddress: "0x223d3edc431e8ae6403b591df52fc16c2d7773dd",
+    TokenLogo:
+      "https://static.oklink.com/cdn/assets/imgs/MjAxOTc/1254C5731DCE6B41F928F1FC529E8505.jpg",
+    TokenSymbol: "btc",
+  });
+  const common = res.result.TokenInfo.map((item) => {
+    return {
+      ...item,
+      balance: getBalanceData(balancesData, item.TokenContractAddress),
+      ticker: item.TokenSymbol,
+    };
+  }).filter((item) => item.balance > 0);
+  summaryData.value = common;
+  summaryDataList = common;
+};
+
+const getBalanceData = (balancesData, address) => {
+  return balancesData.filter((item) => item.contractAddress === address)[0]
+    ?.balance;
+};
+
+const balancesList = async (address, ary) => {
+  const settings = {
+    apiKey: "Mx71dKeiQprWUUb09x56lllHsdsdjx7u", // Replace with your Alchemy API Key.
+    network: Network.ETH_MAINNET, // Replace with your network.
+  };
+  const alchemy = new Alchemy(settings);
+  const balances = await alchemy.core.getTokenBalances(address, [
+    ...ary,
+    "0x223d3edc431e8ae6403b591df52fc16c2d7773dd",
+  ]);
+  const balancesData = balances.tokenBalances.map((item) => {
+    return {
+      ...item,
+      balance: decimal(item.tokenBalance),
+    };
+  });
+  return balancesData;
+};
+
+const decimal = (hex) => {
+  let decimal = parseInt(hex); // 不指定进制，默认按照十进制转换
+  return decimal / 10 ** 18;
 };
 const getGroupName = () => {
   groupName.value;
@@ -125,7 +190,11 @@ defineExpose({ open, close });
           <div class="logo" v-else>{{ getFirstLetter(item.ticker) }}</div>
           <span>{{ decodeURIComponent(item.ticker) }}</span>
         </div>
-        <div class="list-item" @click="getTicker({ ticker: 'btc' })">
+        <div
+          class="list-item"
+          @click="getTicker({ ticker: 'btc' })"
+          v-if="walletType === 'BTC'"
+        >
           <img width="20px" src="@/assets/miniB.png" />
           <span>btc</span>
         </div>

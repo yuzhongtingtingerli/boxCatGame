@@ -7,11 +7,6 @@ import {
 } from "@/services/wallet.js";
 import { getAddress } from "@/utils/Tools";
 import { doBridgeData, getTransferInfoData } from "@/services/index.js";
-import { genDummyUtxo, dummySendInscriptions } from "./utils.ts";
-import { AddressType } from "@unisat/wallet-sdk";
-import { NetworkType, toPsbtNetwork } from "@unisat/wallet-sdk/es/network";
-import { LocalWallet } from "@unisat/wallet-sdk/es/wallet";
-import { ECPair, bitcoin } from "@unisat/wallet-sdk/es/bitcoin-core";
 import { sendBTC } from "@unisat/wallet-sdk/es/tx-helpers";
 import { sendInscriptions } from "./send-inscriptions.ts";
 
@@ -23,9 +18,11 @@ const satoshiData = ref("");
 let inscriptionId = ref("");
 const btcAmount = ref(null);
 const emit = defineEmits(["change"]);
-const open = (btc, eth, insId = "", tick, amt, satoshi = "") => {
+const walletType = ref("");
+const open = (type, btc, eth, insId = "", tick, amt, satoshi = "") => {
+  walletType.value = type;
   getRecommended();
-  getTransferInfo(tick, amt);
+  getTransferInfo(tick, amt, type);
   BTCAddress.value = btc;
   ETHAddress.value = eth;
   inscriptionId.value = insId;
@@ -36,10 +33,12 @@ const open = (btc, eth, insId = "", tick, amt, satoshi = "") => {
 const serviceFee = ref("");
 const toAddress = ref("");
 const serviceAddress = ref("");
-const getTransferInfo = async (tick, amt) => {
+const getTransferInfo = async (tick, amt, type) => {
+  console.log(tick, amt, type, "tick, amt, type");
   const res = await getTransferInfoData({
     TokenSymbol: tick,
     TokenBalance: amt,
+    TokenType: type === "ETH" ? "ethereum" : "",
   });
   if (res.statusCode === 1) {
     serviceFee.value = res.result.ServiceFee;
@@ -282,7 +281,9 @@ defineExpose({ open, close });
       <div class="list">
         <div class="left">From:</div>
         <div class="right">
-          <span>{{ getAddress(BTCAddress) }}</span>
+          <span>{{
+            getAddress(walletType === "BTC" ? BTCAddress : ETHAddress)
+          }}</span>
           <img src="@/assets/copy.png" alt="" srcset="" />
         </div>
       </div>
@@ -295,7 +296,7 @@ defineExpose({ open, close });
       </div>
       <div class="list">
         <div class="left">Service Fee:</div>
-        <div class="right">{{ serviceFee }} BTC</div>
+        <div class="right">{{ serviceFee }} {{ walletType }}</div>
       </div>
       <div class="list tran">
         <div class="fee">Transaction Fee</div>

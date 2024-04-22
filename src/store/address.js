@@ -71,12 +71,12 @@ export const useAddressStore = defineStore("address", {
         const res = await web3.eth.getAccounts();
         if (res.length > 0) {
           this.ETHaddress = res[0];
+          window.localStorage.setItem("ETHlinkWallet", true);
         }
         // 监听地址变化事件
         web3.currentProvider.on("accountsChanged", (accounts) => {
           // 处理地址变化事件
           this.ETHaddress = accounts[0] || "";
-          console.log("Address changed:", accounts);
         });
 
         this.checkNetId();

@@ -1,100 +1,111 @@
 <template>
   <div class="myRecord">
-    <div class="title">
-      <div class="left">My Record</div>
-      <div class="right">
-        <template v-if="Address.getBTCaddress && walletType === 'BTC'">
-          <img
-            v-if="Address.getBTCWalletType === 'unisat'"
-            src="@/assets/uniset-logo.png"
-            width="28px"
-            alt=""
-            srcset=""
-          />
-          <img
-            v-if="Address.getBTCWalletType === 'okx'"
-            src="@/assets/okx-wallet.png"
-            width="28px"
-            alt=""
-            srcset=""
-          />
-          {{ getAddress(Address.getBTCaddress) }}
-        </template>
-        <template v-if="Address.getETHaddress && walletType === 'ETH'">
-          <img
-            v-if="Address.getETHWalletType === 'eth'"
-            src="@/assets/matemask.png"
-            width="28px"
-            alt=""
-            srcset=""
-          />
-          <img
-            v-if="Address.getETHWalletType === 'ip'"
-            src="@/assets/okx-wallet.png"
-            width="28px"
-            alt=""
-            srcset=""
-          />
-          {{ getAddress(Address.getETHaddress) }}
-        </template>
+    <div class="head">
+      <div class="title">
+        <div class="left">My Record</div>
+        <div class="right">
+          <template v-if="Address.getBTCaddress && walletType === 'BTC'">
+            <img
+              v-if="Address.getBTCWalletType === 'unisat'"
+              src="@/assets/uniset-logo.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <img
+              v-if="Address.getBTCWalletType === 'okx'"
+              src="@/assets/okx-wallet.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            {{ getAddress(Address.getBTCaddress) }}
+          </template>
+          <template v-if="Address.getETHaddress && walletType === 'ETH'">
+            <img
+              v-if="Address.getETHWalletType === 'eth'"
+              src="@/assets/matemask.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            <img
+              v-if="Address.getETHWalletType === 'ip'"
+              src="@/assets/okx-wallet.png"
+              width="28px"
+              alt=""
+              srcset=""
+            />
+            {{ getAddress(Address.getETHaddress) }}
+          </template>
+        </div>
+      </div>
+      <div class="refresh" @click="refreshBridgeList">
+        <img src="@/assets/refresh.png" width="18px" />
+        Refresh
       </div>
     </div>
-    <div
-      v-if="myRecord?.length > 0 && Address.getBTCaddress"
-      class="information"
-    >
+    <a-spin :spinning="spinning">
       <div
-        class="list-item"
-        v-for="item in myRecord"
-        :key="item.BridgeTokenTime"
+        v-if="myRecord?.length > 0 && Address.getBTCaddress"
+        class="information"
       >
-        <div class="left">
-          <div :class="`sent active`">
-            Sent {{ getMoney(item.BridgeTokenBalance) }}
-            {{ decodeURIComponent(item.BridgeTokenSymbol) }}
-          </div>
-          <div class="wait">
-            <div
-              :class="`point ${
-                item.BridgeWorkFlow == '1' ? 'flash' : 'active'
-              }`"
-            >
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <span :class="`${item.BridgeWorkFlow != '1' ? 'active' : ''}`">
-              Wait The BTC Network Confirm</span
-            >
-          </div>
-          <div class="tokens">
-            <div
-              :class="`point  ${
-                item.BridgeWorkFlow == '2' || item.BridgeWorkFlow == '3'
-                  ? 'flash'
-                  : item.BridgeWorkFlow == '4'
-                  ? 'active'
-                  : ''
-              }`"
-            >
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <span :class="`${item.BridgeWorkFlow == '4' ? 'active' : ''}`"
-              >Bitparty Smactcontract Sent Your ERC20 Tokens</span
-            >
-          </div>
-        </div>
         <div
-          :class="`status ${getStatusColor(item.BridgeTokenStatus)}`"
-          @click="handleStatus(item)"
+          class="list-item"
+          v-for="item in myRecord"
+          :key="item.BridgeTokenTime"
         >
-          {{ item.BridgeTokenStatus }}
+          <div class="left">
+            <div :class="`sent ${activeColor}`">
+              Sent {{ getMoney(item.BridgeTokenBalance) }}
+              {{ decodeURIComponent(item.BridgeTokenSymbol) }}
+            </div>
+            <div class="wait">
+              <div
+                :class="`point ${
+                  item.BridgeWorkFlow == '1'
+                    ? `flash ${activeColor}`
+                    : activeColor
+                }`"
+              >
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <span :class="`${item.BridgeWorkFlow != '1' ? activeColor : ''}`">
+                Wait The {{ walletType }} Network Confirm</span
+              >
+            </div>
+            <div class="tokens">
+              <div
+                :class="`point  ${
+                  item.BridgeWorkFlow == '2' || item.BridgeWorkFlow == '3'
+                    ? `flash ${activeColor}`
+                    : item.BridgeWorkFlow == '4'
+                    ? activeColor
+                    : ''
+                }`"
+              >
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <span :class="`${item.BridgeWorkFlow == '4' ? activeColor : ''}`"
+                >Bitparty Smactcontract Sent Your ERC20 Tokens</span
+              >
+            </div>
+          </div>
+          <div
+            :class="`status ${getStatusColor(item.BridgeTokenStatus)}`"
+            @click="handleStatus(item)"
+          >
+            {{ item.BridgeTokenStatus }}
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else class="information noInformation">No Information</div>
+      <div v-else class="information noInformation">No Information</div>
+    </a-spin>
+
     <a-pagination
       v-if="myRecord?.length > 0 && total > 4 && Address.getBTCaddress"
       v-model:current="current"
@@ -130,16 +141,23 @@ const isSuccess = (txid) => {
   stakeSuccessRef.value.open(txid, TokenSymbol.value);
   getBridgeList();
 };
+const spinning = ref(false);
 const getBridgeList = async () => {
-  if (!Address.getBTCaddress) return;
+  if (!Address.getBTCaddress && walletType.value === "BTC") return;
+  if (!Address.getETHaddress && walletType.value === "ETH") return;
+  spinning.value = true;
+  const bridgeType = walletType.value === "BTC" ? 1 : 2;
+  const userAddress =
+    walletType.value === "BTC" ? Address.getBTCaddress : Address.getETHaddress;
   const res = await getBridgeListData({
-    BridgeType: 1,
-    UserAddress: Address.getBTCaddress,
+    BridgeType: bridgeType,
+    UserAddress: userAddress,
     Offset: current.value,
     Limit: 4,
   });
   myRecord.value = res.result.BridgeInfo;
   total.value = res.result.TotalListNumber;
+  spinning.value = false;
 };
 const refreshBridgeList = () => {
   myRecord.value = null;
@@ -148,8 +166,14 @@ const refreshBridgeList = () => {
   getBridgeList();
 };
 const walletType = ref("BTC");
+const activeColor = ref("activeY");
 const getWalletType = (type) => {
   walletType.value = type;
+  if (type === "BTC") {
+    activeColor.value = "activeY";
+  } else {
+    activeColor.value = "activeB";
+  }
   getBridgeList();
 };
 const bitpartyAddressRef = ref(null);
@@ -187,9 +211,9 @@ watch(
 
 onMounted(() => {
   // 每15分钟执行一次
-  setInterval(() => {
-    getBridgeList();
-  }, 1000 * 60 * 15);
+  // setInterval(() => {
+  //   getBridgeList();
+  // }, 1000 * 60 * 15);
 });
 defineExpose({ refreshBridgeList, getWalletType });
 </script>
@@ -210,6 +234,21 @@ defineExpose({ refreshBridgeList, getWalletType });
 <style scoped lang="scss">
 .myRecord {
   margin-top: 32px;
+  .head {
+    display: flex;
+    justify-content: space-between;
+    .refresh {
+      font-family: LilitaOne;
+      font-size: 15px;
+      font-weight: 400;
+      margin-top: 50px;
+      margin-right: 40px;
+      cursor: pointer;
+      img {
+        margin-right: 10px;
+      }
+    }
+  }
   .title {
     display: flex;
     justify-self: start;
@@ -279,22 +318,30 @@ defineExpose({ refreshBridgeList, getWalletType });
         .tokens {
           margin-left: 15px;
         }
-        .active {
+        .activeY {
           color: #ffaa08;
         }
-        .point.active {
+        .activeY {
           div {
             background-color: #ffaa08;
           }
         }
+        .activeB {
+          color: #8cc8ff;
+        }
+        .activeB {
+          div {
+            background-color: #8cc8ff;
+          }
+        }
         .flash {
           font-size: 0;
-          color: #ffaa08;
+          // color: #ffaa08;
         }
         .flash > div {
           display: inline-block;
           float: none;
-          background-color: #ffaa08;
+          // background-color: #ffaa08;
           border: 0 solid currentColor;
         }
 

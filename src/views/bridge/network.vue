@@ -34,7 +34,7 @@
         <div class="tip">You Should Do Something First</div> -->
       </div>
       <div class="content" v-if="handover === 'BTC'">
-        <div class="brc20 change" @click="showModal">
+        <div class="brc20 change" @click="showModal('BTC')">
           <div class="left">Select Token</div>
           <div class="right">
             <span>{{ token?.ticker || "Brc20" }}</span>
@@ -70,7 +70,7 @@
         <div class="amount change">
           <div class="left">Amount</div>
           <div class="right">
-            {{ token?.ticker === "btc" ? btcAmount : amountInfo?.data.amt }}
+            {{ token?.balance }}
           </div>
         </div>
         <div
@@ -78,7 +78,7 @@
           v-if="TokenContractAddress"
           @click="goTokenContractAddress"
         >
-          {{ token?.ticker }} eth contract address:
+          {{ token?.ticker }} btc contract address:
           {{ getAddress(TokenContractAddress) }}
           <img src="@/assets/Magnifying.png" alt="" />
         </div>
@@ -149,31 +149,26 @@
         <div class="tip">You Should Do Something First</div> -->
       </div>
       <div class="content" v-if="handover === 'ETH'">
-        <div class="brc20 change" @click="showModal">
+        <div class="brc20 change" @click="showModal('ETH')">
           <div class="left">Select Token</div>
           <div class="right">
             <span>{{ token?.ticker || "Brc20" }}</span>
             <img src="@/assets/Vector.png" />
           </div>
         </div>
-        <div class="amount change" v-if="token?.ticker === 'btc'">
+        <div class="amount change">
           <div class="left">Amount</div>
           <div class="right">
-            <a-input
-              v-model:value="btcAmount"
-              placeholder="0.00"
-              size="small"
-              @input="onInput"
-            ></a-input>
+            {{ token?.balance || "0.00" }}
           </div>
         </div>
-        <div class="amount change" @click="showAmount" v-else>
+        <!-- <div class="amount change" @click="showAmount" v-else>
           <div class="left">Amount</div>
           <div class="right">
             <span>{{ amountInfo?.data.amt || "0.00" }}</span>
             <img src="@/assets/Vector.png" />
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="content" v-else>
         <div class="brc20 change">
@@ -198,7 +193,9 @@
           <img src="@/assets/Magnifying.png" alt="" />
         </div>
       </div>
-      <div class="transfer" v-if="handover === 'ETH'">Transfer</div>
+      <div class="transfer" v-if="handover === 'ETH'" @click="openTransfer">
+        Transfer
+      </div>
     </div>
 
     <selectToken ref="selectTokenRef" @change="changeToken" />
@@ -295,8 +292,14 @@ const ethQuit = () => {
 const errorMsgRef = ref(null);
 // token 弹框
 const selectTokenRef = ref(null);
-const showModal = () => {
-  selectTokenRef.value.open(Address.getBTCaddress);
+const showModal = (type) => {
+  let address;
+  if (type === "BTC") {
+    address = Address.getBTCaddress;
+  } else {
+    address = Address.getETHaddress;
+  }
+  selectTokenRef.value.open(type, address);
 };
 const token = ref(null);
 const changeToken = (data) => {
@@ -304,13 +307,18 @@ const changeToken = (data) => {
   selectAmountRef.value.clear();
   amountInfo.value = null;
   btcAmount.value = null;
-  getETHContractAddress(data.ticker);
+  if (handover.value === "ETH") {
+    TokenContractAddress.value = data.TokenContractAddress;
+  } else {
+    getETHContractAddress(data.ticker);
+  }
 };
 const clearNetwork = () => {
   token.value = null;
   selectAmountRef.value.clear();
   amountInfo.value = null;
   btcAmount.value = null;
+  TokenContractAddress.value = "";
 };
 const onInput = () => {
   const str = btcAmount.value.toString();
@@ -378,9 +386,18 @@ const isSuccess = (type, txid) => {
 
 const transferModalRef = ref(null);
 const showTransferModal = () => {
-  const amt =
-    token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
+  let amt;
+  if (handover.value === "BTC") {
+    amt =
+      token.value.ticker === "btc"
+        ? btcAmount.value
+        : amountInfo.value.data.amt;
+  } else {
+    amt = token.value.balance;
+  }
+
   transferModalRef.value.open(
+    handover.value,
     Address.getBTCaddress,
     Address.getETHaddress,
     amountInfo?.value?.inscriptionId || "",
@@ -393,6 +410,7 @@ const showTransferModal = () => {
 const handover = ref("BTC");
 const changeWallet = (val) => {
   handover.value = val;
+  clearNetwork();
   emit("change", val);
 };
 
@@ -414,44 +432,47 @@ const isShowError = (title) => {
 };
 const btcAmount = ref(null);
 const openTransfer = async () => {
-  if (!token.value) return console.log("没选token");
-  if (token.value.ticker === "btc") {
-    if (!btcAmount.value) return console.log("没输入金额");
-    let balance = await window.unisat.getBalance();
-    if (btcAmount.value * 10000 * 10000 > balance.total) {
+  if (!token.value) return console.log("no token");
+  if (handover.value === "BTC") {
+    if (token.value.ticker === "btc") {
+      if (!btcAmount.value) return console.log("no balance");
+      let balance = await window.unisat.getBalance();
+      if (btcAmount.value * 10000 * 10000 > balance.total) {
+        const headline = "Dear!";
+        const title = "stake value error";
+        const message = `stake balance greater than your wallet balance`;
+        errorMsgRef.value.open(headline, title, message);
+        return;
+      }
+    } else {
+      if (!amountInfo.value) return console.log("no balance");
+    }
+    if (!Address.getETHaddress) {
       const headline = "Dear!";
-      const title = "stake value error";
-      const message = `stake balance greater than your wallet balance`;
+      const title = "You should connect your eth wallet first";
+      const message = `Please remember the association between your current btc
+and eth addresses and make sure you don’t forget it before
+the game is over`;
       errorMsgRef.value.open(headline, title, message);
       return;
     }
-  } else {
-    if (!amountInfo.value) return console.log("没选择金额");
-  }
-  if (!Address.getETHaddress) {
-    const headline = "Dear!";
-    const title = "You should connect your eth wallet first";
-    const message = `Please remember the association between your current btc
-and eth addresses and make sure you don’t forget it before
-the game is over`;
-    errorMsgRef.value.open(headline, title, message);
-    return;
-  }
-  const CheckMappingStatus = await checkAddressMapping();
-  if (CheckMappingStatus == 2) {
-    const InsertMappingStatus = await insertAddressMapping();
-    if (InsertMappingStatus !== "OK") {
+    const CheckMappingStatus = await checkAddressMapping();
+    if (CheckMappingStatus == 2) {
+      const InsertMappingStatus = await insertAddressMapping();
+      if (InsertMappingStatus !== "OK") {
+        isShowError(
+          "The logging btc address is not matching the logging ethereum address!"
+        );
+        return;
+      }
+    } else if (CheckMappingStatus == 0) {
       isShowError(
-        "The logging btc address is not matching the logging ethereum address!"
+        "Can not create mapping between bitcoin address and ethereum address！"
       );
       return;
     }
-  } else if (CheckMappingStatus == 0) {
-    isShowError(
-      "Can not create mapping between bitcoin address and ethereum address！"
-    );
-    return;
   }
+
   // const amt =
   //   token.value.ticker === "btc" ? btcAmount.value : amountInfo.value.data.amt;
   // const TVLStatus = await getTVLStatus({

@@ -138,9 +138,9 @@ export const getETHContractAddress = ({ TokenSymbol }) => {
   );
 };
 
-export const getTransferInfo = ({ TokenSymbol, TokenBalance }) => {
+export const getTransferInfo = ({ TokenSymbol, TokenBalance, TokenType }) => {
   return request(
-    `/stake/getTransferInfo?TokenSymbol=${TokenSymbol}&TokenBalance=${TokenBalance}`,
+    `/stake/getTransferInfo?TokenSymbol=${TokenSymbol}&TokenBalance=${TokenBalance}&TokenType=${TokenType}`,
     "get"
   );
 };
@@ -181,4 +181,8 @@ export const getNftGroupDetailInfo = ({ UserAddress }) => {
 
 export const getNftScore = ({ UserAddress }) => {
   return request(`/nft/getNftScore?UserAddress=${UserAddress}`, "get");
+};
+
+export const getPartyTokenList = () => {
+  return request(`/stake/getPartyTokenList?TokenType=ethereum`, "get");
 };
