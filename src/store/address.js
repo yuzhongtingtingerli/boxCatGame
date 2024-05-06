@@ -77,6 +77,7 @@ export const useAddressStore = defineStore("address", {
         web3.currentProvider.on("accountsChanged", (accounts) => {
           // 处理地址变化事件
           this.ETHaddress = accounts[0] || "";
+          this.ETHaddress && window.localStorage.setItem("ETHlinkWallet", true);
         });
 
         this.checkNetId();
@@ -232,6 +233,7 @@ export const useAddressStore = defineStore("address", {
         const ETHWalletType = window.localStorage.getItem("ETHWalletType");
         if (ETHWalletType === "ip") {
           this.ETHaddress = accounts[0] || "";
+          this.ETHaddress && window.localStorage.setItem("ETHlinkWallet", true);
           if (accounts.length === 0) {
             this.clearETHWallet();
           }
