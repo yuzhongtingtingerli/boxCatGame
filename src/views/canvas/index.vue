@@ -51,7 +51,7 @@ const checkRuning = async () => {
     );
   } else {
     isShowError(
-      "Welcome to Bit party !  Join the BRC20 Group you hold and win BTPX. Good luck !",
+      "Welcome to Bit party !  Join the token Group you hold and win BTPX. Good luck !",
       5000
     );
   }

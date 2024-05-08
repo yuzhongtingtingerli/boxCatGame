@@ -6,7 +6,7 @@
         <a-input
           v-model:value="GroupName"
           @keyup.enter="getGroupName"
-          placeholder="Brc20"
+          placeholder="token"
           size="small"
         >
           <template #suffix>

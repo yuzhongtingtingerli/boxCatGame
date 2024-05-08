@@ -21,23 +21,30 @@
         <div class="text" @click="connectBTCWallet">
           {{
             !Address.getBTCaddress
-              ? "Connect BTC Wallet"
+              ? "Connect Wallet"
               : getAddress(Address.getBTCaddress)
           }}
         </div>
         <div class="isQuit" v-if="isBTCQuit" @click="btcQuit">log out</div>
       </div>
-      <div class="title">BRC20 NETWORK</div>
+      <div class="title">
+        <span>{{ networkData }}</span>
+        <img
+          src="@/assets/select-network.png"
+          height="37px"
+          @click="openNetwork"
+        />
+      </div>
       <div class="tips" v-if="errorMsgBTC">
         {{ errorMsgBTC }}
         <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
         <div class="tip">You Should Do Something First</div> -->
       </div>
       <div class="content">
-        <div class="brc20 change" @click="showModal">
+        <div class="token change" @click="showModal">
           <div class="left">Select Token</div>
           <div class="right">
-            <span>{{ token?.ticker || "Brc20" }}</span>
+            <span>{{ token?.ticker || "token" }}</span>
             <img src="@/assets/Vector.png" />
           </div>
         </div>
@@ -117,20 +124,20 @@
         <div class="text" @click="connectETHWallet">
           {{
             Address.getETHaddress === "" || !Address.getETHaddress
-              ? "Connect ETH Wallet"
+              ? "Connect Wallet"
               : getAddress(Address.getETHaddress)
           }}
         </div>
         <div class="isQuit" v-if="isETHQuit" @click="ethQuit">log out</div>
       </div>
-      <div class="title">ERC20 NETWORK</div>
+      <div class="title">Bitlayer NETWORK</div>
       <div class="tips" v-if="errorMsgETH">
         {{ errorMsgETH }}
         <!-- <InfoCircleOutlined style="font-size: 12px; margin-left: 10px" />
         <div class="tip">You Should Do Something First</div> -->
       </div>
       <div class="content">
-        <div class="brc20 change">
+        <div class="token change">
           <div class="left">Will Get</div>
           <div class="right">
             {{ token?.ticker }}
@@ -156,6 +163,7 @@
     </div>
 
     <selectToken ref="selectTokenRef" @change="changeToken" />
+    <selectNetwork ref="selectNetworkRef" @change="changeNetwork" />
     <selectAmount ref="selectAmountRef" @change="changeAmount" />
     <transferModal ref="transferModalRef" @change="isSuccess" />
     <ErrorInfo ref="errorInfoRef" />
@@ -177,13 +185,13 @@ import {
 
 import { useAddressStore } from "@/store/address";
 import selectToken from "./selectToken.vue";
+import selectNetwork from "./selectNetwork.vue";
 import selectAmount from "./selectAmount.vue";
 import transferModal from "./transferModal.vue";
 import ChooseWallet from "@/components/chooseWallet.vue";
 import ErrorInfo from "@/components/error-info.vue";
 import SuccessMsg from "@/components/success-msg.vue";
 import ErrorMsg from "@/components/error-msg.vue";
-import { MetaMaskSDK } from "@metamask/sdk";
 const emit = defineEmits(["refresh"]);
 const Address = useAddressStore();
 const isBTCQuit = ref(false);
@@ -208,27 +216,14 @@ const connectETHWallet = async () => {
     chooseWalletRef.value.open("eth");
     // Address.linkWallet();
   }
-  // Address.linkETHWallet();
-  // console.log(ethers, "ethers");
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // console.log(provider, "provider");
-  // const signer = provider.getSigner();
-  // console.log(signer, "signer");
-  // const address = await provider.send("eth_requestAccounts", []);
-  // console.log(address, "address");
-  // const MMSDK = new MetaMaskSDK({
-  //   dappMetadata: {
-  //     name: "JavaScript example dapp",
-  //     url: window.location.href,
-  //   },
-  //   infuraAPIKey: process.env.INFURA_API_KEY,
-  //   // Other options
-  // });
-
-  // // You can also access via window.ethereum
-  // const ethereum = MMSDK.getProvider();
-  // console.log(ethereum, "ethereum");
-  // ethereum.request({ method: "eth_requestAccounts", params: [] });
+};
+const selectNetworkRef = ref(null);
+const openNetwork = async () => {
+  selectNetworkRef.value.open();
+};
+const networkData = ref("BTC NETWORK");
+const changeNetwork = (item) => {
+  networkData.value = item;
 };
 const chooseWallet = async (type) => {
   if (type === "okx") {
@@ -559,9 +554,13 @@ watch(
     font-family: LilitaOne;
     font-size: 36px;
     font-weight: 400;
-    line-height: 22px;
     letter-spacing: 0em;
     text-align: left;
+    img {
+      margin-left: 10px;
+      margin-bottom: 7px;
+      cursor: pointer;
+    }
   }
   .tips {
     font-family: LilitaOne;
@@ -630,7 +629,7 @@ watch(
       //   }
       // }
     }
-    .brc20 {
+    .token {
     }
     .address {
       font-family: LilitaOne;

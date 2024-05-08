@@ -9,16 +9,17 @@
     </div>
     <div class="main w1400">
       <div class="left3">
-        <div class="title">BIT PARTY</div>
-        <div class="description">
-          The First <span class="active">All Brc20</span> Stake To Earn
-          Playground
+        <div class="title">
+          <img class="bitlayer" src="@/assets/bitlayer.png" height="100px" />
+          <img class="middle" src="@/assets/home_logo.png" height="24px" />
+          <span>BIT PARTY</span>
         </div>
+        <div class="description">the first Token Rally</div>
         <div class="list">
           <div class="list-item">
             <div class="top" @click="unfolding(1)">
               <div :class="`text ${active === 1 ? 'active' : ''}`">
-                Powered By BTC、Brc20、Smart Contract、ERC20
+                Powered By BTC、token、Smart Contract、Bitlayer Assets
               </div>
               <div class="right" v-if="active === 1">
                 <img src="@/assets/Vector.png" alt="" srcset="" />
@@ -34,7 +35,7 @@
                 >
               </div>
               <div>
-                Learn BRC20：<a
+                Learn token：<a
                   target="_blank"
                   href="https://domo-2.gitbook.io/brc-20-experiment/"
                   >domo-2.gitbook.io/brc-20-experiment/</a
@@ -48,7 +49,7 @@
                 >
               </div>
               <div>
-                Learn erc20：<a
+                Learn Bitlayer Assets：<a
                   target="_blank"
                   href="https://eips.ethereum.org/EIPS/eip-20"
                   >https://eips.ethereum.org/EIPS/eip-20</a
@@ -56,7 +57,7 @@
               </div>
             </div>
           </div>
-          <!-- <div class="list-item">
+          <div class="list-item">
             <div class="top" @click="unfolding(2)">
               <div :class="`text ${active === 2 ? 'active' : ''}`">
                 Stake Pool By Temporary Address Stream
@@ -94,7 +95,7 @@
                 >
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -240,9 +241,16 @@ const unfolding = (index) => {
       font-family: LuckiestGuy;
       font-size: 65px;
       font-weight: 400;
-      line-height: 30px;
+      // line-height: 30px;
       letter-spacing: 0em;
       text-align: left;
+      .bitlayer {
+        margin-bottom: 20px;
+      }
+      .middle {
+        margin-left: 8px;
+        margin-right: 20px;
+      }
     }
     .description {
       margin-top: 15px;
@@ -252,6 +260,7 @@ const unfolding = (index) => {
       line-height: 22px;
       letter-spacing: 0em;
       text-align: left;
+      text-transform: capitalize;
     }
     .active {
       color: #feac14;

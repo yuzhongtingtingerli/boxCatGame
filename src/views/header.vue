@@ -16,6 +16,7 @@
             width="42"
           />
           <router-link to="/">BIT PARTY</router-link>
+          <span class="handover">on bitlayer</span>
         </div>
         <div class="menu">
           <router-link :class="getCurrentRoute('/map')" to="/map"
@@ -220,10 +221,25 @@ onMounted(() => {
     .title {
       font-family: LuckiestGuy;
       font-size: 30px;
-      width: 210px;
+      width: 320px;
       text-align: center;
-      margin-right: 80px;
+      margin-right: 30px;
       color: #000;
+      .handover {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        font-family: Urbanist;
+        font-size: 10px;
+        font-weight: 900;
+        text-align: left;
+        border: 1px solid #e36e1b;
+        color: #e36e1b;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        padding: 0 10px;
+        text-transform: capitalize;
+      }
     }
   }
 

@@ -5,7 +5,7 @@
       <a-input
         v-model:value="groupName"
         @keyup.enter="getName"
-        placeholder="Brc20"
+        placeholder="token"
         size="small"
       >
         <template #suffix>

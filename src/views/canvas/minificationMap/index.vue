@@ -45,7 +45,7 @@
           TVL：{{ getMoney(props.seasonData?.TotalStakeToken) }} BTC
         </div>
         <div class="t">
-          Created by：{{ props.seasonData?.Staker }} BRC20 holders
+          Created by：{{ props.seasonData?.Staker }} token holders
         </div>
         <div class="t">
           Special thanks to ：{{ getAddress(Address.getBTCaddress) }}

@@ -56,7 +56,7 @@
               <div></div>
             </div>
             <span :class="`${item.BridgeWorkFlow == '4' ? 'active' : ''}`"
-              >Bitparty Smactcontract Sent Your ERC20 Tokens</span
+              >Bitparty Smactcontract Sent Your Bitlayer Assets Tokens</span
             >
           </div>
         </div>

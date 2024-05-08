@@ -14,15 +14,16 @@
         <p>Please treat it with caution.</p>
       </div>
       <div class="step">
-        step 2. Select the amount of BRC20 you want to stake, Confirm it, and
+        step 2. Select the amount of token you want to stake, Confirm it, and
         wait 30mins.
       </div>
       <div class="step">
-        step 3. After success you will get the same name ERC20 in your wallet.
+        step 3. After success you will get the same name Bitlayer Assets in your
+        wallet.
       </div>
       <div class="step">
         step 4. Confirm stake with your eth wallet, you will successful complete
-        the stake and join BRC20 group.
+        the stake and join token group.
       </div>
     </div>
   </div>
