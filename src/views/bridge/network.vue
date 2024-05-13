@@ -386,6 +386,7 @@ const isSuccess = (type, txid) => {
 
 const transferModalRef = ref(null);
 const showTransferModal = () => {
+  console.log(token.value, "token.value");
   let amt;
   if (handover.value === "BTC") {
     amt =
@@ -403,7 +404,8 @@ const showTransferModal = () => {
     amountInfo?.value?.inscriptionId || "",
     token.value.ticker,
     amt,
-    amountInfo?.value?.satoshi || ""
+    amountInfo?.value?.satoshi || "",
+    token.value.TokenContractAddress || ""
   );
 };
 

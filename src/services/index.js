@@ -30,6 +30,9 @@ import {
   getNftGroupDetailInfo,
   getNftScore,
   getPartyTokenList,
+  getAssetList,
+  doWithdraw,
+  doBridgePost,
 } from "./api";
 
 export const getGroupDetailInfoData = async (params) => {
@@ -455,6 +458,48 @@ export const getNftScoreData = async (params) => {
 export const getPartyTokenListData = async () => {
   try {
     const { code, result, status } = await getPartyTokenList();
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const getAssetListData = async (params) => {
+  try {
+    const { code, result, status } = await getAssetList(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const doWithdrawData = async (params) => {
+  try {
+    const { code, result, status } = await doWithdraw(params);
+    const statusCode = parseInt(code);
+    if (statusCode === 1) {
+      return { status, statusCode, result };
+    } else {
+      return { status, statusCode, result: result };
+    }
+  } catch (error) {
+    return { result: error };
+  }
+};
+
+export const doBridgePostData = async (params) => {
+  try {
+    const { code, result, status } = await doBridgePost(params);
     const statusCode = parseInt(code);
     if (statusCode === 1) {
       return { status, statusCode, result };

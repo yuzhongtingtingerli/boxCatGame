@@ -9,9 +9,14 @@ import {
 } from "@/services/index.js";
 import { getBrc20SummaryData } from "@/services/wallet.js";
 const emit = defineEmits(["change"]);
-/**
- * 数据部分
- */
+
+let network;
+if (window.location.origin.indexOf("bitparty.tech") !== -1) {
+  network = Network.ETH_MAINNET;
+} else {
+  network = Network.MATIC_AMOY;
+}
+
 const groupName = ref("");
 const show = ref(false);
 let summaryDataList = [];
@@ -62,7 +67,7 @@ const getBalanceData = (balancesData, address) => {
 const balancesList = async (address, ary) => {
   const settings = {
     apiKey: "Mx71dKeiQprWUUb09x56lllHsdsdjx7u", // Replace with your Alchemy API Key.
-    network: Network.ETH_MAINNET, // Replace with your network.
+    network: network, // Replace with your network.
   };
   const alchemy = new Alchemy(settings);
   const balances = await alchemy.core.getTokenBalances(address, [

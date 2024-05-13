@@ -17,6 +17,10 @@ export const getMoney = (money) => {
   });
 };
 
+export const getFloorNum = (money) => {
+  return Number((Math.floor(money * 10 ** 6) / 10 ** 6).toFixed(6));
+};
+
 export const getUniSatAddress = async () => {
   if (window.unisat) {
     if (window.address) return window.address;

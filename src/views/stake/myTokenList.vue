@@ -32,13 +32,13 @@
           <div class="amount">{{ getMoney(item.TokenAmount) }}</div>
           <div class="stakeBalance">{{ getMoney(item.TokenStakeBalance) }}</div>
           <div class="availableStatus">
-            <div
+            <!-- <div
               class="btn"
               v-if="item.TokenStakeStatus == 1"
               @click="handleStatus(item)"
             >
               Go Stake
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

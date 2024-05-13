@@ -19,6 +19,7 @@
     "alchemy-sdk": "^3.2.1",
     "ant-design-vue": "4.x",
     "axios": "^1.6.2",
+    "big.js": "^6.2.1",
     "ethers": "5",
     "install": "^0.13.0",
     "pinia": "^2.1.7",

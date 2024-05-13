@@ -6,7 +6,7 @@ import Rank from "../views/rank/index.vue";
 import Bridge from "../views/bridge/index.vue";
 import Stake from "../views/stake/index.vue";
 import Empty from "../views/empty.vue";
-import Whitepaper from "../views/whitepaper.vue";
+import Withdraw from "../views/withdraw/index.vue";
 const routes = [
   {
     path: "/empty",
@@ -39,9 +39,9 @@ const routes = [
     component: Stake,
   },
   {
-    path: "/whitepaper",
-    name: "Whitepaper",
-    component: Whitepaper,
+    path: "/withdraw",
+    name: "Withdraw",
+    component: Withdraw,
   },
 ];
 

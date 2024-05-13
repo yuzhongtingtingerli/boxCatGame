@@ -112,7 +112,7 @@ export const useAddressStore = defineStore("address", {
             method: "wallet_switchEthereumChain",
             params: [
               {
-                chainId: "0x13881", // 目标链ID
+                chainId: "0x13882", // 目标链ID
               },
             ],
           });
@@ -128,14 +128,14 @@ export const useAddressStore = defineStore("address", {
               method: "wallet_addEthereumChain",
               params: [
                 {
-                  chainId: "0x13881", // 目标链ID
-                  chainName: "Mumbai",
+                  chainId: "0x13882", // 目标链ID
+                  chainName: "Amoy",
                   nativeCurrency: {
                     name: "MATIC",
                     symbol: "MATIC",
                     decimals: 18,
                   },
-                  rpcUrls: ["https://rpc.ankr.com/polygon_mumbai "],
+                  rpcUrls: ["https://rpc-amoy.polygon.technology"],
                   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
                 },
               ],
@@ -150,7 +150,6 @@ export const useAddressStore = defineStore("address", {
       if (!window.ethereum) return;
       const isLink = window.localStorage.getItem("ETHlinkWallet");
       if (isLink === "false") return;
-      console.log(isLink, "isLink-----");
       const ETHWalletType = window.localStorage.getItem("ETHWalletType");
       if (ETHWalletType) {
         if (ETHWalletType === "eth") {
@@ -161,14 +160,18 @@ export const useAddressStore = defineStore("address", {
             this.ETHaddress &&
               window.localStorage.setItem("ETHlinkWallet", true);
           }
+          // 监听地址变化事件;
+          web3.currentProvider.on("accountsChanged", (accounts) => {
+            // 处理地址变化事件
+            this.ETHaddress = accounts[0] || "";
+            if (accounts.length === 0) {
+              this.clearETHWallet();
+            }
+          });
         } else {
           this.linkIPwallet();
         }
-        // 监听地址变化事件
-        // web3.currentProvider.on("accountsChanged", (accounts) => {
-        //   // 处理地址变化事件
-        //   this.ETHaddress = accounts[0] || "";
-        // });
+
         this.checkNetId();
       }
     },

@@ -46,10 +46,7 @@
       </div>
     </div>
     <a-spin :spinning="spinning">
-      <div
-        v-if="myRecord?.length > 0 && Address.getBTCaddress"
-        class="information"
-      >
+      <div v-if="myRecord?.length > 0" class="information">
         <div
           class="list-item"
           v-for="item in myRecord"
@@ -107,7 +104,7 @@
     </a-spin>
 
     <a-pagination
-      v-if="myRecord?.length > 0 && total > 4 && Address.getBTCaddress"
+      v-if="myRecord?.length > 0 && total > 4"
       v-model:current="current"
       :pageSize="4"
       :total="total"
@@ -143,21 +140,28 @@ const isSuccess = (txid) => {
 };
 const spinning = ref(false);
 const getBridgeList = async () => {
+  myRecord.value = null;
+  total.value = 0;
   if (!Address.getBTCaddress && walletType.value === "BTC") return;
   if (!Address.getETHaddress && walletType.value === "ETH") return;
   spinning.value = true;
   const bridgeType = walletType.value === "BTC" ? 1 : 2;
   const userAddress =
     walletType.value === "BTC" ? Address.getBTCaddress : Address.getETHaddress;
-  const res = await getBridgeListData({
-    BridgeType: bridgeType,
-    UserAddress: userAddress,
-    Offset: current.value,
-    Limit: 4,
-  });
-  myRecord.value = res.result.BridgeInfo;
-  total.value = res.result.TotalListNumber;
-  spinning.value = false;
+  try {
+    const res = await getBridgeListData({
+      BridgeType: bridgeType,
+      UserAddress: userAddress,
+      Offset: current.value,
+      Limit: 4,
+    });
+    myRecord.value = res.result.BridgeInfo;
+    total.value = res.result.TotalListNumber;
+    spinning.value = false;
+  } catch (error) {
+    console.log(error, "error");
+    spinning.value = false;
+  }
 };
 const refreshBridgeList = () => {
   myRecord.value = null;
@@ -175,6 +179,7 @@ const getWalletType = (type) => {
     activeColor.value = "activeB";
   }
   getBridgeList();
+  console.log("???");
 };
 const bitpartyAddressRef = ref(null);
 const router = useRouter();

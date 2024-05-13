@@ -186,3 +186,33 @@ export const getNftScore = ({ UserAddress }) => {
 export const getPartyTokenList = () => {
   return request(`/stake/getPartyTokenList?TokenType=ethereum`, "get");
 };
+
+export const getAssetList = ({ EthAddress }) => {
+  return request(`/withdraw/withdrawAssetList?EthAddress=${EthAddress}`, "get");
+};
+
+export const doWithdraw = ({ StakeAddress, StakeSymbol, Txhash }) => {
+  return requestPost(`/withdraw/doWithdraw`, "post", {
+    StakeAddress,
+    StakeSymbol,
+    Txhash,
+  });
+};
+
+export const doBridgePost = ({
+  BridgeFromAddress,
+  BridgeType,
+  BridgeTokenSymbol,
+  BridgeTokenBalance,
+  BridgeTxHash,
+  BridgeToAddress,
+}) => {
+  return requestPost(`/stake/doBridgePost`, "post", {
+    BridgeFromAddress,
+    BridgeType,
+    BridgeTokenSymbol,
+    BridgeTokenBalance,
+    BridgeTxHash,
+    BridgeToAddress,
+  });
+};

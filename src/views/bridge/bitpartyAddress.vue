@@ -4,6 +4,14 @@ import { ref, onMounted } from "vue";
 import erc20Abi from "@/abi/erc20.json";
 import stakeAbi from "@/abi/stake.json";
 const emit = defineEmits(["change"]);
+
+let stakeAddress;
+if (window.location.origin.indexOf("bitparty.tech") !== -1) {
+  stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
+} else {
+  stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
+}
+
 const record = ref();
 const show = ref(false);
 const balance = ref(0);
@@ -68,16 +76,6 @@ const getBalance = async () => {
   }
 };
 const goStake = async () => {
-  let stakeAddress;
-  if (
-    window.location.origin.indexOf("bitparty.tech") !== -1 ||
-    window.location.origin.indexOf("18.136.19.168") !== -1
-  ) {
-    stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
-  } else {
-    stakeAddress = "0x4Df30bE441ecdF9B5D118286E7EFe2EC4C106b20";
-  }
-  // let stakeAddress = "0xC854a902c6E1D9F861342318fC612041d63dB15A";
   try {
     const provider = window["ethereum"] || window.web3.currentProvider;
     let web3 = new Web3(provider);
