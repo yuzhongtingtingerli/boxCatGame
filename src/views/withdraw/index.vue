@@ -57,7 +57,7 @@
               !assetList || (assetList && assetList?.StakeInfo.length === 0)
             "
           >
-            This wallet address does not participate in s2 activities
+            This wallet address does not participate in Season1 activities
           </div>
           <div
             v-else-if="assetList && assetList?.StakeInfo.length > 0"
